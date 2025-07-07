@@ -1,0 +1,137 @@
+version: '3.8'
+
+services:
+  # Main application
+  orcastrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=docker
+    env_file:
+      - docker/.env.docker
+    depends_on:
+      - postgres
+      - mongodb
+      - redis
+      - localstack
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - orcastrate-net
+
+  # PostgreSQL database
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-orcastrate}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/db/postgres:/docker-entrypoint-initdb.d
+    networks:
+      - orcastrate-net
+
+  # MongoDB database
+  mongodb:
+    image: mongo:7-jammy
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGODB_DB:-orcastrate}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - orcastrate-net
+
+  # MySQL database (alternative)
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-mysql}
+      MYSQL_DATABASE: ${MYSQL_DB:-orcastrate}
+      MYSQL_USER: ${MYSQL_USER:-orcastrate}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-mysql}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - orcastrate-net
+
+  # Redis cache
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - orcastrate-net
+
+  # LocalStack for AWS services simulation
+  localstack:
+    image: localstack/localstack:3.0
+    ports:
+      - "4566:4566"
+      - "4510-4559:4510-4559"
+    environment:
+      - SERVICES=s3,ec2,rds,lambda,ecs,iam,sts,cloudformation
+      - DEBUG=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - HOST_TMP_FOLDER=${TMPDIR:-/tmp}/localstack
+    volumes:
+      - "${TMPDIR:-/tmp}/localstack:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - orcastrate-net
+
+  # Monitoring with Prometheus (optional)
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - orcastrate-net
+    profiles:
+      - monitoring
+
+  # Grafana for metrics visualization (optional)
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - orcastrate-net
+    profiles:
+      - monitoring
+
+networks:
+  orcastrate-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  mongodb_data:
+  mysql_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:

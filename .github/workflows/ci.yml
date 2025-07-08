@@ -1,0 +1,296 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  release:
+    types: [ published ]
+
+env:
+  PYTHON_VERSION: '3.10'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Cache Poetry packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pypoetry
+        key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-poetry-
+
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    - name: Install dependencies
+      run: |
+        poetry install --with dev
+
+    - name: Run unit tests
+      run: |
+        poetry run pytest tests/unit/ -v --cov=src --cov-report=xml --cov-report=term
+
+    - name: Run integration tests
+      run: |
+        poetry run pytest tests/integration/ -v
+
+    - name: Upload coverage to Codecov
+      if: matrix.python-version == '3.10'
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+
+  quality:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    - name: Install dependencies
+      run: |
+        poetry install --with dev
+
+    - name: Lint with flake8
+      run: |
+        poetry run flake8 src/ tests/ --count --select=E9,F63,F7,F82 --show-source --statistics
+        poetry run flake8 src/ tests/ --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+
+    - name: Check code formatting with black
+      run: |
+        poetry run black --check src/ tests/
+
+    - name: Check import sorting with isort
+      run: |
+        poetry run isort --check-only src/ tests/
+
+    - name: Type checking with mypy
+      run: |
+        poetry run mypy src/ --ignore-missing-imports
+      continue-on-error: true
+
+  live-tests:
+    runs-on: ubuntu-latest
+    needs: [test]  # Run after basic tests pass
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    - name: Install dependencies
+      run: |
+        poetry install --with dev
+
+    - name: Start live test infrastructure
+      run: |
+        docker compose -f docker-compose.test.yml up -d --wait
+
+    - name: Wait for services to be ready
+      run: |
+        # Wait for LocalStack health check
+        timeout 60 bash -c 'until curl -f http://localhost:4566/_localstack/health; do sleep 2; done'
+        # Wait for databases
+        timeout 30 bash -c 'until nc -z localhost 5432; do sleep 1; done'  # PostgreSQL
+        timeout 30 bash -c 'until nc -z localhost 3306; do sleep 1; done'  # MySQL
+        timeout 30 bash -c 'until nc -z localhost 6379; do sleep 1; done'  # Redis
+        timeout 30 bash -c 'until nc -z localhost 27017; do sleep 1; done' # MongoDB
+
+    - name: Run live integration tests
+      run: |
+        docker exec orcastrate-test-coordinator python -m pytest tests/live/ --live -v --tb=short
+
+    - name: Show infrastructure logs on failure
+      if: failure()
+      run: |
+        echo "=== LocalStack logs ==="
+        docker logs orcastrate-localstack || true
+        echo "=== Test coordinator logs ==="
+        docker logs orcastrate-test-coordinator || true
+        echo "=== Infrastructure status ==="
+        docker compose -f docker-compose.test.yml ps || true
+
+    - name: Cleanup test infrastructure
+      if: always()
+      run: |
+        docker compose -f docker-compose.test.yml down -v --remove-orphans || true
+
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    - name: Install dependencies
+      run: |
+        poetry install --with dev
+
+    - name: Security scan with bandit
+      run: |
+        poetry run bandit -r src/ -f json -o bandit-report.json
+      continue-on-error: true
+
+    - name: Safety check
+      run: |
+        poetry run safety check
+      continue-on-error: true
+
+    - name: Upload security scan results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-reports
+        path: bandit-report.json
+
+  docs:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    - name: Install dependencies
+      run: |
+        poetry install --with dev
+        pip install -r docs/requirements.txt
+
+    - name: Build documentation
+      run: |
+        sphinx-build -b html docs/source docs/build/html
+
+    - name: Check links in documentation
+      run: |
+        sphinx-build -b linkcheck docs/source docs/build/linkcheck
+      continue-on-error: true
+
+    - name: Upload documentation
+      uses: actions/upload-artifact@v3
+      with:
+        name: documentation
+        path: docs/build/html/
+
+  deploy-docs:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: [test, quality, live-tests, docs]
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    - name: Install dependencies
+      run: |
+        poetry install --with dev
+        pip install -r docs/requirements.txt
+
+    - name: Build documentation
+      run: |
+        sphinx-build -b html docs/source docs/build/html
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/build/html
+
+  build-and-publish:
+    if: github.event_name == 'release'
+    needs: [test, quality, live-tests, security, docs]
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    - name: Install dependencies
+      run: |
+        poetry install --with dev
+        pip install twine
+
+    - name: Build package
+      run: |
+        poetry build
+
+    - name: Check package
+      run: |
+        twine check dist/*
+
+    - name: Publish to PyPI
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      run: |
+        twine upload dist/*

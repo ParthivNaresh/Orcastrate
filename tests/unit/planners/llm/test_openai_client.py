@@ -40,11 +40,15 @@ class TestOpenAIClient:
         """Create mock OpenAI API response."""
         mock_response = MagicMock()
         mock_response.choices = [
-            MagicMock(message=MagicMock(content="Test response content"))
+            MagicMock(
+                message=MagicMock(content="Test response content"),
+                finish_reason="completed",
+            )
         ]
         mock_response.usage = MagicMock(
             prompt_tokens=100, completion_tokens=200, total_tokens=300
         )
+        mock_response.model = "gpt-4"
         return mock_response
 
     @pytest.fixture
@@ -52,7 +56,14 @@ class TestOpenAIClient:
         """Create OpenAI client for testing."""
         with patch("src.planners.llm.openai_client.OPENAI_AVAILABLE", True):
             with patch("src.planners.llm.openai_client.openai"):
-                return OpenAIClient(openai_config)
+                client = OpenAIClient(openai_config)
+                # Set up mock client structure for testing
+                mock_client = MagicMock()
+                mock_client.chat = MagicMock()
+                mock_client.chat.completions = MagicMock()
+                mock_client.chat.completions.create = AsyncMock()
+                client._client = mock_client
+                return client
 
     @pytest.mark.asyncio
     async def test_client_initialization(self, openai_client, openai_config):
@@ -130,12 +141,19 @@ class TestOpenAIClient:
             user_prompt="Create a plan",
         )
 
-        # First call fails, second succeeds
+        # First call fails with rate limit, second succeeds
+        # Import openai to create proper exception type
+        import openai
+
+        rate_limit_error = openai.RateLimitError(
+            message="Rate limit exceeded", response=MagicMock(status_code=429), body={}
+        )
+
         with patch.object(
             openai_client._client.chat.completions,
             "create",
             new_callable=AsyncMock,
-            side_effect=[Exception("Rate limit"), mock_openai_response],
+            side_effect=[rate_limit_error, mock_openai_response],
         ):
             with patch("asyncio.sleep", new_callable=AsyncMock):
                 response = await openai_client.generate_text(prompt)
@@ -146,19 +164,29 @@ class TestOpenAIClient:
         """Test requirements analysis functionality."""
         requirements = "Build a web application with user authentication"
 
-        mock_analysis = {
+        # Mock the generate_text response to return valid JSON
+        mock_response_content = """{
             "technologies": ["React", "Node.js", "PostgreSQL"],
             "architecture_pattern": "MVC",
             "complexity_score": 6.5,
             "estimated_duration": 120.0,
-            "confidence_score": 0.85,
-        }
+            "confidence_score": 0.85
+        }"""
+
+        mock_llm_response = LLMResponse(
+            content=mock_response_content,
+            usage={"prompt_tokens": 100, "completion_tokens": 50, "total_tokens": 150},
+            model="gpt-4",
+            provider="openai",
+            response_time=1.5,
+            finish_reason="completed",
+        )
 
         with patch.object(
             openai_client,
-            "_make_requirements_analysis_request",
+            "generate_text",
             new_callable=AsyncMock,
-            return_value=mock_analysis,
+            return_value=mock_llm_response,
         ):
             analysis = await openai_client.analyze_requirements(requirements)
 
@@ -178,7 +206,8 @@ class TestOpenAIClient:
             budget_constraints={"max_monthly": 500},
         )
 
-        mock_plan = {
+        # Mock the generate_text response to return valid JSON
+        mock_response_content = """{
             "steps": [
                 {
                     "id": "step_1",
@@ -187,16 +216,25 @@ class TestOpenAIClient:
                     "tool": "postgresql",
                     "action": "create_database",
                     "estimated_duration": 600.0,
-                    "estimated_cost": 25.0,
+                    "estimated_cost": 25.0
                 }
             ]
-        }
+        }"""
+
+        mock_llm_response = LLMResponse(
+            content=mock_response_content,
+            usage={"prompt_tokens": 100, "completion_tokens": 50, "total_tokens": 150},
+            model="gpt-4",
+            provider="openai",
+            response_time=1.5,
+            finish_reason="completed",
+        )
 
         with patch.object(
             openai_client,
-            "_make_plan_generation_request",
+            "generate_text",
             new_callable=AsyncMock,
-            return_value=mock_plan,
+            return_value=mock_llm_response,
         ):
             plan = await openai_client.generate_plan(request)
 
@@ -225,22 +263,32 @@ class TestOpenAIClient:
             available_tools=["aws", "docker"],
         )
 
-        mock_optimized_plan = {
+        # Mock the generate_text response to return valid JSON
+        mock_response_content = """{
             "steps": [
                 {
                     "id": "step_1",
                     "name": "Create Infrastructure",
                     "tool": "aws",
-                    "estimated_cost": 70.0,  # Optimized cost
+                    "estimated_cost": 70.0
                 }
             ]
-        }
+        }"""
+
+        mock_llm_response = LLMResponse(
+            content=mock_response_content,
+            usage={"prompt_tokens": 100, "completion_tokens": 50, "total_tokens": 150},
+            model="gpt-4",
+            provider="openai",
+            response_time=1.5,
+            finish_reason="completed",
+        )
 
         with patch.object(
             openai_client,
-            "_make_plan_optimization_request",
+            "generate_text",
             new_callable=AsyncMock,
-            return_value=mock_optimized_plan,
+            return_value=mock_llm_response,
         ):
             optimized_plan = await openai_client.optimize_plan(request)
 
@@ -262,13 +310,26 @@ class TestOpenAIClient:
 
         requirements = "Deploy a simple web application"
 
-        mock_validation = {"is_valid": False, "issues": ["Invalid dependency step_2"]}
+        # Mock the generate_text response to return valid JSON
+        mock_response_content = """{
+            "is_valid": false,
+            "issues": ["Invalid dependency step_2"]
+        }"""
+
+        mock_llm_response = LLMResponse(
+            content=mock_response_content,
+            usage={"prompt_tokens": 100, "completion_tokens": 50, "total_tokens": 150},
+            model="gpt-4",
+            provider="openai",
+            response_time=1.5,
+            finish_reason="completed",
+        )
 
         with patch.object(
             openai_client,
-            "_make_plan_validation_request",
+            "generate_text",
             new_callable=AsyncMock,
-            return_value=mock_validation,
+            return_value=mock_llm_response,
         ):
             validation_result = await openai_client.validate_plan(plan, requirements)
 
@@ -292,11 +353,21 @@ class TestOpenAIClient:
             "The total cost is $65 and will take 20 minutes to complete."
         )
 
+        # Mock the generate_text response to return the explanation
+        mock_llm_response = LLMResponse(
+            content=mock_explanation,
+            usage={"prompt_tokens": 100, "completion_tokens": 50, "total_tokens": 150},
+            model="gpt-4",
+            provider="openai",
+            response_time=1.5,
+            finish_reason="completed",
+        )
+
         with patch.object(
             openai_client,
-            "_make_plan_explanation_request",
+            "generate_text",
             new_callable=AsyncMock,
-            return_value=mock_explanation,
+            return_value=mock_llm_response,
         ):
             explanation = await openai_client.explain_plan(plan)
             assert "PostgreSQL database" in explanation
@@ -366,8 +437,8 @@ class TestOpenAIClient:
         )
 
         with patch.object(
-            openai_client, "_estimate_tokens", return_value=5000
-        ):  # Exceeds limit
+            openai_client, "_estimate_tokens", return_value=8000
+        ):  # Exceeds GPT-4 limit of 6000
             truncated_prompt = openai_client._truncate_prompt_if_needed(long_prompt)
             assert len(truncated_prompt.user_prompt) < len(long_prompt.user_prompt)
 

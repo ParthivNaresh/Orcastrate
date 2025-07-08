@@ -45,12 +45,12 @@ dev-environment-agent/
 **Technology Stack Decisions:**
 
 - **Language**: Python 3.10+ (async/await, type hints)
-- **Framework**: FastAPI for APIs, Pydantic for data validation
+- **Framework**: FastAPI 0.116.0 for APIs, Pydantic (latest) for data validation
 - **Database**: PostgreSQL for metadata, Redis for caching/queues
 - **Message Queue**: Redis/RabbitMQ for async task processing
 - **Container Runtime**: Docker + Kubernetes
 - **Cloud SDK**: Boto3 (AWS), Google Cloud SDK, Azure SDK
-- **LLM Integration**: OpenAI/Anthropic APIs with fallback support
+- **LLM Integration**: OpenAI 1.93.2, Anthropic 0.57.1 with fallback support
 - **Monitoring**: Prometheus, Grafana, OpenTelemetry
 - **Documentation**: Sphinx + ReadTheDocs
 
@@ -60,7 +60,7 @@ dev-environment-agent/
 - GitHub Actions CI/CD pipeline
 - Development containers with VS Code integration
 - Justfile for common tasks
-- Poetry for dependency management
+- Poetry for dependency management (unpinned for latest versions)
 
 ### 1.2 Core Agent Architecture
 

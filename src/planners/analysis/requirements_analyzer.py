@@ -388,9 +388,22 @@ class RequirementsAnalyzer:
             patterns.append("microservices_architecture")
         elif "api" in req_lower and "service" in req_lower:
             patterns.append("service_oriented_architecture")
+        elif "web application" in req_lower or "web app" in req_lower:
+            patterns.append("web_application_architecture")
 
         if "serverless" in req_lower or "lambda" in req_lower:
             patterns.append("serverless_architecture")
+
+        # Authentication patterns
+        if "authentication" in req_lower or "auth" in req_lower:
+            patterns.append("user_authentication")
+
+        # Security patterns
+        if "ssl" in req_lower or "tls" in req_lower or "encryption" in req_lower:
+            patterns.append("encryption_security")
+
+        if "gdpr" in req_lower or "compliant" in req_lower:
+            patterns.append("compliance_requirements")
 
         # Deployment patterns
         if "docker" in req_lower or "container" in req_lower:
@@ -399,12 +412,21 @@ class RequirementsAnalyzer:
         if "kubernetes" in req_lower or "k8s" in req_lower:
             patterns.append("kubernetes_orchestration")
 
+        if "aws" in req_lower or "azure" in req_lower or "gcp" in req_lower:
+            patterns.append("cloud_deployment")
+
         # Data patterns
-        if "database" in req_lower and ("read" in req_lower or "write" in req_lower):
-            patterns.append("read_write_separation")
+        if "database" in req_lower:
+            patterns.append("database_integration")
+            if "read" in req_lower or "write" in req_lower:
+                patterns.append("read_write_separation")
 
         if "cache" in req_lower or "redis" in req_lower:
             patterns.append("caching_layer")
+
+        # Performance patterns
+        if "concurrent" in req_lower or "users" in req_lower:
+            patterns.append("scalability_requirements")
 
         # Infrastructure patterns
         if "load balancer" in req_lower or "lb" in req_lower:
@@ -412,6 +434,13 @@ class RequirementsAnalyzer:
 
         if "auto scal" in req_lower:
             patterns.append("auto_scaling")
+
+        # Budget and timeline patterns
+        if "budget" in req_lower or "$" in req_lower or "cost" in req_lower:
+            patterns.append("budget_constraints")
+
+        if "month" in req_lower or "week" in req_lower or "timeline" in req_lower:
+            patterns.append("timeline_constraints")
 
         return patterns
 

@@ -122,7 +122,7 @@ class TechnologyDetector:
 
         # Boost confidence for exact name matches vs aliases
         if matched_lower == tech_info.get("canonical_name", "").lower():
-            confidence += 0.2
+            confidence += 0.25
 
         # Boost confidence for contextual indicators
         context_indicators = tech_info.get("context_indicators", [])
@@ -154,7 +154,9 @@ class TechnologyDetector:
         if any(keyword in context_lower for keyword in setup_keywords):
             confidence += 0.1
 
-        return max(0.0, min(1.0, confidence))
+        # Ensure small boost for exact matches to avoid floating point precision issues
+        result = max(0.0, min(1.0, round(confidence, 2)))
+        return result
 
     def _has_version_indicators(self, context: str, tech_name: str) -> bool:
         """Check if context contains version indicators for the technology."""
@@ -394,7 +396,7 @@ class TechnologyDetector:
             },
             # Cloud Providers
             "AWS": {
-                "category": TechnologyCategory.CLOUD_PROVIDER,
+                "category": TechnologyCategory.INFRASTRUCTURE,
                 "canonical_name": "Amazon Web Services",
                 "aliases": ["Amazon Web Services", "aws"],
                 "context_indicators": ["ec2", "s3", "rds", "lambda", "cloudformation"],
@@ -473,7 +475,13 @@ class TechnologyDetector:
                 "category": TechnologyCategory.MONITORING,
                 "canonical_name": "Grafana",
                 "aliases": ["grafana"],
-                "context_indicators": ["dashboard", "visualization", "prometheus"],
+                "context_indicators": [
+                    "dashboard",
+                    "visualization",
+                    "prometheus",
+                    "monitoring",
+                    "metrics",
+                ],
             },
             "Elasticsearch": {
                 "category": TechnologyCategory.ANALYTICS,
@@ -512,5 +520,115 @@ class TechnologyDetector:
                 "canonical_name": "Apache HTTP Server",
                 "aliases": ["Apache HTTP Server", "httpd"],
                 "context_indicators": ["web server", "mod_", "virtual host"],
+            },
+            # State Management
+            "Redux": {
+                "category": TechnologyCategory.FRONTEND,
+                "canonical_name": "Redux",
+                "aliases": ["redux"],
+                "context_indicators": [
+                    "state management",
+                    "store",
+                    "reducer",
+                    "action",
+                ],
+            },
+            # Programming Languages
+            "JavaScript": {
+                "category": TechnologyCategory.BACKEND,
+                "canonical_name": "JavaScript",
+                "aliases": ["JS", "js", "javascript"],
+                "context_indicators": ["frontend", "backend", "node", "browser"],
+            },
+            # Mobile Technologies
+            "React Native": {
+                "category": TechnologyCategory.FRONTEND,
+                "canonical_name": "React Native",
+                "aliases": ["ReactNative", "react-native"],
+                "context_indicators": ["mobile", "ios", "android", "cross-platform"],
+            },
+            # Testing Frameworks
+            "Jest": {
+                "category": TechnologyCategory.BACKEND,
+                "canonical_name": "Jest",
+                "aliases": ["jest"],
+                "context_indicators": ["testing", "javascript", "unit test", "mock"],
+            },
+            "Pytest": {
+                "category": TechnologyCategory.BACKEND,
+                "canonical_name": "Pytest",
+                "aliases": ["pytest", "PyTest"],
+                "context_indicators": ["testing", "python", "unit test", "fixture"],
+            },
+            # Monitoring Tools
+            "ELK": {
+                "category": TechnologyCategory.MONITORING,
+                "canonical_name": "ELK",
+                "aliases": ["ELK Stack", "Elastic Stack", "elk stack", "elk"],
+                "context_indicators": [
+                    "elasticsearch",
+                    "logstash",
+                    "kibana",
+                    "monitoring",
+                ],
+            },
+            # Security Tools
+            "SonarQube": {
+                "category": TechnologyCategory.SECURITY,
+                "canonical_name": "SonarQube",
+                "aliases": ["Sonar", "sonarqube"],
+                "context_indicators": [
+                    "code quality",
+                    "security",
+                    "analysis",
+                    "static",
+                ],
+            },
+            "OWASP ZAP": {
+                "category": TechnologyCategory.SECURITY,
+                "canonical_name": "OWASP ZAP",
+                "aliases": ["OWASP", "ZAP", "owasp zap"],
+                "context_indicators": ["vulnerability", "security", "testing", "scan"],
+            },
+            # Programming Languages - Additional
+            "TypeScript": {
+                "category": TechnologyCategory.BACKEND,
+                "canonical_name": "TypeScript",
+                "aliases": ["TS", "ts", "typescript"],
+                "context_indicators": ["javascript", "typing", "frontend", "angular"],
+            },
+            "Swift": {
+                "category": TechnologyCategory.BACKEND,
+                "canonical_name": "Swift",
+                "aliases": ["swift"],
+                "context_indicators": ["ios", "apple", "mobile", "xcode"],
+            },
+            # Mobile Technologies - Additional
+            "iOS": {
+                "category": TechnologyCategory.FRONTEND,
+                "canonical_name": "iOS",
+                "aliases": ["ios"],
+                "context_indicators": ["mobile", "apple", "swift", "iphone"],
+            },
+            # Testing Frameworks - Additional
+            "Selenium": {
+                "category": TechnologyCategory.BACKEND,
+                "canonical_name": "Selenium",
+                "aliases": ["selenium"],
+                "context_indicators": ["testing", "automation", "browser", "webdriver"],
+            },
+            "JMeter": {
+                "category": TechnologyCategory.BACKEND,
+                "canonical_name": "JMeter",
+                "aliases": ["jmeter"],
+                "context_indicators": ["testing", "load", "performance", "stress"],
+            },
+            # Monitoring Tools - Additional
+            # Frontend Frameworks - Additional
+            "Next.js": {
+                "category": TechnologyCategory.FRONTEND,
+                "canonical_name": "Next.js",
+                "aliases": ["NextJS", "Nextjs", "next.js", "next"],
+                "context_indicators": ["react", "ssr", "server-side", "rendering"],
             },
         }

@@ -64,11 +64,12 @@ class TestAgentCoordinator:
     async def test_initialize_coordinator(self, coordinator):
         """Test coordinator initialization process."""
         # Mock the component initialization
-        with patch.object(
-            coordinator, "_initialize_components", new_callable=AsyncMock
-        ) as mock_init, patch.object(
-            coordinator, "_setup_event_handlers"
-        ) as mock_setup:
+        with (
+            patch.object(
+                coordinator, "_initialize_components", new_callable=AsyncMock
+            ) as mock_init,
+            patch.object(coordinator, "_setup_event_handlers") as mock_setup,
+        ):
             await coordinator.initialize()
 
             mock_init.assert_called_once()
@@ -101,11 +102,14 @@ class TestAgentCoordinator:
         coordinator.executor = mock_executor
         coordinator.security_manager = security_manager
 
-        with patch.object(
-            coordinator, "_validate_requirements", return_value=True
-        ) as mock_validate, patch.object(
-            coordinator, "_emit_event", new_callable=AsyncMock
-        ) as mock_emit:
+        with (
+            patch.object(
+                coordinator, "_validate_requirements", return_value=True
+            ) as mock_validate,
+            patch.object(
+                coordinator, "_emit_event", new_callable=AsyncMock
+            ) as mock_emit,
+        ):
             result = await coordinator.create_environment(sample_requirements)
 
             assert result.success is True
@@ -228,11 +232,14 @@ class TestAgentCoordinator:
             status=AgentStatus.PLANNING,
         )
 
-        with patch.object(
-            coordinator, "_emit_event", new_callable=AsyncMock
-        ) as mock_emit, patch.object(
-            coordinator, "_setup_monitoring", new_callable=AsyncMock
-        ) as mock_monitor:
+        with (
+            patch.object(
+                coordinator, "_emit_event", new_callable=AsyncMock
+            ) as mock_emit,
+            patch.object(
+                coordinator, "_setup_monitoring", new_callable=AsyncMock
+            ) as mock_monitor,
+        ):
             result = await coordinator._execute_workflow(context)
 
             # Verify all phases were called
@@ -356,10 +363,13 @@ class TestAgentCoordinator:
     @pytest.mark.asyncio
     async def test_execution_cleanup_on_failure(self, coordinator, sample_requirements):
         """Test that executions are cleaned up even on failure."""
-        with patch.object(
-            coordinator, "_validate_requirements", return_value=True
-        ), patch.object(
-            coordinator, "_execute_workflow", side_effect=Exception("Workflow failed")
+        with (
+            patch.object(coordinator, "_validate_requirements", return_value=True),
+            patch.object(
+                coordinator,
+                "_execute_workflow",
+                side_effect=Exception("Workflow failed"),
+            ),
         ):
             result = await coordinator.create_environment(sample_requirements)
 

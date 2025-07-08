@@ -104,7 +104,6 @@ class MockToolResult:
 
 async def mock_rds_operation(aws_tool, action: str, params: dict):
     """Execute mock RDS operations when real RDS is not available."""
-    global _mock_rds
 
     if action == "create_rds_instance":
         instance = _mock_rds.create_db_instance(params)

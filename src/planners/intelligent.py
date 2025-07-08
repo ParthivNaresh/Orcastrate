@@ -957,9 +957,11 @@ class IntelligentPlanner(Planner):
         # Convert the Requirements object to a context dictionary
         # This bridges the base Planner interface with our intelligent planner
         return {
-            "requirements_text": requirements.description
-            if hasattr(requirements, "description")
-            else str(requirements),
+            "requirements_text": (
+                requirements.description
+                if hasattr(requirements, "description")
+                else str(requirements)
+            ),
             "technologies": getattr(requirements, "technologies", []),
             "constraints": getattr(requirements, "constraints", {}),
             "preferences": getattr(requirements, "preferences", {}),

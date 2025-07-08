@@ -48,8 +48,14 @@ class TestAnthropicClient:
     def anthropic_client(self, anthropic_config):
         """Create Anthropic client for testing."""
         with patch("src.planners.llm.anthropic_client.ANTHROPIC_AVAILABLE", True):
-            with patch("src.planners.llm.anthropic_client.anthropic"):
-                return AnthropicClient(anthropic_config)
+            client = AnthropicClient(anthropic_config)
+            # Create mock client structure for testing
+            mock_client = MagicMock()
+            mock_client.messages = MagicMock()
+            mock_client.messages.create = AsyncMock()
+            client._client = mock_client
+            client._messages = mock_client.messages
+            return client
 
     @pytest.mark.asyncio
     async def test_client_initialization(self, anthropic_client, anthropic_config):
@@ -69,11 +75,19 @@ class TestAnthropicClient:
     @pytest.mark.asyncio
     async def test_initialize_client(self, anthropic_client):
         """Test client initialization process."""
-        with patch.object(
-            anthropic_client, "_validate_api_key", new_callable=AsyncMock
+        # Mock the AsyncAnthropic class for initialization
+        mock_async_anthropic = MagicMock()
+        mock_async_anthropic.messages = MagicMock()
+
+        with patch(
+            "src.planners.llm.anthropic_client.anthropic.AsyncAnthropic",
+            return_value=mock_async_anthropic,
         ):
-            await anthropic_client.initialize()
-            assert anthropic_client._initialized is True
+            with patch.object(
+                anthropic_client, "_test_connection", new_callable=AsyncMock
+            ):
+                await anthropic_client.initialize()
+                assert anthropic_client._initialized is True
 
     @pytest.mark.asyncio
     async def test_validate_api_key_success(
@@ -151,19 +165,29 @@ class TestAnthropicClient:
         """Test requirements analysis functionality."""
         requirements = "Build a web application with user authentication"
 
-        mock_analysis = {
+        # Mock the generate_text response to return valid JSON
+        mock_response_content = """{
             "technologies": ["React", "Node.js", "PostgreSQL"],
             "architecture_pattern": "MVC",
             "complexity_score": 6.5,
             "estimated_duration": 120.0,
-            "confidence_score": 0.85,
-        }
+            "confidence_score": 0.85
+        }"""
+
+        mock_llm_response = LLMResponse(
+            content=mock_response_content,
+            usage={"input_tokens": 100, "output_tokens": 50, "total_tokens": 150},
+            model="claude-3-sonnet-20240229",
+            provider="anthropic",
+            response_time=1.5,
+            finish_reason="completed",
+        )
 
         with patch.object(
             anthropic_client,
-            "_make_requirements_analysis_request",
+            "generate_text",
             new_callable=AsyncMock,
-            return_value=mock_analysis,
+            return_value=mock_llm_response,
         ):
             analysis = await anthropic_client.analyze_requirements(requirements)
 
@@ -183,7 +207,8 @@ class TestAnthropicClient:
             budget_constraints={"max_monthly": 500},
         )
 
-        mock_plan = {
+        # Mock the generate_text response to return valid JSON plan
+        mock_response_content = """{
             "steps": [
                 {
                     "id": "step_1",
@@ -192,16 +217,25 @@ class TestAnthropicClient:
                     "tool": "postgresql",
                     "action": "create_database",
                     "estimated_duration": 600.0,
-                    "estimated_cost": 25.0,
+                    "estimated_cost": 25.0
                 }
             ]
-        }
+        }"""
+
+        mock_llm_response = LLMResponse(
+            content=mock_response_content,
+            usage={"input_tokens": 200, "output_tokens": 100, "total_tokens": 300},
+            model="claude-3-sonnet-20240229",
+            provider="anthropic",
+            response_time=2.0,
+            finish_reason="completed",
+        )
 
         with patch.object(
             anthropic_client,
-            "_make_plan_generation_request",
+            "generate_text",
             new_callable=AsyncMock,
-            return_value=mock_plan,
+            return_value=mock_llm_response,
         ):
             plan = await anthropic_client.generate_plan(request)
 
@@ -230,22 +264,32 @@ class TestAnthropicClient:
             available_tools=["aws", "docker"],
         )
 
-        mock_optimized_plan = {
+        # Mock the generate_text response to return valid JSON plan
+        mock_response_content = """{
             "steps": [
                 {
                     "id": "step_1",
                     "name": "Create Infrastructure",
                     "tool": "aws",
-                    "estimated_cost": 70.0,  # Optimized cost
+                    "estimated_cost": 70.0
                 }
             ]
-        }
+        }"""
+
+        mock_llm_response = LLMResponse(
+            content=mock_response_content,
+            usage={"input_tokens": 250, "output_tokens": 80, "total_tokens": 330},
+            model="claude-3-sonnet-20240229",
+            provider="anthropic",
+            response_time=1.8,
+            finish_reason="completed",
+        )
 
         with patch.object(
             anthropic_client,
-            "_make_plan_optimization_request",
+            "generate_text",
             new_callable=AsyncMock,
-            return_value=mock_optimized_plan,
+            return_value=mock_llm_response,
         ):
             optimized_plan = await anthropic_client.optimize_plan(request)
 
@@ -267,13 +311,26 @@ class TestAnthropicClient:
 
         requirements = "Deploy a simple web application"
 
-        mock_validation = {"is_valid": False, "issues": ["Invalid dependency step_2"]}
+        # Mock the generate_text response to return valid JSON validation
+        mock_response_content = """{
+            "is_valid": false,
+            "issues": ["Invalid dependency step_2"]
+        }"""
+
+        mock_llm_response = LLMResponse(
+            content=mock_response_content,
+            usage={"input_tokens": 150, "output_tokens": 30, "total_tokens": 180},
+            model="claude-3-sonnet-20240229",
+            provider="anthropic",
+            response_time=1.2,
+            finish_reason="completed",
+        )
 
         with patch.object(
             anthropic_client,
-            "_make_plan_validation_request",
+            "generate_text",
             new_callable=AsyncMock,
-            return_value=mock_validation,
+            return_value=mock_llm_response,
         ):
             validation_result = await anthropic_client.validate_plan(plan, requirements)
 
@@ -297,11 +354,21 @@ class TestAnthropicClient:
             "The total cost is $65 and will take 20 minutes to complete."
         )
 
+        # Mock the generate_text response to return the explanation
+        mock_llm_response = LLMResponse(
+            content=mock_explanation,
+            usage={"input_tokens": 120, "output_tokens": 60, "total_tokens": 180},
+            model="claude-3-sonnet-20240229",
+            provider="anthropic",
+            response_time=1.0,
+            finish_reason="completed",
+        )
+
         with patch.object(
             anthropic_client,
-            "_make_plan_explanation_request",
+            "generate_text",
             new_callable=AsyncMock,
-            return_value=mock_explanation,
+            return_value=mock_llm_response,
         ):
             explanation = await anthropic_client.explain_plan(plan)
             assert "PostgreSQL database" in explanation
@@ -475,7 +542,18 @@ class TestAnthropicClient:
     @pytest.mark.asyncio
     async def test_cleanup_and_shutdown(self, anthropic_client):
         """Test client cleanup and shutdown procedures."""
-        await anthropic_client.initialize()
+        # Mock the AsyncAnthropic class for initialization
+        mock_async_anthropic = MagicMock()
+        mock_async_anthropic.messages = MagicMock()
+
+        with patch(
+            "src.planners.llm.anthropic_client.anthropic.AsyncAnthropic",
+            return_value=mock_async_anthropic,
+        ):
+            with patch.object(
+                anthropic_client, "_test_connection", new_callable=AsyncMock
+            ):
+                await anthropic_client.initialize()
 
         # Test that cleanup doesn't raise errors
         try:

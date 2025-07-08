@@ -25,6 +25,9 @@ class PromptType(Enum):
     DEPENDENCY_ANALYSIS = "dependency_analysis"
     SECURITY_REVIEW = "security_review"
     PERFORMANCE_ANALYSIS = "performance_analysis"
+    TECHNOLOGY_RECOMMENDATION = "technology_recommendation"
+    ARCHITECTURE_REVIEW = "architecture_review"
+    GENERAL_PLANNING = "general_planning"
 
 
 @dataclass
@@ -33,6 +36,8 @@ class TemplateConfig:
 
     include_examples: bool = True
     include_constraints: bool = True
+    include_context: bool = True
+    output_format: str = "json"
     temperature: float = 0.7
     max_tokens: int = 4000
     custom_instructions: str = ""
@@ -63,9 +68,12 @@ class PromptTemplateManager:
         if not template:
             raise ValueError(f"No template found for prompt type: {prompt_type}")
 
+        # Create a safe context with defaults for missing variables
+        safe_context = self._create_safe_context(context, prompt_type)
+
         # Build system and user prompts
-        system_prompt = template["system"].format(**context)
-        user_prompt = template["user"].format(**context)
+        system_prompt = template["system"].format(**safe_context)
+        user_prompt = template["user"].format(**safe_context)
 
         # Add custom instructions if provided
         if config.custom_instructions:
@@ -77,11 +85,19 @@ class PromptTemplateManager:
         examples = []
         if config.include_examples and prompt_type in self._examples:
             examples = self._examples[prompt_type]
+            # Also mention examples in the prompt text
+            if examples:
+                user_prompt += "\n\nExample interactions are provided to guide your response format."
 
         # Add constraints if requested
         constraints = []
         if config.include_constraints and prompt_type in self._constraints:
             constraints = self._constraints[prompt_type]
+            # Also mention constraints in the prompt text
+            if constraints:
+                user_prompt += "\n\nPlease follow these constraints:\n" + "\n".join(
+                    f"- {c}" for c in constraints
+                )
 
         return PlanningPrompt(
             system_prompt=system_prompt,
@@ -90,6 +106,158 @@ class PromptTemplateManager:
             examples=examples,
             constraints=constraints,
         )
+
+    def _create_safe_context(
+        self, context: Dict[str, Any], prompt_type: PromptType
+    ) -> Dict[str, Any]:
+        """Create a safe context with default values for missing variables."""
+        safe_context = context.copy()
+
+        # Define default values for different prompt types
+        defaults = {
+            PromptType.REQUIREMENTS_ANALYSIS: {
+                "requirements": safe_context.get(
+                    "requirements", "Build a web application"
+                ),
+                "additional_context": safe_context.get(
+                    "additional_context",
+                    (
+                        f"Known technologies: {safe_context.get('technologies', [])}"
+                        if safe_context.get("technologies")
+                        else ""
+                    ),
+                ),
+            },
+            PromptType.PLAN_GENERATION: {
+                "available_tools": safe_context.get(
+                    "available_tools", ["aws", "docker", "postgresql"]
+                ),
+                "requirements_description": safe_context.get(
+                    "requirements_description",
+                    safe_context.get("requirements", "Build a web application"),
+                ),
+                "analysis_summary": safe_context.get(
+                    "analysis_summary",
+                    f"Technologies: {safe_context.get('technologies', [])}, Budget: {safe_context.get('budget', {})}",
+                ),
+                "constraints_summary": safe_context.get(
+                    "constraints_summary",
+                    f"Timeline: {safe_context.get('timeline', 'flexible')}, Team size: {safe_context.get('team_size', 'small')}",
+                ),
+            },
+            PromptType.PLAN_OPTIMIZATION: {
+                "optimization_goals": safe_context.get(
+                    "optimization_goals", ["cost", "performance"]
+                ),
+                "constraints": safe_context.get("constraints", []),
+                "optimization_priority": safe_context.get(
+                    "optimization_priority", "cost"
+                ),
+                "original_plan": safe_context.get("original_plan", {}),
+            },
+            PromptType.COST_ESTIMATION: {
+                "plan": safe_context.get("plan", safe_context.get("plan_steps", [])),
+                "region": safe_context.get("region", "us-east-1"),
+                "usage_pattern": safe_context.get("usage_pattern", "development"),
+                "team_size": safe_context.get("team_size", 1),
+                "environment_type": safe_context.get("environment_type", "development"),
+            },
+            PromptType.RISK_ASSESSMENT: {
+                "plan": safe_context.get(
+                    "plan",
+                    {
+                        "complexity": safe_context.get("complexity", 5.0),
+                        "identified_patterns": safe_context.get(
+                            "identified_patterns", []
+                        ),
+                    },
+                ),
+                "industry": safe_context.get("industry", "technology"),
+                "compliance_requirements": safe_context.get(
+                    "compliance_requirements", []
+                ),
+                "data_sensitivity": safe_context.get("data_sensitivity", "medium"),
+                "team_experience": safe_context.get("team_experience", "intermediate"),
+            },
+            PromptType.PLAN_VALIDATION: {
+                "requirements": safe_context.get(
+                    "requirements", "Build a web application"
+                ),
+                "plan": safe_context.get("plan", {}),
+            },
+            PromptType.PLAN_EXPLANATION: {
+                "plan": safe_context.get("plan", {}),
+                "audience_level": safe_context.get("audience_level", "technical"),
+            },
+            PromptType.DEPENDENCY_ANALYSIS: {
+                "plan": safe_context.get("plan", {}),
+            },
+            PromptType.SECURITY_REVIEW: {
+                "plan": safe_context.get("plan", {}),
+                "security_requirements": safe_context.get("security_requirements", []),
+            },
+            PromptType.PERFORMANCE_ANALYSIS: {
+                "plan": safe_context.get("plan", {}),
+                "performance_requirements": safe_context.get(
+                    "performance_requirements", []
+                ),
+            },
+            PromptType.TECHNOLOGY_RECOMMENDATION: {
+                "project_description": safe_context.get(
+                    "project_description",
+                    safe_context.get("requirements", "Build a web application"),
+                ),
+                "requirements": safe_context.get(
+                    "requirements", "Build a web application"
+                ),
+                "team_size": safe_context.get("team_size", 1),
+                "experience_level": safe_context.get(
+                    "experience_level", "intermediate"
+                ),
+                "existing_expertise": safe_context.get("existing_expertise", []),
+                "constraints": safe_context.get("constraints", []),
+            },
+            PromptType.ARCHITECTURE_REVIEW: {
+                "architecture_description": safe_context.get(
+                    "architecture_description",
+                    f"{safe_context.get('requirements', 'Web application architecture')} - Pattern: {safe_context.get('architecture_pattern', 'N/A')}",
+                ),
+                "current_implementation": safe_context.get(
+                    "current_implementation",
+                    f"Initial implementation with {safe_context.get('technology_stack', {})}",
+                ),
+                "project_scale": safe_context.get("project_scale", "medium"),
+                "performance_requirements": safe_context.get(
+                    "performance_requirements", []
+                ),
+                "security_requirements": safe_context.get("security_requirements", []),
+                "team_structure": safe_context.get("team_structure", "small team"),
+            },
+            PromptType.GENERAL_PLANNING: {
+                "project_description": safe_context.get(
+                    "project_description",
+                    safe_context.get("requirements", "Build a web application"),
+                ),
+                "requirements": safe_context.get(
+                    "requirements", "Build a web application"
+                ),
+                "timeline": safe_context.get("timeline", "3 months"),
+                "budget": safe_context.get("budget", "$5000"),
+                "team_description": safe_context.get(
+                    "team_description", "small development team"
+                ),
+                "technology_preferences": safe_context.get(
+                    "technology_preferences", "modern web technologies"
+                ),
+            },
+        }
+
+        # Apply defaults for the specific prompt type
+        if prompt_type in defaults:
+            for key, value in defaults[prompt_type].items():
+                safe_context.setdefault(key, value)
+
+        return safe_context
 
     def _initialize_templates(self):
         """Initialize all prompt templates."""
@@ -111,6 +279,8 @@ Be thorough but concise. Focus on actionable insights that will guide plan gener
 Return your analysis in JSON format with the specified structure.""",
                 "user": """Requirements to analyze:
 {requirements}
+
+{additional_context}
 
 Please provide a detailed analysis in JSON format with the following structure:
 {{
@@ -458,6 +628,221 @@ Please provide performance analysis in JSON format:
         "current_capacity": "100 concurrent users",
         "scaling_strategy": "horizontal",
         "breaking_points": ["Database connections at 1000 users"]
+    }}
+}}""",
+            },
+            PromptType.TECHNOLOGY_RECOMMENDATION: {
+                "system": """You are a technology advisory expert helping teams choose the best technologies for their development environments.
+
+Provide technology recommendations based on:
+1. Project requirements and constraints
+2. Team expertise and learning curve
+3. Community support and ecosystem maturity
+4. Performance and scalability characteristics
+5. Cost considerations (licensing, infrastructure)
+6. Integration capabilities
+7. Long-term maintenance and support
+8. Industry standards and best practices
+
+Focus on practical, proven technologies that align with the project goals.
+Consider both current needs and future growth requirements.""",
+                "user": """Project context:
+{project_description}
+
+Current requirements:
+{requirements}
+
+Team context:
+- Team size: {team_size}
+- Experience level: {experience_level}
+- Existing expertise: {existing_expertise}
+
+Constraints:
+{constraints}
+
+Please provide technology recommendations in JSON format:
+{{
+    "recommended_technologies": {{
+        "frontend": {{
+            "primary": "React",
+            "rationale": "Good team expertise and ecosystem",
+            "alternatives": ["Vue.js", "Angular"]
+        }},
+        "backend": {{
+            "primary": "Node.js",
+            "rationale": "JavaScript consistency with frontend",
+            "alternatives": ["Python", "Java"]
+        }}
+    }},
+    "technology_stack": {{
+        "languages": ["JavaScript", "TypeScript"],
+        "frameworks": ["React", "Express.js"],
+        "databases": ["PostgreSQL", "Redis"],
+        "infrastructure": ["AWS", "Docker"]
+    }},
+    "implementation_roadmap": [
+        "Phase 1: Core backend API",
+        "Phase 2: Frontend development",
+        "Phase 3: Database optimization"
+    ],
+    "learning_requirements": {{
+        "new_technologies": ["Docker"],
+        "estimated_learning_time": "2 weeks",
+        "training_resources": ["Official docs", "Online courses"]
+    }},
+    "risk_assessment": {{
+        "technology_risks": ["Docker learning curve"],
+        "mitigation_strategies": ["Team training", "Gradual adoption"]
+    }}
+}}""",
+            },
+            PromptType.ARCHITECTURE_REVIEW: {
+                "system": """You are a senior software architect reviewing development environment architectures for best practices and optimization opportunities.
+
+Review the architecture for:
+1. Design patterns and architectural principles
+2. Scalability and performance considerations
+3. Security architecture and data protection
+4. Maintainability and code organization
+5. Technology choices and integration patterns
+6. Deployment and infrastructure design
+7. Monitoring and observability
+8. Cost optimization opportunities
+
+Provide constructive feedback with specific recommendations.
+Focus on long-term sustainability and industry best practices.""",
+                "user": """Architecture to review:
+{architecture_description}
+
+Current implementation:
+{current_implementation}
+
+Context:
+- Project scale: {project_scale}
+- Performance requirements: {performance_requirements}
+- Security requirements: {security_requirements}
+- Team structure: {team_structure}
+
+Please provide architecture review in JSON format:
+{{
+    "overall_assessment": {{
+        "architecture_score": 7.5,
+        "strengths": ["Well-defined API boundaries", "Good separation of concerns"],
+        "weaknesses": ["Lack of caching strategy", "No disaster recovery plan"]
+    }},
+    "design_patterns": {{
+        "current_patterns": ["MVC", "Repository"],
+        "recommended_patterns": ["CQRS", "Event Sourcing"],
+        "anti_patterns_found": ["God object in main controller"]
+    }},
+    "scalability_analysis": {{
+        "current_capacity": "1000 concurrent users",
+        "bottlenecks": ["Database queries", "File uploads"],
+        "scaling_recommendations": ["Add read replicas", "Implement CDN"]
+    }},
+    "security_review": {{
+        "security_score": 8.0,
+        "vulnerabilities": ["Weak password policy"],
+        "recommendations": ["Implement OAuth2", "Add rate limiting"]
+    }},
+    "technology_assessment": {{
+        "appropriate_choices": ["PostgreSQL for data integrity"],
+        "questionable_choices": ["Monolithic structure for this scale"],
+        "upgrade_recommendations": ["Migrate to microservices"]
+    }},
+    "action_items": [
+        "Implement caching layer",
+        "Add comprehensive monitoring",
+        "Create disaster recovery plan"
+    ]
+}}""",
+            },
+            PromptType.GENERAL_PLANNING: {
+                "system": """You are an expert project planning consultant helping teams create comprehensive development environment plans.
+
+Create detailed plans that address:
+1. Project scope and objectives
+2. Timeline and milestone planning
+3. Resource allocation and team structure
+4. Technology stack and infrastructure
+5. Risk management and mitigation
+6. Quality assurance and testing
+7. Deployment and go-live strategy
+8. Maintenance and support planning
+
+Focus on creating realistic, achievable plans with clear deliverables.
+Consider both technical and business requirements.""",
+                "user": """Project to plan:
+{project_description}
+
+Requirements:
+{requirements}
+
+Constraints:
+- Timeline: {timeline}
+- Budget: {budget}
+- Team: {team_description}
+- Technology preferences: {technology_preferences}
+
+Please provide a comprehensive plan in JSON format:
+{{
+    "project_overview": {{
+        "scope": "Development environment for e-commerce platform",
+        "objectives": ["Create scalable infrastructure", "Ensure security"],
+        "success_criteria": ["Handle 10k users", "99.9% uptime"]
+    }},
+    "timeline": {{
+        "total_duration": "12 weeks",
+        "phases": [
+            {{
+                "name": "Planning & Setup",
+                "duration": "2 weeks",
+                "deliverables": ["Architecture design", "Tool selection"]
+            }},
+            {{
+                "name": "Infrastructure",
+                "duration": "4 weeks",
+                "deliverables": ["VPC setup", "Database deployment"]
+            }}
+        ],
+        "milestones": [
+            {{
+                "name": "MVP Release",
+                "date": "Week 8",
+                "criteria": ["Basic functionality working"]
+            }}
+        ]
+    }},
+    "resource_plan": {{
+        "team_structure": {{
+            "developers": 3,
+            "devops": 1,
+            "qa": 1
+        }},
+        "skill_requirements": ["AWS", "Docker", "PostgreSQL"],
+        "training_needs": ["Kubernetes basics"]
+    }},
+    "technology_stack": {{
+        "frontend": ["React", "TypeScript"],
+        "backend": ["Node.js", "Express"],
+        "database": ["PostgreSQL", "Redis"],
+        "infrastructure": ["AWS", "Docker", "Kubernetes"]
+    }},
+    "risk_management": {{
+        "identified_risks": [
+            {{
+                "risk": "Database performance",
+                "probability": "medium",
+                "impact": "high",
+                "mitigation": "Performance testing early"
+            }}
+        ],
+        "contingency_plans": ["Cloud provider backup"]
+    }},
+    "quality_assurance": {{
+        "testing_strategy": ["Unit tests", "Integration tests"],
+        "code_review_process": "Pull request reviews",
+        "deployment_gates": ["All tests pass", "Security scan clean"]
     }}
 }}""",
             },

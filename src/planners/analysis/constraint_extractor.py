@@ -162,6 +162,7 @@ class ConstraintExtractor:
         duration_patterns = [
             r"(?:deadline|due|complete|finish|deliver).*?(\d+)\s*(day|week|month|year)s?",
             r"(\d+)\s*(day|week|month|year)s?.*?(?:deadline|timeline|schedule)",
+            r"within\s+(\d+)\s*(day|week|month|year)s?",
             r"asap|as soon as possible",
             r"urgent|rush|immediate",
             r"by\s+(\w+\s+\d+|\d+/\d+|\d+-\d+-\d+)",
@@ -182,7 +183,7 @@ class ConstraintExtractor:
                         description="Urgent timeline requirement",
                         priority="critical",
                     )
-                elif match.group(1) and match.group(2):
+                elif len(match.groups()) >= 2 and match.group(1) and match.group(2):
                     duration = int(match.group(1))
                     unit = match.group(2)
 
@@ -194,19 +195,25 @@ class ConstraintExtractor:
                         description=f"Timeline constraint: {duration} {unit}(s)",
                         priority=self._determine_timeline_priority(duration, unit),
                     )
-                else:
+                elif len(match.groups()) >= 1 and match.group(1):
                     # Date constraint
                     constraint = Constraint(
                         type=ConstraintType.TIMELINE,
-                        value={
-                            "deadline": match.group(1)
-                            if match.lastindex
-                            else "specified"
-                        },
+                        value={"deadline": match.group(1), "type": "date"},
                         confidence=0.7,
                         source_text=match.group(0),
                         description="Specific deadline mentioned",
                         priority="high",
+                    )
+                else:
+                    # Generic urgency constraint
+                    constraint = Constraint(
+                        type=ConstraintType.TIMELINE,
+                        value={"urgency": "medium", "timeline": "general"},
+                        confidence=0.6,
+                        source_text=match.group(0),
+                        description="General timeline requirement",
+                        priority="medium",
                     )
                 constraints.append(constraint)
 
@@ -296,6 +303,8 @@ class ConstraintExtractor:
             "authorization": {"requirement": "authorization", "type": "access_control"},
             "mfa": {"requirement": "multi_factor_auth", "type": "access_control"},
             "2fa": {"requirement": "two_factor_auth", "type": "access_control"},
+            "multi-factor": {"requirement": "multi_factor", "type": "access_control"},
+            "multi factor": {"requirement": "multi_factor", "type": "access_control"},
             "audit log": {"requirement": "audit_logging", "type": "monitoring"},
             "security scan": {"requirement": "security_scanning", "type": "testing"},
         }
@@ -308,9 +317,9 @@ class ConstraintExtractor:
                     confidence=0.8,
                     source_text=keyword,
                     description=f"Security requirement: {keyword}",
-                    priority="high"
-                    if constraint_data["type"] == "regulatory"
-                    else "medium",
+                    priority=(
+                        "high" if constraint_data["type"] == "regulatory" else "medium"
+                    ),
                 )
                 constraints.append(constraint)
 
@@ -399,6 +408,19 @@ class ConstraintExtractor:
             for match in matches:
                 users = int(match.group(1))
 
+                # Higher confidence for explicit requirements
+                confidence = 0.7
+                source_text = match.group(0)
+                context_start = max(0, match.start() - 20)
+                context_end = min(len(text), match.end() + 20)
+                context = text[context_start:context_end].lower()
+
+                if any(
+                    word in context
+                    for word in ["must", "exactly", "requirement", "support"]
+                ):
+                    confidence = 0.8
+
                 constraint = Constraint(
                     type=ConstraintType.SCALABILITY,
                     value={
@@ -406,8 +428,8 @@ class ConstraintExtractor:
                         "value": users,
                         "type": "target",
                     },
-                    confidence=0.7,
-                    source_text=match.group(0),
+                    confidence=confidence,
+                    source_text=source_text,
                     description=f"Scalability target: {users} concurrent users",
                     priority="high" if users > 1000 else "medium",
                 )
@@ -570,9 +592,11 @@ class ConstraintExtractor:
                     confidence=0.8,
                     source_text=keyword,
                     description=f"Operational requirement: {keyword}",
-                    priority="high"
-                    if keyword in ["high availability", "disaster recovery"]
-                    else "medium",
+                    priority=(
+                        "high"
+                        if keyword in ["high availability", "disaster recovery"]
+                        else "medium"
+                    ),
                 )
                 constraints.append(constraint)
 

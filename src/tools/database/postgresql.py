@@ -499,9 +499,11 @@ class PostgreSQLTool(DatabaseTool):
         return {
             "success": result.success,
             "database_name": database_name,
-            "message": f"Database '{database_name}' created successfully"
-            if result.success
-            else None,
+            "message": (
+                f"Database '{database_name}' created successfully"
+                if result.success
+                else None
+            ),
             "error": result.error,
         }
 
@@ -544,9 +546,9 @@ class PostgreSQLTool(DatabaseTool):
         return {
             "success": result.success,
             "table_name": table_name,
-            "message": f"Table '{table_name}' created successfully"
-            if result.success
-            else None,
+            "message": (
+                f"Table '{table_name}' created successfully" if result.success else None
+            ),
             "error": result.error,
         }
 
@@ -579,9 +581,9 @@ class PostgreSQLTool(DatabaseTool):
             "success": result.success,
             "index_name": index_name,
             "table_name": table_name,
-            "message": f"Index '{index_name}' created successfully"
-            if result.success
-            else None,
+            "message": (
+                f"Index '{index_name}' created successfully" if result.success else None
+            ),
             "error": result.error,
         }
 

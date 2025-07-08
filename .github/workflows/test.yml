@@ -1,0 +1,109 @@
+name: Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_call:
+    outputs:
+      coverage-artifact:
+        description: "Coverage report artifact name"
+        value: ${{ jobs.test.outputs.coverage-artifact }}
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    outputs:
+      coverage-artifact: ${{ steps.upload-coverage.outputs.artifact-id }}
+    
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: orcastrate_ci
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+      mongodb:
+        image: mongo:7
+        ports:
+          - 27017:27017
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Just
+      uses: extractions/setup-just@v1
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+
+    - name: Load cached venv
+      id: cached-poetry-dependencies
+      uses: actions/cache@v3
+      with:
+        path: .venv
+        key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+    - name: Install dependencies
+      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+      run: just install
+
+    - name: Load CI environment
+      run: |
+        cp scripts/env/ci.env .env
+        echo "Environment configuration loaded"
+
+    - name: Set environment variables
+      run: |
+        echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD || 'postgres' }}" >> $GITHUB_ENV
+        echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY || 'test-key' }}" >> $GITHUB_ENV
+        echo "ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY || 'test-key' }}" >> $GITHUB_ENV
+
+    - name: Validate environment configuration
+      run: just validate-env ci
+
+    - name: Run tests with coverage
+      run: just test-coverage ci
+
+    - name: Upload coverage to Codecov
+      id: upload-coverage
+      if: matrix.python-version == '3.11'
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella

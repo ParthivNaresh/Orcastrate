@@ -711,9 +711,12 @@ class TestParallelExecutor:
             step_execution.status = ExecutionStatus.COMPLETED
             return step_execution
 
-        with patch.object(
-            parallel_executor, "_execute_step", side_effect=mock_execute_step
-        ), patch.object(parallel_executor, "_check_dependencies", return_value=True):
+        with (
+            patch.object(
+                parallel_executor, "_execute_step", side_effect=mock_execute_step
+            ),
+            patch.object(parallel_executor, "_check_dependencies", return_value=True),
+        ):
             context = ExecutionContext(
                 execution_id="test_exec",
                 plan_id=sample_plan.id,
@@ -754,12 +757,15 @@ class TestParallelExecutor:
             dependencies = step.get("dependencies", [])
             return all(dep in completed_steps for dep in dependencies)
 
-        with patch.object(
-            parallel_executor, "_execute_step", side_effect=mock_execute_step
-        ), patch.object(
-            parallel_executor,
-            "_check_dependencies",
-            side_effect=mock_check_dependencies,
+        with (
+            patch.object(
+                parallel_executor, "_execute_step", side_effect=mock_execute_step
+            ),
+            patch.object(
+                parallel_executor,
+                "_check_dependencies",
+                side_effect=mock_check_dependencies,
+            ),
         ):
             context = ExecutionContext(
                 execution_id="test_exec",

@@ -712,9 +712,9 @@ class MongoDBTool(DatabaseTool):
 
         return {
             "success": result.success,
-            "inserted_id": result.metadata.get("inserted_id")
-            if result.success
-            else None,
+            "inserted_id": (
+                result.metadata.get("inserted_id") if result.success else None
+            ),
             "execution_time": result.execution_time,
             "error": result.error,
         }
@@ -734,9 +734,9 @@ class MongoDBTool(DatabaseTool):
         return {
             "success": result.success,
             "inserted_count": result.rows_affected,
-            "inserted_ids": result.metadata.get("inserted_ids")
-            if result.success
-            else None,
+            "inserted_ids": (
+                result.metadata.get("inserted_ids") if result.success else None
+            ),
             "execution_time": result.execution_time,
             "error": result.error,
         }

@@ -512,11 +512,14 @@ class TestPlanner:
         concrete_planner.config.parallel_execution = True
         concrete_planner.config.cost_optimization = True
 
-        with patch.object(
-            concrete_planner, "_can_parallelize", return_value=True
-        ) as mock_parallel, patch.object(
-            concrete_planner, "_optimize_step_cost", side_effect=lambda x: x
-        ) as mock_optimize:
+        with (
+            patch.object(
+                concrete_planner, "_can_parallelize", return_value=True
+            ) as mock_parallel,
+            patch.object(
+                concrete_planner, "_optimize_step_cost", side_effect=lambda x: x
+            ) as mock_optimize,
+        ):
             optimized_steps = await concrete_planner._optimize_steps(sample_plan_steps)
 
             assert len(optimized_steps) == len(sample_plan_steps)

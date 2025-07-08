@@ -144,7 +144,7 @@ security:
     @echo "├── 🛡️  Running bandit (security linting)..."
     python -m bandit -r src/ -f json -o bandit-report.json || true
     @echo "└── 🔐 Running safety (dependency vulnerability check)..."
-    python -m safety check || true
+    python -m safety scan || true
     @echo "✅ Security analysis completed (check bandit-report.json)"
 
 # ┌──────────────────────────────────────────────────────────────────────────────┐

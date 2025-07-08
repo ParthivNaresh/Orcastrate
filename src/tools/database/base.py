@@ -357,9 +357,11 @@ class ConnectionPool:
             "available_connections": self._available.qsize(),
             "pool_hits": self.pool_hits,
             "pool_misses": self.pool_misses,
-            "hit_ratio": self.pool_hits / (self.pool_hits + self.pool_misses)
-            if (self.pool_hits + self.pool_misses) > 0
-            else 0,
+            "hit_ratio": (
+                self.pool_hits / (self.pool_hits + self.pool_misses)
+                if (self.pool_hits + self.pool_misses) > 0
+                else 0
+            ),
         }
 
 
@@ -474,9 +476,9 @@ class DatabaseTool(Tool):
             "total_query_time": self.total_query_time,
             "average_query_time": avg_query_time,
             "error_count": self.error_count,
-            "error_rate": self.error_count / self.query_count
-            if self.query_count > 0
-            else 0,
+            "error_rate": (
+                self.error_count / self.query_count if self.query_count > 0 else 0
+            ),
         }
 
         if self.connection_pool:

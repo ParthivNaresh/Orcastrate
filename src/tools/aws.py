@@ -64,9 +64,9 @@ class AWSCloudTool(Tool):
             if settings.cloud.aws_access_key_id:
                 session_kwargs["aws_access_key_id"] = settings.cloud.aws_access_key_id
             if settings.cloud.aws_secret_access_key:
-                session_kwargs[
-                    "aws_secret_access_key"
-                ] = settings.cloud.aws_secret_access_key
+                session_kwargs["aws_secret_access_key"] = (
+                    settings.cloud.aws_secret_access_key
+                )
             if settings.cloud.aws_session_token:
                 session_kwargs["aws_session_token"] = settings.cloud.aws_session_token
 
@@ -323,9 +323,9 @@ class AWSCloudTool(Tool):
             if settings.cloud.aws_access_key_id:
                 session_kwargs["aws_access_key_id"] = settings.cloud.aws_access_key_id
             if settings.cloud.aws_secret_access_key:
-                session_kwargs[
-                    "aws_secret_access_key"
-                ] = settings.cloud.aws_secret_access_key
+                session_kwargs["aws_secret_access_key"] = (
+                    settings.cloud.aws_secret_access_key
+                )
             if settings.cloud.aws_session_token:
                 session_kwargs["aws_session_token"] = settings.cloud.aws_session_token
 

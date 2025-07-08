@@ -389,9 +389,9 @@ class TerraformTool(Tool):
 
         return {
             "success": result["success"],
-            "message": "Terraform initialized successfully"
-            if result["success"]
-            else None,
+            "message": (
+                "Terraform initialized successfully" if result["success"] else None
+            ),
             "output": result["output"],
             "error": result.get("error"),
         }
@@ -474,9 +474,9 @@ class TerraformTool(Tool):
 
         return {
             "success": result["success"],
-            "message": "Terraform apply completed successfully"
-            if result["success"]
-            else None,
+            "message": (
+                "Terraform apply completed successfully" if result["success"] else None
+            ),
             "output": result["output"],
             "error": result.get("error"),
         }
@@ -503,9 +503,11 @@ class TerraformTool(Tool):
 
         return {
             "success": result["success"],
-            "message": "Terraform destroy completed successfully"
-            if result["success"]
-            else None,
+            "message": (
+                "Terraform destroy completed successfully"
+                if result["success"]
+                else None
+            ),
             "output": result["output"],
             "error": result.get("error"),
         }
@@ -620,9 +622,11 @@ class TerraformTool(Tool):
 
         return {
             "success": result["success"],
-            "message": f"Resource {address} imported successfully"
-            if result["success"]
-            else None,
+            "message": (
+                f"Resource {address} imported successfully"
+                if result["success"]
+                else None
+            ),
             "output": result["output"],
             "error": result.get("error"),
         }
@@ -772,9 +776,9 @@ class TerraformTool(Tool):
         return {
             "success": result["success"],
             "workspace": workspace,
-            "message": f"Switched to workspace '{workspace}'"
-            if result["success"]
-            else None,
+            "message": (
+                f"Switched to workspace '{workspace}'" if result["success"] else None
+            ),
             "error": result.get("error"),
         }
 
@@ -788,9 +792,11 @@ class TerraformTool(Tool):
         return {
             "success": result["success"],
             "workspace": workspace,
-            "message": f"Created and switched to workspace '{workspace}'"
-            if result["success"]
-            else None,
+            "message": (
+                f"Created and switched to workspace '{workspace}'"
+                if result["success"]
+                else None
+            ),
             "error": result.get("error"),
         }
 
@@ -808,9 +814,9 @@ class TerraformTool(Tool):
 
         return {
             "success": result["success"],
-            "message": "Configuration formatted successfully"
-            if result["success"]
-            else None,
+            "message": (
+                "Configuration formatted successfully" if result["success"] else None
+            ),
             "output": result["output"],
             "error": result.get("error"),
         }

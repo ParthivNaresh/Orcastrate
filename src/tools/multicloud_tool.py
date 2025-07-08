@@ -439,9 +439,11 @@ class MultiCloudTool(Tool):
             "region": resource.region,
             "provider_resource_id": resource.provider_resource_id,
             "compute_details": resource.compute_details,
-            "estimated_cost_per_month": float(resource.estimated_cost_per_month)
-            if resource.estimated_cost_per_month
-            else None,
+            "estimated_cost_per_month": (
+                float(resource.estimated_cost_per_month)
+                if resource.estimated_cost_per_month
+                else None
+            ),
             "created_at": resource.created_at.isoformat(),
         }
 
@@ -482,9 +484,11 @@ class MultiCloudTool(Tool):
             "region": resource.region,
             "provider_resource_id": resource.provider_resource_id,
             "database_details": resource.database_details,
-            "estimated_cost_per_month": float(resource.estimated_cost_per_month)
-            if resource.estimated_cost_per_month
-            else None,
+            "estimated_cost_per_month": (
+                float(resource.estimated_cost_per_month)
+                if resource.estimated_cost_per_month
+                else None
+            ),
             "created_at": resource.created_at.isoformat(),
         }
 
@@ -629,9 +633,11 @@ class MultiCloudTool(Tool):
                     "provider_resource_id": resource.provider_resource_id,
                     "created_at": resource.created_at.isoformat(),
                     "tags": resource.tags,
-                    "estimated_cost_per_month": float(resource.estimated_cost_per_month)
-                    if resource.estimated_cost_per_month
-                    else None,
+                    "estimated_cost_per_month": (
+                        float(resource.estimated_cost_per_month)
+                        if resource.estimated_cost_per_month
+                        else None
+                    ),
                 }
             )
 
@@ -672,9 +678,11 @@ class MultiCloudTool(Tool):
                     "database_details": resource.database_details,
                     "storage_details": resource.storage_details,
                     "network_details": resource.network_details,
-                    "estimated_cost_per_month": float(resource.estimated_cost_per_month)
-                    if resource.estimated_cost_per_month
-                    else None,
+                    "estimated_cost_per_month": (
+                        float(resource.estimated_cost_per_month)
+                        if resource.estimated_cost_per_month
+                        else None
+                    ),
                     "created_at": resource.created_at.isoformat(),
                     "tags": resource.tags,
                 }
@@ -788,11 +796,11 @@ class MultiCloudTool(Tool):
             "description": deployment.description,
             "providers": [p.value for p in deployment.providers],
             "resource_count": len(deployment.resources),
-            "total_estimated_cost_per_month": float(
-                deployment.total_estimated_cost_per_month
-            )
-            if deployment.total_estimated_cost_per_month
-            else None,
+            "total_estimated_cost_per_month": (
+                float(deployment.total_estimated_cost_per_month)
+                if deployment.total_estimated_cost_per_month
+                else None
+            ),
             "created_at": deployment.created_at.isoformat(),
             "resources": [
                 {

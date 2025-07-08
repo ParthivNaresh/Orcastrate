@@ -1,6 +1,6 @@
 {
   "errors": [],
-  "generated_at": "2025-07-07T22:42:11Z",
+  "generated_at": "2025-07-08T01:06:08Z",
   "metrics": {
     "_totals": {
       "CONFIDENCE.HIGH": 1,
@@ -631,7 +631,7 @@
       "line_range": [
         31
       ],
-      "more_info": "https://bandit.readthedocs.io/en/0.0.0/plugins/b108_hardcoded_tmp_directory.html",
+      "more_info": "https://bandit.readthedocs.io/en/1.8.5/plugins/b108_hardcoded_tmp_directory.html",
       "test_id": "B108",
       "test_name": "hardcoded_tmp_directory"
     },
@@ -651,7 +651,7 @@
       "line_range": [
         175
       ],
-      "more_info": "https://bandit.readthedocs.io/en/0.0.0/plugins/b108_hardcoded_tmp_directory.html",
+      "more_info": "https://bandit.readthedocs.io/en/1.8.5/plugins/b108_hardcoded_tmp_directory.html",
       "test_id": "B108",
       "test_name": "hardcoded_tmp_directory"
     },
@@ -673,7 +673,7 @@
         214,
         215
       ],
-      "more_info": "https://bandit.readthedocs.io/en/0.0.0/plugins/b101_assert_used.html",
+      "more_info": "https://bandit.readthedocs.io/en/1.8.5/plugins/b101_assert_used.html",
       "test_id": "B101",
       "test_name": "assert_used"
     },
@@ -693,7 +693,7 @@
       "line_range": [
         329
       ],
-      "more_info": "https://bandit.readthedocs.io/en/0.0.0/plugins/b108_hardcoded_tmp_directory.html",
+      "more_info": "https://bandit.readthedocs.io/en/1.8.5/plugins/b108_hardcoded_tmp_directory.html",
       "test_id": "B108",
       "test_name": "hardcoded_tmp_directory"
     },
@@ -713,7 +713,7 @@
       "line_range": [
         243
       ],
-      "more_info": "https://bandit.readthedocs.io/en/0.0.0/plugins/b104_hardcoded_bind_all_interfaces.html",
+      "more_info": "https://bandit.readthedocs.io/en/1.8.5/plugins/b104_hardcoded_bind_all_interfaces.html",
       "test_id": "B104",
       "test_name": "hardcoded_bind_all_interfaces"
     },
@@ -733,7 +733,7 @@
       "line_range": [
         843
       ],
-      "more_info": "https://bandit.readthedocs.io/en/0.0.0/plugins/b108_hardcoded_tmp_directory.html",
+      "more_info": "https://bandit.readthedocs.io/en/1.8.5/plugins/b108_hardcoded_tmp_directory.html",
       "test_id": "B108",
       "test_name": "hardcoded_tmp_directory"
     },
@@ -753,7 +753,7 @@
       "line_range": [
         171
       ],
-      "more_info": "https://bandit.readthedocs.io/en/0.0.0/plugins/b108_hardcoded_tmp_directory.html",
+      "more_info": "https://bandit.readthedocs.io/en/1.8.5/plugins/b108_hardcoded_tmp_directory.html",
       "test_id": "B108",
       "test_name": "hardcoded_tmp_directory"
     },
@@ -773,7 +773,7 @@
       "line_range": [
         272
       ],
-      "more_info": "https://bandit.readthedocs.io/en/0.0.0/plugins/b108_hardcoded_tmp_directory.html",
+      "more_info": "https://bandit.readthedocs.io/en/1.8.5/plugins/b108_hardcoded_tmp_directory.html",
       "test_id": "B108",
       "test_name": "hardcoded_tmp_directory"
     }

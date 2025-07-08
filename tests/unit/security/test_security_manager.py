@@ -369,11 +369,12 @@ class TestSecurityManager:
     @pytest.mark.asyncio
     async def test_security_manager_initialize(self, security_manager):
         """Test security manager initialization process."""
-        with patch.object(
-            security_manager, "_load_security_policies"
-        ) as mock_load, patch.object(
-            security_manager, "_setup_default_access_control"
-        ) as mock_setup:
+        with (
+            patch.object(security_manager, "_load_security_policies") as mock_load,
+            patch.object(
+                security_manager, "_setup_default_access_control"
+            ) as mock_setup,
+        ):
             await security_manager.initialize()
 
             mock_load.assert_called_once()
@@ -395,13 +396,13 @@ class TestSecurityManager:
         """Test successful plan validation."""
         await security_manager.initialize()
 
-        with patch.object(
-            security_manager, "_validate_step"
-        ) as mock_validate_step, patch.object(
-            security_manager, "_apply_security_policies"
-        ) as mock_apply_policies, patch.object(
-            security_manager, "_log_security_event"
-        ) as mock_log:
+        with (
+            patch.object(security_manager, "_validate_step") as mock_validate_step,
+            patch.object(
+                security_manager, "_apply_security_policies"
+            ) as mock_apply_policies,
+            patch.object(security_manager, "_log_security_event") as mock_log,
+        ):
             # Mock all validations to pass
             mock_validate_step.return_value = SecurityResult(
                 valid=True, level=SecurityLevel.LOW
@@ -429,11 +430,10 @@ class TestSecurityManager:
         """Test plan validation with step failure."""
         await security_manager.initialize()
 
-        with patch.object(
-            security_manager, "_validate_step"
-        ) as mock_validate_step, patch.object(
-            security_manager, "_log_security_event"
-        ) as mock_log:
+        with (
+            patch.object(security_manager, "_validate_step") as mock_validate_step,
+            patch.object(security_manager, "_log_security_event") as mock_log,
+        ):
             # Mock step validation to fail
             mock_validate_step.return_value = SecurityResult(
                 valid=False,

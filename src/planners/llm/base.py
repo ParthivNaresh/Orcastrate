@@ -60,6 +60,11 @@ class LLMResponse(BaseModel):
     finish_reason: Optional[str] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
 
+    @property
+    def tokens_used(self) -> int:
+        """Get total tokens used from usage dict."""
+        return self.usage.get("total_tokens", 0)
+
     class Config:
         arbitrary_types_allowed = True
 
@@ -118,6 +123,26 @@ class LLMClient(ABC):
         self._client: Any = None
         self._request_count = 0
         self._last_request_time = 0.0
+
+    @property
+    def model(self) -> str:
+        """Get the model name."""
+        return self.config.model
+
+    @property
+    def provider(self) -> LLMProvider:
+        """Get the provider."""
+        return self.config.provider
+
+    @property
+    def temperature(self) -> float:
+        """Get the temperature setting."""
+        return self.config.temperature
+
+    @property
+    def max_tokens(self) -> int:
+        """Get the max tokens setting."""
+        return self.config.max_tokens
 
     @abstractmethod
     async def initialize(self) -> None:

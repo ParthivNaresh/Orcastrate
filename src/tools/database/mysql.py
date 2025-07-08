@@ -132,9 +132,9 @@ class MySQLConnection(DatabaseConnection):
                     metadata={
                         "query_type": query.strip().split()[0].upper(),
                         "connection_id": self.connection_id,
-                        "last_insert_id": cursor.lastrowid
-                        if hasattr(cursor, "lastrowid")
-                        else None,
+                        "last_insert_id": (
+                            cursor.lastrowid if hasattr(cursor, "lastrowid") else None
+                        ),
                     },
                 )
 
@@ -145,9 +145,11 @@ class MySQLConnection(DatabaseConnection):
             return QueryResult(
                 success=False,
                 execution_time=execution_time,
-                error=f"MySQL Error {e.args[0]}: {e.args[1]}"
-                if len(e.args) >= 2
-                else str(e),
+                error=(
+                    f"MySQL Error {e.args[0]}: {e.args[1]}"
+                    if len(e.args) >= 2
+                    else str(e)
+                ),
                 metadata={"connection_id": self.connection_id},
             )
         except Exception as e:
@@ -483,9 +485,11 @@ class MySQLTool(DatabaseTool):
             "database_name": database_name,
             "charset": charset,
             "collation": collation,
-            "message": f"Database '{database_name}' created successfully"
-            if result.success
-            else None,
+            "message": (
+                f"Database '{database_name}' created successfully"
+                if result.success
+                else None
+            ),
             "error": result.error,
         }
 
@@ -523,9 +527,9 @@ class MySQLTool(DatabaseTool):
             "table_name": table_name,
             "engine": engine,
             "charset": charset,
-            "message": f"Table '{table_name}' created successfully"
-            if result.success
-            else None,
+            "message": (
+                f"Table '{table_name}' created successfully" if result.success else None
+            ),
             "error": result.error,
         }
 
@@ -564,9 +568,9 @@ class MySQLTool(DatabaseTool):
             "table_name": table_name,
             "unique": unique,
             "index_type": index_type,
-            "message": f"Index '{index_name}' created successfully"
-            if result.success
-            else None,
+            "message": (
+                f"Index '{index_name}' created successfully" if result.success else None
+            ),
             "error": result.error,
         }
 
@@ -580,9 +584,11 @@ class MySQLTool(DatabaseTool):
         return {
             "success": result.success,
             "table_name": table_name,
-            "message": f"Table '{table_name}' optimized successfully"
-            if result.success
-            else None,
+            "message": (
+                f"Table '{table_name}' optimized successfully"
+                if result.success
+                else None
+            ),
             "optimization_result": result.data if result.success else None,
             "error": result.error,
         }
@@ -597,9 +603,11 @@ class MySQLTool(DatabaseTool):
         return {
             "success": result.success,
             "table_name": table_name,
-            "message": f"Table '{table_name}' analyzed successfully"
-            if result.success
-            else None,
+            "message": (
+                f"Table '{table_name}' analyzed successfully"
+                if result.success
+                else None
+            ),
             "analysis_result": result.data if result.success else None,
             "error": result.error,
         }

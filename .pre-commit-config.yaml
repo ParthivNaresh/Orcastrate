@@ -1,0 +1,190 @@
+# Pre-commit configuration for Orcastrate
+# This file defines hooks that run before each commit to ensure code quality
+# Run `pre-commit install` to set up the git hook automatically
+# Run `pre-commit run --all-files` to check all files manually
+
+repos:
+  # ==================================================================================
+  # PYTHON CODE FORMATTING & IMPORT MANAGEMENT
+  # ==================================================================================
+
+  # Remove unused imports and variables
+  - repo: https://github.com/PyCQA/autoflake
+    rev: v2.2.1
+    hooks:
+      - id: autoflake
+        args: [
+          --in-place,
+          --remove-all-unused-imports,
+          --remove-unused-variables,
+          --remove-duplicate-keys,
+          --ignore-init-module-imports
+        ]
+        files: ^(src|tests)/.*\.py$
+
+  # Code formatting with Black
+  - repo: https://github.com/psf/black
+    rev: 23.12.1
+    hooks:
+      - id: black
+        language_version: python3.10
+        files: ^(src|tests)/.*\.py$
+
+  # Import sorting with isort
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: [--profile, black]
+        files: ^(src|tests)/.*\.py$
+
+  # ==================================================================================
+  # PYTHON LINTING & STYLE CHECKING
+  # ==================================================================================
+
+  # Style and error checking with flake8
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        files: ^(src|tests)/.*\.py$
+        additional_dependencies:
+          - flake8-docstrings
+          - flake8-bugbear
+          - flake8-comprehensions
+          - flake8-simplify
+
+  # ==================================================================================
+  # SECURITY & VULNERABILITY SCANNING
+  # ==================================================================================
+
+  # Security linting with bandit
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.5
+    hooks:
+      - id: bandit
+        args: [-r, src/, -f, json, -o, bandit-report.json]
+        files: ^src/.*\.py$
+        pass_filenames: false
+
+  # ==================================================================================
+  # GENERAL FILE FORMATTING & VALIDATION
+  # ==================================================================================
+
+  # Built-in pre-commit hooks for general file hygiene
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      # File formatting
+      - id: trailing-whitespace
+        exclude: ^docs/
+      - id: end-of-file-fixer
+        exclude: ^docs/
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+      # JSON/YAML validation
+      - id: check-json
+      - id: check-yaml
+        args: [--unsafe]  # Allow custom YAML tags
+      - id: pretty-format-json
+        args: [--autofix, --indent=2]
+        exclude: ^(\.vscode|\.devcontainer)/
+
+      # Python-specific checks
+      - id: check-ast
+        files: ^(src|tests)/.*\.py$
+      - id: check-builtin-literals
+        files: ^(src|tests)/.*\.py$
+      - id: check-docstring-first
+        files: ^src/.*\.py$
+      - id: debug-statements
+        files: ^(src|tests)/.*\.py$
+
+      # File size and merge conflicts
+      - id: check-added-large-files
+        args: [--maxkb=1000]
+      - id: check-merge-conflict
+
+      # Case sensitivity for cross-platform compatibility
+      - id: check-case-conflict
+
+  # ==================================================================================
+  # DOCUMENTATION & MARKDOWN
+  # ==================================================================================
+
+  # Markdown linting and formatting
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.38.0
+    hooks:
+      - id: markdownlint
+        args: [--fix]
+        files: \.md$
+        exclude: ^(docs/build|htmlcov)/
+
+  # ==================================================================================
+  # DEPENDENCY & PACKAGE MANAGEMENT
+  # ==================================================================================
+
+  # Poetry check for dependency consistency
+  - repo: https://github.com/python-poetry/poetry
+    rev: 1.7.1
+    hooks:
+      - id: poetry-check
+        files: ^(pyproject\.toml|poetry\.lock)$
+        pass_filenames: false
+
+  # ==================================================================================
+  # CUSTOM ORCASTRATE HOOKS
+  # ==================================================================================
+
+  # Local repository hooks for project-specific checks
+  - repo: local
+    hooks:
+      # MyPy static type checking
+      - id: mypy
+        name: mypy (static type checking)
+        entry: python -m mypy
+        language: system
+        files: ^src/.*\.py$
+        args: [src/, --ignore-missing-imports, --no-error-summary]
+        pass_filenames: false
+
+      # Quick unit tests (fast feedback)
+      - id: pytest-unit
+        name: pytest (unit tests only)
+        entry: python -m pytest
+        language: system
+        files: ^(src|tests/unit)/.*\.py$
+        args: [tests/unit/, -x, --tb=short, -q]
+        pass_filenames: false
+
+      # Check imports can be resolved
+      - id: python-check-imports
+        name: python import validation
+        entry: python -c
+        language: system
+        files: ^src/.*\.py$
+        args: ["import sys; [__import__(f.replace('/', '.').replace('.py', '')) for f in sys.argv[1:] if f.startswith('src/')]"]
+
+# ==================================================================================
+# CONFIGURATION
+# ==================================================================================
+
+# Global configuration
+default_stages: [commit]
+fail_fast: false  # Run all hooks even if one fails
+minimum_pre_commit_version: "3.0.0"
+
+# CI configuration (when running in GitHub Actions)
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit hooks
+
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ''
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: [mypy, pytest-unit]  # Skip slow hooks in CI
+  submodules: false

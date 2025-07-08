@@ -1,0 +1,172 @@
+version: '3.8'
+
+services:
+  # LocalStack - AWS services simulation
+  localstack:
+    image: localstack/localstack:3.0
+    container_name: orcastrate-localstack
+    ports:
+      - "4566:4566"  # LocalStack main endpoint
+      - "4510-4559:4510-4559"  # LocalStack service ports
+    environment:
+      - SERVICES=ec2,rds,lambda,iam,s3,sts,pricing,cloudformation
+      - DEBUG=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # PostgreSQL for database tool testing
+  postgres:
+    image: postgres:15-alpine
+    container_name: orcastrate-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=test_password
+      - POSTGRES_USER=test_user
+      - POSTGRES_DB=test_db
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user -d test_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+
+  # MySQL for database tool testing
+  mysql:
+    image: mysql:8.0
+    container_name: orcastrate-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=test_password
+      - MYSQL_DATABASE=test_db
+      - MYSQL_USER=test_user
+      - MYSQL_PASSWORD=test_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-ptest_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - mysql_test_data:/var/lib/mysql
+
+  # Redis for caching tool testing
+  redis:
+    image: redis:7-alpine
+    container_name: orcastrate-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - redis_test_data:/data
+
+  # MongoDB for NoSQL tool testing
+  mongodb:
+    image: mongo:7
+    container_name: orcastrate-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=test_user
+      - MONGO_INITDB_ROOT_PASSWORD=test_password
+      - MONGO_INITDB_DATABASE=test_db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - mongodb_test_data:/data/db
+
+  # MinIO for S3-compatible storage testing
+  minio:
+    image: minio/minio:latest
+    container_name: orcastrate-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"  # MinIO Console
+    environment:
+      - MINIO_ROOT_USER=test_user
+      - MINIO_ROOT_PASSWORD=test_password
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - minio_test_data:/data
+
+  # Elasticsearch for search testing
+  elasticsearch:
+    image: elasticsearch:8.11.0
+    container_name: orcastrate-elasticsearch
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - elasticsearch_test_data:/usr/share/elasticsearch/data
+
+  # Test coordinator - for orchestrating test workflows
+  test-coordinator:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: orcastrate-test-coordinator
+    depends_on:
+      localstack:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    environment:
+      - LOCALSTACK_ENDPOINT=http://localstack:4566
+      - POSTGRES_HOST=postgres
+      - MYSQL_HOST=mysql
+      - REDIS_HOST=redis
+      - MONGODB_HOST=mongodb
+      - MINIO_ENDPOINT=http://minio:9000
+      - ELASTICSEARCH_HOST=elasticsearch
+    volumes:
+      - .:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /workspace
+    command: ["sleep", "infinity"]  # Keep container running for test execution
+
+volumes:
+  postgres_test_data:
+  mysql_test_data:
+  redis_test_data:
+  mongodb_test_data:
+  minio_test_data:
+  elasticsearch_test_data:
+
+networks:
+  default:
+    name: orcastrate-test-network

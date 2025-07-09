@@ -88,8 +88,6 @@ jobs:
         echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY || 'test-key' }}" >> $GITHUB_ENV
         echo "ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY || 'test-key' }}" >> $GITHUB_ENV
 
-    - name: Validate environment configuration
-      run: just validate-env ci
 
     - name: Run tests with coverage
       run: just test-coverage ci

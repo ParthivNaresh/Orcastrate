@@ -154,14 +154,12 @@ security:
 # Run all tests (unit + integration, excludes live tests)
 test env="testing":
     @echo "🧪 Running unit and integration tests..."
-    @just load-env {{env}} > /dev/null
     poetry run python -m pytest tests/unit/ tests/integration/ -v --tb=short
     @echo "✅ All tests completed!"
 
 # Run tests with detailed coverage report
 test-coverage env="testing":
     @echo "🧪 Running tests with coverage analysis..."
-    @just load-env {{env}} > /dev/null
     poetry run python -m pytest tests/unit/ tests/integration/ \
         --cov=src \
         --cov-report=term-missing \
@@ -174,21 +172,18 @@ test-coverage env="testing":
 # Run only unit tests (fast feedback loop)
 test-unit env="testing":
     @echo "🧪 Running unit tests only..."
-    @just load-env {{env}} > /dev/null
     poetry run python -m pytest tests/unit/ -v --tb=short
     @echo "✅ Unit tests completed!"
 
 # Run only integration tests (component interactions)
 test-integration env="testing":
     @echo "🧪 Running integration tests only..."
-    @just load-env {{env}} > /dev/null
     poetry run python -m pytest tests/integration/ -v --tb=short
     @echo "✅ Integration tests completed!"
 
 # Run tests in watch mode for development
 test-watch env="testing":
     @echo "👀 Starting test watch mode (Ctrl+C to stop)..."
-    @just load-env {{env}} > /dev/null
     poetry run python -m pytest tests/unit/ tests/integration/ --lf -x -v --tb=short -f
 
 # Run specific test file or pattern
@@ -262,7 +257,6 @@ test-live env="testing":
     @echo "├── 🔍 Checking Docker infrastructure..."
     @just docker-status > /dev/null || (echo "❌ Docker infrastructure not running. Start with 'just docker-start'" && exit 1)
     @echo "├── 🧪 Running live tests..."
-    @just load-env {{env}} > /dev/null
     poetry run python -m pytest tests/live/ --live -v --tb=short
     @echo "└── ✅ Live tests completed!"
 

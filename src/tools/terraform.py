@@ -519,14 +519,25 @@ class TerraformTool(Tool):
         # Try to parse JSON output even if command failed
         # terraform validate returns non-zero exit code for invalid configs but still produces JSON
         try:
-            validation_data = json.loads(result["output"])
-            return {
-                "success": True,
-                "valid": validation_data.get("valid", False),
-                "error_count": validation_data.get("error_count", 0),
-                "warning_count": validation_data.get("warning_count", 0),
-                "diagnostics": validation_data.get("diagnostics", []),
-            }
+            # Extract JSON from output (may contain additional text like GitHub Actions annotations)
+            output = result["output"]
+            json_start = output.find("{")
+            json_end = output.rfind("}") + 1
+
+            if json_start != -1 and json_end > json_start:
+                json_content = output[json_start:json_end]
+                validation_data = json.loads(json_content)
+                return {
+                    "success": True,
+                    "valid": validation_data.get("valid", False),
+                    "error_count": validation_data.get("error_count", 0),
+                    "warning_count": validation_data.get("warning_count", 0),
+                    "diagnostics": validation_data.get("diagnostics", []),
+                }
+            else:
+                # No JSON found in output, treat as parsing failure
+                raise json.JSONDecodeError("No JSON found in output", output, 0)
+
         except json.JSONDecodeError:
             # If JSON parsing fails, return success based on command success
             if result["success"]:

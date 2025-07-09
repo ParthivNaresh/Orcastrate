@@ -47,7 +47,16 @@ class AWSCloudTool(Tool):
         settings = get_settings()
         self._clients: Dict[str, BaseClient] = {}
         self._session: Optional[boto3.Session] = None
-        self._region: str = settings.cloud.aws_region
+
+        # Get region from settings, with fallback to environment variable
+        # This ensures AWS_DEFAULT_REGION is properly respected
+        import os
+
+        env_region = os.environ.get("AWS_DEFAULT_REGION")
+        if env_region:
+            self._region = env_region
+        else:
+            self._region = settings.cloud.aws_region
 
         # Initialize AWS session with credentials from settings
         self._initialize_session()

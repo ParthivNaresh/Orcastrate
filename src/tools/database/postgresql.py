@@ -124,7 +124,7 @@ class PostgreSQLConnection(DatabaseConnection):
                 args = []
 
             # Execute query based on type
-            if query.strip().upper().startswith(("SELECT", "WITH")):
+            if query.strip().upper().startswith(("SELECT", "WITH", "EXPLAIN")):
                 # Read operation
                 rows = await self._connection.fetch(query, *args)
                 data = [dict(row) for row in rows]
@@ -171,13 +171,33 @@ class PostgreSQLConnection(DatabaseConnection):
         self, query: str, params: dict[str, Any]
     ) -> tuple[str, list[Any]]:
         """Convert named parameters to positional for asyncpg."""
-        # Simple conversion - replace %(name)s with $1, $2, etc.
+        import re
+
         args = []
         converted_query = query
 
-        for i, (key, value) in enumerate(params.items(), 1):
-            converted_query = converted_query.replace(f"%({key})s", f"${i}")
-            args.append(value)
+        # Handle both %(name)s and %s parameter formats
+        if params:
+            # First handle named parameters %(name)s
+            named_pattern = re.compile(r"%\(([^)]+)\)s")
+            matches = named_pattern.findall(converted_query)
+
+            if matches:
+                # Named parameters found
+                for i, key in enumerate(matches, 1):
+                    if key in params:
+                        converted_query = converted_query.replace(f"%({key})s", f"${i}")
+                        args.append(params[key])
+            else:
+                # Check for positional parameters %s
+                positional_count = converted_query.count("%s")
+                if positional_count > 0:
+                    # Convert positional %s to $1, $2, etc.
+                    for i in range(1, positional_count + 1):
+                        converted_query = converted_query.replace("%s", f"${i}", 1)
+
+                    # Use parameter values in the order they appear in the dict
+                    args = list(params.values())[:positional_count]
 
         return converted_query, args
 
@@ -616,8 +636,12 @@ class PostgreSQLTool(DatabaseTool):
         result = await self.execute_query(explain_query, query_params)
 
         if result.success and result.data:
-            # Parse execution plan
-            plan_data = result.data[0].get("QUERY PLAN", [{}])[0]
+            # Parse execution plan - QUERY PLAN is a JSON string that needs parsing
+            import json
+
+            query_plan_str = result.data[0].get("QUERY PLAN", "[]")
+            plan_list = json.loads(query_plan_str)
+            plan_data = plan_list[0] if plan_list else {}
 
             return {
                 "success": True,
@@ -695,9 +719,11 @@ class PostgreSQLTool(DatabaseTool):
         databases = params.get("databases", [])
 
         try:
-            # Create user
-            query = f'CREATE USER "{username}" WITH PASSWORD %s'
-            result = await self.execute_query(query, {"password": password})
+            # Create user - PostgreSQL doesn't allow parameters for passwords in CREATE USER
+            # We need to escape the password string properly
+            escaped_password = password.replace("'", "''")  # Escape single quotes
+            query = f"CREATE USER \"{username}\" WITH PASSWORD '{escaped_password}'"
+            result = await self.execute_query(query, {})
 
             if not result.success:
                 return {

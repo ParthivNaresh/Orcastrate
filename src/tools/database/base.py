@@ -471,7 +471,7 @@ class DatabaseTool(Tool):
             self.total_query_time / self.query_count if self.query_count > 0 else 0
         )
 
-        stats = {
+        stats: dict[str, Any] = {
             "query_count": self.query_count,
             "total_query_time": self.total_query_time,
             "average_query_time": avg_query_time,
@@ -483,6 +483,8 @@ class DatabaseTool(Tool):
 
         if self.connection_pool:
             pool_stats = self.connection_pool.stats
+            stats["pool"] = pool_stats
+            # Also include individual pool stats for backward compatibility
             stats.update(pool_stats)
 
         return stats

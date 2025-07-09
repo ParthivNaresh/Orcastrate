@@ -159,6 +159,9 @@ class TestPostgreSQLIntegration:
             {"query": "SELECT COUNT(*) FROM perf_test"}
         )
 
+        # Debug print the result
+        print(f"Performance analysis result: {result}")
+
         assert result["success"]
         assert "execution_time" in result
         assert "planning_time" in result
@@ -209,7 +212,7 @@ class TestMySQLIntegration:
                 "host": mysql_container.get_container_host_ip(),
                 "port": mysql_container.get_exposed_port(3306),
                 "database": mysql_container.dbname,
-                "username": mysql_container.username,
+                "username": "root",  # Use root user for full privileges including CREATE DATABASE
                 "password": mysql_container.password,
                 "min_connections": 1,
                 "max_connections": 3,
@@ -303,7 +306,7 @@ class TestMySQLIntegration:
             {
                 "username": username,
                 "password": "test_password_123",
-                "host": "%",
+                "host": "%%",  # % puts arguments in queries, so %% is required
                 "permissions": ["SELECT", "INSERT"],
                 "databases": ["test"],
             }
@@ -363,9 +366,9 @@ class TestMongoDBIntegration:
             environment={
                 "host": mongodb_container.get_container_host_ip(),
                 "port": mongodb_container.get_exposed_port(27017),
-                "database": "test_db",
-                "username": "",
-                "password": "",
+                "database": mongodb_container.dbname,  # Use container's default database
+                "username": mongodb_container.username,  # Use container's default username
+                "password": mongodb_container.password,  # Use container's default password
                 "min_connections": 1,
                 "max_connections": 3,
             },

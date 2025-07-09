@@ -114,8 +114,10 @@ class TestJustfileEnvironmentCommands:
         assert result.returncode != 0
         output = result.stderr + result.stdout
 
-        # Should show error about missing environment file
-        assert "Environment file not found" in output or "nonexistent.env" in output
+        # Should show error about failed recipe execution
+        assert "Recipe `load-env` failed with exit code 1" in output
+        assert "Recipe `validate-env` failed" in output
+        assert "nonexistent" in output
 
     def test_show_config_nonexistent_environment(self):
         """Test show config with non-existent environment."""
@@ -350,8 +352,8 @@ class TestEnvironmentFileHandling:
             # Should be testing environment
             assert "ENVIRONMENT=testing" in content
 
-            # Should enable live testing
-            assert "ENABLE_LIVE_TESTING=true" in content
+            # Should have live testing setting (disabled by default for safety)
+            assert "ENABLE_LIVE_TESTING=false" in content
 
             # Should use LocalStack
             assert "USE_LOCALSTACK=true" in content

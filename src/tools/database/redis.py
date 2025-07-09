@@ -774,9 +774,18 @@ class RedisTool(DatabaseTool):
             redis_conn = cast(RedisConnection, connection)
             result = await redis_conn.execute_query(command)
 
+        # Extract the result value
+        result_value = result.data[0]["result"] if result.data else None
+
+        # Convert boolean True to "OK" for SET commands (redis-py converts "OK" to True)
+        if result_value is True:
+            command_parts = command.strip().split()
+            if command_parts and command_parts[0].upper() == "SET":
+                result_value = "OK"
+
         return {
             "success": result.success,
-            "result": result.data[0]["result"] if result.data else None,
+            "result": result_value,
             "execution_time": result.execution_time,
             "error": result.error,
         }

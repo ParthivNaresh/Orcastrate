@@ -10,9 +10,11 @@ from typing import Any, Dict, List, Optional
 from pydantic import Field, field_validator
 
 try:
-    from pydantic_settings import BaseSettings
+    from pydantic_settings import BaseSettings, SettingsConfigDict
 except ImportError:
     from pydantic import BaseSettings
+
+    SettingsConfigDict = None
 
 # Type ignore for env parameter used throughout this module
 # mypy: disable-error-code=call-arg
@@ -84,7 +86,16 @@ class CloudSettings(BaseSettings):
     azure_client_secret: Optional[str] = Field(default=None, env="AZURE_CLIENT_SECRET")
     azure_tenant_id: Optional[str] = Field(default=None, env="AZURE_TENANT_ID")
 
-    model_config = {"env_prefix": "", "case_sensitive": False}
+    if SettingsConfigDict:
+        model_config = SettingsConfigDict(
+            env_prefix="",
+            case_sensitive=False,
+        )
+    else:
+
+        class Config:
+            env_prefix = ""
+            case_sensitive = False
 
 
 class LLMSettings(BaseSettings):
@@ -134,7 +145,6 @@ class SecuritySettings(BaseSettings):
     cors_origins: List[str] = Field(
         default=["http://localhost:3000", "http://localhost:8000"],
         env="CORS_ORIGINS",
-        json_schema_extra={"env_parse": False},
     )
     max_request_size: int = Field(
         default=16 * 1024 * 1024, env="MAX_REQUEST_SIZE"
@@ -153,12 +163,19 @@ class SecuritySettings(BaseSettings):
         else:
             return []
 
-    model_config = {
-        "env_prefix": "",
-        "case_sensitive": False,
-        "env_parse_none_str": "null",
-        "str_strip_whitespace": True,
-    }
+    if SettingsConfigDict:
+        model_config = SettingsConfigDict(
+            env_prefix="",
+            case_sensitive=False,
+            env_parse_none_str="null",
+            str_strip_whitespace=True,
+            env_nested_delimiter=None,
+        )
+    else:
+
+        class Config:
+            env_prefix = ""
+            case_sensitive = False
 
 
 class TestingSettings(BaseSettings):
@@ -257,12 +274,12 @@ class AppSettings(BaseSettings):
     )
 
     # Nested settings
-    database: DatabaseSettings = Field(default_factory=DatabaseSettings)
-    cloud: CloudSettings = Field(default_factory=CloudSettings)
-    llm: LLMSettings = Field(default_factory=LLMSettings)
-    security: SecuritySettings = Field(default_factory=SecuritySettings)
-    testing: TestingSettings = Field(default_factory=TestingSettings)
-    monitoring: MonitoringSettings = Field(default_factory=MonitoringSettings)
+    database: DatabaseSettings = Field(default_factory=lambda: DatabaseSettings())
+    cloud: CloudSettings = Field(default_factory=lambda: CloudSettings())
+    llm: LLMSettings = Field(default_factory=lambda: LLMSettings())
+    security: SecuritySettings = Field(default_factory=lambda: SecuritySettings())
+    testing: TestingSettings = Field(default_factory=lambda: TestingSettings())
+    monitoring: MonitoringSettings = Field(default_factory=lambda: MonitoringSettings())
 
     @field_validator("environment")
     @classmethod

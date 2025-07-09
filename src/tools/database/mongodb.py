@@ -86,6 +86,10 @@ class MongoDBConnection(DatabaseConnection):
 
         params = []
 
+        # Add authSource for authenticated connections
+        if self.config.username and self.config.password:
+            params.append("authSource=admin")
+
         # SSL configuration
         if self.config.ssl_enabled:
             params.append("ssl=true")
@@ -138,7 +142,7 @@ class MongoDBConnection(DatabaseConnection):
         skip: Optional[int] = None,
     ) -> QueryResult:
         """Find documents in a MongoDB collection."""
-        if not self._database:
+        if self._database is None:
             raise ToolError("Not connected to database")
 
         start_time = time.time()
@@ -195,7 +199,7 @@ class MongoDBConnection(DatabaseConnection):
         document: dict[str, Any],
     ) -> QueryResult:
         """Insert a single document."""
-        if not self._database:
+        if self._database is None:
             raise ToolError("Not connected to database")
 
         start_time = time.time()
@@ -234,7 +238,7 @@ class MongoDBConnection(DatabaseConnection):
         documents: list[dict[str, Any]],
     ) -> QueryResult:
         """Insert multiple documents."""
-        if not self._database:
+        if self._database is None:
             raise ToolError("Not connected to database")
 
         start_time = time.time()
@@ -275,7 +279,7 @@ class MongoDBConnection(DatabaseConnection):
         many: bool = False,
     ) -> QueryResult:
         """Update documents in a collection."""
-        if not self._database:
+        if self._database is None:
             raise ToolError("Not connected to database")
 
         start_time = time.time()
@@ -320,7 +324,7 @@ class MongoDBConnection(DatabaseConnection):
         many: bool = False,
     ) -> QueryResult:
         """Delete documents from a collection."""
-        if not self._database:
+        if self._database is None:
             raise ToolError("Not connected to database")
 
         start_time = time.time()
@@ -363,7 +367,7 @@ class MongoDBConnection(DatabaseConnection):
         pipeline: list[dict[str, Any]],
     ) -> QueryResult:
         """Execute an aggregation pipeline."""
-        if not self._database:
+        if self._database is None:
             raise ToolError("Not connected to database")
 
         start_time = time.time()
@@ -859,7 +863,7 @@ class MongoDBTool(DatabaseTool):
 
         async with self.connection_pool.acquire() as connection:
             mongo_conn = cast(MongoDBConnection, connection)
-            if not mongo_conn._database:
+            if mongo_conn._database is None:
                 raise ToolError("Not connected to database")
 
             try:
@@ -886,7 +890,7 @@ class MongoDBTool(DatabaseTool):
 
         async with self.connection_pool.acquire() as connection:
             mongo_conn = cast(MongoDBConnection, connection)
-            if not mongo_conn._database:
+            if mongo_conn._database is None:
                 raise ToolError("Not connected to database")
 
             try:
@@ -952,7 +956,7 @@ class MongoDBTool(DatabaseTool):
         try:
             async with self.connection_pool.acquire() as connection:
                 mongo_conn = cast(MongoDBConnection, connection)
-                if not mongo_conn._database:
+                if mongo_conn._database is None:
                     return {"error": "Not connected to database"}
 
                 stats = await mongo_conn._database.command("collStats", collection_name)

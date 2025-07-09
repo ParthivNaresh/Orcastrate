@@ -91,6 +91,28 @@ class MySQLConnection(DatabaseConnection):
                 self._connection = None
                 self.state = ConnectionState.DISCONNECTED
 
+    def _convert_params(self, query: str, params: dict[str, Any]) -> tuple[str, Any]:
+        """Convert parameters for MySQL execution."""
+        import re
+
+        # Handle both %(name)s and %s parameter formats
+        if params:
+            # First handle named parameters %(name)s
+            named_pattern = re.compile(r"%\(([^)]+)\)s")
+            matches = named_pattern.findall(query)
+
+            if matches:
+                # Named parameters - return as dict for MySQL
+                return query, params
+            else:
+                # Check for positional parameters %s
+                positional_count = query.count("%s")
+                if positional_count > 0:
+                    # Convert dict values to tuple for positional parameters
+                    return query, tuple(params.values())
+
+        return query, params
+
     async def execute_query(
         self, query: str, params: Optional[dict[str, Any]] = None
     ) -> QueryResult:
@@ -101,9 +123,15 @@ class MySQLConnection(DatabaseConnection):
         start_time = time.time()
 
         try:
+            # Convert parameters if provided
+            if params:
+                query, converted_params = self._convert_params(query, params)
+            else:
+                converted_params = {}
+
             async with self._connection.cursor(aiomysql.DictCursor) as cursor:
                 # Execute query
-                await cursor.execute(query, params or {})
+                await cursor.execute(query, converted_params)
 
                 # Handle different query types
                 if (
@@ -174,8 +202,14 @@ class MySQLConnection(DatabaseConnection):
         total_affected = 0
 
         try:
+            # Convert parameters for each item in the list
+            converted_params = []
+            for params in param_list:
+                _, converted = self._convert_params(query, params)
+                converted_params.append(converted)
+
             async with self._connection.cursor() as cursor:
-                await cursor.executemany(query, param_list)
+                await cursor.executemany(query, converted_params)
                 total_affected = cursor.rowcount
 
             execution_time = time.time() - start_time
@@ -656,7 +690,7 @@ class MySQLTool(DatabaseTool):
         """Create a new MySQL user."""
         username = params["username"]
         password = params["password"]
-        host = params.get("host", "%")
+        host = params.get("host", "%%")
         permissions = params.get("permissions", [])
         databases = params.get("databases", [])
 

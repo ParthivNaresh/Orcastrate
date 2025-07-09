@@ -311,11 +311,9 @@ class DockerTool(Tool):
                     image_name = params.get("tag") or params.get("image_name")
 
                     if not context_path:
-                        errors.append(
-                            "path (or context_path) is required for build_image"
-                        )
+                        errors.append("context_path is required for build_image")
                     if not image_name:
-                        errors.append("tag (or image_name) is required for build_image")
+                        errors.append("image_name is required for build_image")
 
                     # Normalize parameters for consistency
                     if context_path:
@@ -352,8 +350,13 @@ class DockerTool(Tool):
                     "get_container_logs",
                     "execute_command",
                 ]:
-                    if not params.get("container_id"):
+                    # Support both parameter names for backward compatibility
+                    container_id = params.get("container_id") or params.get("container")
+                    if not container_id:
                         errors.append(f"container_id is required for {action}")
+                    else:
+                        # Normalize parameter names
+                        normalized_params["container_id"] = container_id
 
                 elif action == "execute_command":
                     if not params.get("command"):
@@ -456,7 +459,14 @@ class DockerTool(Tool):
         """Build a Docker image."""
         # Support both parameter formats
         context_path = params.get("path") or params.get("context_path")
-        image_tag = params.get("tag") or params.get("image_name")
+        image_name = params.get("image_name")
+        tag = params.get("tag")
+
+        # Build the full image tag
+        if image_name and tag:
+            image_tag = f"{image_name}:{tag}"
+        else:
+            image_tag = tag or image_name or ""
 
         if not context_path:
             raise ToolError("context_path or path parameter is required")
@@ -494,8 +504,8 @@ class DockerTool(Tool):
             raise ToolError(f"Docker build failed: {result['stderr']}")
 
         return {
-            "image_name": image_tag,
-            "tag": image_tag,
+            "image_name": image_name or image_tag,
+            "tag": tag or image_tag,
             "build_output": result["stdout"],
             "success": True,
         }
@@ -638,12 +648,18 @@ class DockerTool(Tool):
         if params.get("timeout"):
             cmd.extend(["-t", str(params["timeout"])])
 
-        cmd.append(params["container_id"])
+        # Support both parameter names for backward compatibility
+        container_id = params.get("container_id") or params.get("container")
+        if not container_id:
+            raise ToolError("container_id or container parameter is required")
+
+        cmd.append(container_id)
 
         result = await self._run_command(cmd)
 
         return {
-            "container_id": params["container_id"],
+            "container_id": container_id,
+            "container": container_id,  # For backward compatibility
             "success": result["returncode"] == 0,
             "output": result["stdout"],
         }
@@ -687,21 +703,8 @@ class DockerTool(Tool):
                 if line:
                     try:
                         container_data = json.loads(line)
-                        # Normalize field names to match what tests expect
-                        normalized_container = {
-                            "container_id": container_data.get("ID", ""),
-                            "name": container_data.get("Names", "").lstrip(
-                                "/"
-                            ),  # Remove leading slash
-                            "image": container_data.get("Image", ""),
-                            "state": container_data.get("State", ""),
-                            "status": container_data.get("Status", ""),
-                            "ports": container_data.get("Ports", ""),
-                            "created": container_data.get("CreatedAt", ""),
-                            "command": container_data.get("Command", ""),
-                            "labels": container_data.get("Labels", ""),
-                        }
-                        containers.append(normalized_container)
+                        # Keep original field names from Docker output
+                        containers.append(container_data)
                     except json.JSONDecodeError:
                         continue
 
@@ -721,12 +724,18 @@ class DockerTool(Tool):
         if params.get("follow"):
             cmd.append("-f")
 
-        cmd.append(params["container_id"])
+        # Support both parameter names for backward compatibility
+        container_id = params.get("container_id") or params.get("container")
+        if not container_id:
+            raise ToolError("container_id or container parameter is required")
+
+        cmd.append(container_id)
 
         result = await self._run_command(cmd)
 
         return {
-            "container_id": params["container_id"],
+            "container_id": container_id,
+            "container": container_id,  # For backward compatibility
             "logs": result["stdout"],
             "success": result["returncode"] == 0,
         }

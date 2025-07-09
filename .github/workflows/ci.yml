@@ -34,9 +34,13 @@ jobs:
     uses: ./.github/workflows/docs.yml
     secrets: inherit
 
-  sonarqube:
-    name: "SonarQube Analysis"
+  sonarcloud:
+    name: "SonarCloud Analysis"
     if: github.event_name == 'push' && (contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/heads/develop'))
     needs: [unit-tests, integration-tests, live-tests]
     uses: ./.github/workflows/sonarqube.yml
     secrets: inherit
+    with:
+      unit-coverage-artifact: "unit-tests-coverage"
+      integration-coverage-artifact: "integration-tests-coverage"
+      live-coverage-artifact: "live-tests-coverage"

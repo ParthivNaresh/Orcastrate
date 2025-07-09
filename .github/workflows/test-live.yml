@@ -28,7 +28,7 @@ jobs:
     - name: Install Terraform
       uses: hashicorp/setup-terraform@v3
       with:
-        terraform_version: "latest"
+        terraform_version: "1.12.2"
 
     - name: Install Poetry
       uses: snok/install-poetry@v1

@@ -11,6 +11,7 @@ Tests cover:
 
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -171,7 +172,7 @@ class TestJustfileScriptIntegration:
         # Test with default environment
         result = subprocess.run(
             [
-                "/Users/parthivnaresh/miniconda3/envs/orcastrate/bin/python",
+                sys.executable,
                 "scripts/validate_config.py",
             ],
             capture_output=True,
@@ -190,7 +191,7 @@ class TestJustfileScriptIntegration:
         """Test the show_config.py script directly."""
         result = subprocess.run(
             [
-                "/Users/parthivnaresh/miniconda3/envs/orcastrate/bin/python",
+                sys.executable,
                 "scripts/show_config.py",
             ],
             capture_output=True,
@@ -227,7 +228,7 @@ class TestJustfileScriptIntegration:
 
         result = subprocess.run(
             [
-                "/Users/parthivnaresh/miniconda3/envs/orcastrate/bin/python",
+                sys.executable,
                 "scripts/validate_config.py",
             ],
             capture_output=True,
@@ -258,7 +259,7 @@ class TestJustfileScriptIntegration:
 
         result = subprocess.run(
             [
-                "/Users/parthivnaresh/miniconda3/envs/orcastrate/bin/python",
+                sys.executable,
                 "scripts/validate_config.py",
             ],
             capture_output=True,
@@ -384,7 +385,7 @@ class TestErrorHandling:
 
         result = subprocess.run(
             [
-                "/Users/parthivnaresh/miniconda3/envs/orcastrate/bin/python",
+                sys.executable,
                 "scripts/validate_config.py",
             ],
             capture_output=True,
@@ -409,7 +410,7 @@ class TestErrorHandling:
 
         result = subprocess.run(
             [
-                "/Users/parthivnaresh/miniconda3/envs/orcastrate/bin/python",
+                sys.executable,
                 "scripts/validate_config.py",
             ],
             capture_output=True,
@@ -444,7 +445,7 @@ class TestEnvironmentIsolation:
 
         result_dev = subprocess.run(
             [
-                "/Users/parthivnaresh/miniconda3/envs/orcastrate/bin/python",
+                sys.executable,
                 "scripts/show_config.py",
             ],
             capture_output=True,
@@ -468,7 +469,7 @@ class TestEnvironmentIsolation:
 
         result_prod = subprocess.run(
             [
-                "/Users/parthivnaresh/miniconda3/envs/orcastrate/bin/python",
+                sys.executable,
                 "scripts/show_config.py",
             ],
             capture_output=True,
@@ -498,7 +499,7 @@ class TestEnvironmentIsolation:
 
         result_test = subprocess.run(
             [
-                "/Users/parthivnaresh/miniconda3/envs/orcastrate/bin/python",
+                sys.executable,
                 "scripts/show_config.py",
             ],
             capture_output=True,
@@ -520,7 +521,7 @@ class TestEnvironmentIsolation:
 
         result_staging = subprocess.run(
             [
-                "/Users/parthivnaresh/miniconda3/envs/orcastrate/bin/python",
+                sys.executable,
                 "scripts/show_config.py",
             ],
             capture_output=True,
@@ -550,7 +551,7 @@ class TestPerformanceAndReliability:
 
         result = subprocess.run(
             [
-                "/Users/parthivnaresh/miniconda3/envs/orcastrate/bin/python",
+                sys.executable,
                 "scripts/validate_config.py",
             ],
             capture_output=True,

@@ -33,25 +33,27 @@ class TestDatabaseSettings:
 
     def test_default_values(self):
         """Test that default database settings are correct."""
-        settings = DatabaseSettings()
+        # Clear environment variables to test defaults
+        with patch.dict(os.environ, {}, clear=True):
+            settings = DatabaseSettings()
 
-        assert settings.postgres_host == "localhost"
-        assert settings.postgres_port == 5432
-        assert settings.postgres_db == "orcastrate"
-        assert settings.postgres_user == "postgres"
-        assert settings.postgres_password == ""
+            assert settings.postgres_host == "localhost"
+            assert settings.postgres_port == 5432
+            assert settings.postgres_db == "orcastrate"
+            assert settings.postgres_user == "postgres"
+            assert settings.postgres_password == ""
 
-        assert settings.mongodb_url == "mongodb://localhost:27017"
-        assert settings.mongodb_db == "orcastrate"
+            assert settings.mongodb_url == "mongodb://localhost:27017"
+            assert settings.mongodb_db == "orcastrate"
 
-        assert settings.redis_url == "redis://localhost:6379"
-        assert settings.redis_db == 0
+            assert settings.redis_url == "redis://localhost:6379"
+            assert settings.redis_db == 0
 
-        assert settings.mysql_host == "localhost"
-        assert settings.mysql_port == 3306
-        assert settings.mysql_db == "orcastrate"
-        assert settings.mysql_user == "root"
-        assert settings.mysql_password == ""
+            assert settings.mysql_host == "localhost"
+            assert settings.mysql_port == 3306
+            assert settings.mysql_db == "orcastrate"
+            assert settings.mysql_user == "root"
+            assert settings.mysql_password == ""
 
     def test_environment_variable_loading(self):
         """Test that environment variables are properly loaded."""
@@ -81,14 +83,16 @@ class TestDatabaseSettings:
 
     def test_connection_urls(self):
         """Test database connection URL generation."""
-        settings = DatabaseSettings()
+        # Clear environment variables to test defaults
+        with patch.dict(os.environ, {}, clear=True):
+            settings = DatabaseSettings()
 
-        # Test with default values (empty password)
-        postgres_url = settings.postgres_url
-        assert postgres_url == "postgresql://postgres:@localhost:5432/orcastrate"
+            # Test with default values (empty password)
+            postgres_url = settings.postgres_url
+            assert postgres_url == "postgresql://postgres:@localhost:5432/orcastrate"
 
-        mysql_url = settings.mysql_url
-        assert mysql_url == "mysql://root:@localhost:3306/orcastrate"
+            mysql_url = settings.mysql_url
+            assert mysql_url == "mysql://root:@localhost:3306/orcastrate"
 
         # Test with custom values
         with patch.dict(
@@ -194,26 +198,28 @@ class TestLLMSettings:
 
     def test_default_values(self):
         """Test that default LLM settings are correct."""
-        settings = LLMSettings()
+        # Clear environment variables to test defaults
+        with patch.dict(os.environ, {}, clear=True):
+            settings = LLMSettings()
 
-        # OpenAI defaults
-        assert settings.openai_api_key is None
-        assert settings.openai_default_model == "gpt-4"
-        assert settings.openai_temperature == 0.7
-        assert settings.openai_max_tokens == 4000
-        assert settings.openai_timeout == 30
+            # OpenAI defaults
+            assert settings.openai_api_key is None
+            assert settings.openai_default_model == "gpt-4"
+            assert settings.openai_temperature == 0.7
+            assert settings.openai_max_tokens == 4000
+            assert settings.openai_timeout == 30
 
-        # Anthropic defaults
-        assert settings.anthropic_api_key is None
-        assert settings.anthropic_default_model == "claude-3-sonnet-20240229"
-        assert settings.anthropic_temperature == 0.7
-        assert settings.anthropic_max_tokens == 4000
-        assert settings.anthropic_timeout == 30
+            # Anthropic defaults
+            assert settings.anthropic_api_key is None
+            assert settings.anthropic_default_model == "claude-3-sonnet-20240229"
+            assert settings.anthropic_temperature == 0.7
+            assert settings.anthropic_max_tokens == 4000
+            assert settings.anthropic_timeout == 30
 
-        # General settings
-        assert settings.llm_retry_attempts == 3
-        assert settings.llm_retry_delay == 1.0
-        assert settings.llm_rate_limit_requests_per_minute == 60
+            # General settings
+            assert settings.llm_retry_attempts == 3
+            assert settings.llm_retry_delay == 1.0
+            assert settings.llm_rate_limit_requests_per_minute == 60
 
     @pytest.mark.skip(
         reason="Environment variable handling needs investigation - nested settings not picking up env vars"
@@ -446,13 +452,15 @@ class TestAppSettings:
 
     def test_get_safe_dict_empty_values(self):
         """Test safe dictionary with empty sensitive values."""
-        settings = AppSettings()
-        safe_dict = settings.get_safe_dict()
+        # Clear environment variables to test defaults
+        with patch.dict(os.environ, {}, clear=True):
+            settings = AppSettings()
+            safe_dict = settings.get_safe_dict()
 
-        # Empty/None values should not be masked
-        assert safe_dict["llm"]["openai_api_key"] is None
-        assert safe_dict["cloud"]["aws_secret_access_key"] is None
-        assert safe_dict["database"]["postgres_password"] == ""
+            # Empty/None values should not be masked
+            assert safe_dict["llm"]["openai_api_key"] is None
+            assert safe_dict["cloud"]["aws_secret_access_key"] is None
+            assert safe_dict["database"]["postgres_password"] == ""
 
 
 class TestSettingsSingleton:

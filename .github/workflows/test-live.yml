@@ -7,20 +7,22 @@ on:
     branches: [ main, develop ]
   workflow_call:
 
-env:
-  PYTHON_VERSION: '3.11'
-
 jobs:
   live-tests:
+    name: "Live Tests (Python ${{ matrix.python-version }})"
     runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
     
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Python
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ env.PYTHON_VERSION }}
+        python-version: ${{ matrix.python-version }}
 
     - name: Install Just
       uses: extractions/setup-just@v2
@@ -42,7 +44,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: .venv
-        key: venv-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('**/poetry.lock') }}
+        key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
     - name: Install dependencies
       run: just install

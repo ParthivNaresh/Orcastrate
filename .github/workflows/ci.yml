@@ -7,20 +7,29 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  test:
-    uses: ./.github/workflows/test.yml
+  unit-tests:
+    name: "Unit Tests"
+    uses: ./.github/workflows/test-unit.yml
     secrets: inherit
 
-  quality:
-    uses: ./.github/workflows/quality.yml
+  integration-tests:
+    name: "Integration Tests"
+    uses: ./.github/workflows/test-integration.yml
     secrets: inherit
 
   live-tests:
+    name: "Live Tests"
     if: github.event_name == 'push' && (contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/heads/develop'))
-    needs: [test, quality]
+    needs: [unit-tests, integration-tests]
     uses: ./.github/workflows/test-live.yml
     secrets: inherit
 
-  docs:
+  code-quality:
+    name: "Code Quality"
+    uses: ./.github/workflows/quality.yml
+    secrets: inherit
+
+  documentation:
+    name: "Documentation"
     uses: ./.github/workflows/docs.yml
     secrets: inherit

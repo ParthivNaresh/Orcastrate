@@ -14,8 +14,12 @@ env:
   PYTHON_VERSION: '3.11'
 
 jobs:
-  test:
-    uses: ./.github/workflows/test.yml
+  unit-tests:
+    uses: ./.github/workflows/test-unit.yml
+    secrets: inherit
+
+  integration-tests:
+    uses: ./.github/workflows/test-integration.yml
     secrets: inherit
 
   quality:
@@ -23,7 +27,7 @@ jobs:
     secrets: inherit
 
   build-and-publish:
-    needs: [test, quality]
+    needs: [unit-tests, integration-tests, quality]
     runs-on: ubuntu-latest
     
     steps:
@@ -62,7 +66,7 @@ jobs:
         twine upload dist/*
 
   build-docker:
-    needs: [test, quality]
+    needs: [unit-tests, integration-tests, quality]
     runs-on: ubuntu-latest
     
     steps:

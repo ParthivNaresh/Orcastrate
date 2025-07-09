@@ -36,7 +36,6 @@ jobs:
 
   sonarcloud:
     name: "SonarCloud Analysis"
-    if: github.event_name == 'push' && (contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/heads/develop'))
     needs: [unit-tests, integration-tests, live-tests]
     uses: ./.github/workflows/sonarqube.yml
     secrets: inherit

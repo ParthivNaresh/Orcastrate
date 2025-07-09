@@ -33,3 +33,10 @@ jobs:
     name: "Documentation"
     uses: ./.github/workflows/docs.yml
     secrets: inherit
+
+  sonarqube:
+    name: "SonarQube Analysis"
+    if: github.event_name == 'push' && (contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/heads/develop'))
+    needs: [unit-tests, integration-tests, live-tests]
+    uses: ./.github/workflows/sonarqube.yml
+    secrets: inherit

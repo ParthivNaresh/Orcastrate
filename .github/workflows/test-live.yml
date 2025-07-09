@@ -25,7 +25,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Install Just
-      uses: extractions/setup-just@v2
+      uses: extractions/setup-just@v3
 
     - name: Install Terraform
       uses: hashicorp/setup-terraform@v3

@@ -45,25 +45,17 @@ jobs:
         virtualenvs-create: true
         virtualenvs-in-project: true
 
-    - name: Install dependencies
-      run: |
-        poetry install --with dev
-        pip install twine
+    - name: Install Just
+      uses: extractions/setup-just@v3
 
     - name: Build package
-      run: |
-        poetry build
-
-    - name: Check package
-      run: |
-        twine check dist/*
+      run: just build-package
 
     - name: Publish to PyPI
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      run: |
-        twine upload dist/*
+      run: just publish-package
 
   build-docker:
     needs: [unit-tests, integration-tests, quality]

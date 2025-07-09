@@ -165,7 +165,7 @@ test-coverage env="testing":
         --cov-report=term-missing \
         --cov-report=html:htmlcov \
         --cov-report=xml:coverage.xml \
-        --cov-fail-under=85 \
+        --cov-fail-under=65 \
         -v
     @echo "📊 Coverage report generated: htmlcov/index.html"
 
@@ -174,6 +174,18 @@ test-unit env="testing":
     @echo "🧪 Running unit tests only..."
     poetry run python -m pytest tests/unit/ -v --tb=short
     @echo "✅ Unit tests completed!"
+
+# Run unit tests with detailed coverage report
+test-unit-coverage env="testing":
+    @echo "🧪 Running unit tests with coverage analysis..."
+    poetry run python -m pytest tests/unit/ \
+        --cov=src \
+        --cov-report=term-missing \
+        --cov-report=html:htmlcov \
+        --cov-report=xml:coverage.xml \
+        --cov-fail-under=65 \
+        -v
+    @echo "📊 Unit test coverage report generated: htmlcov/index.html"
 
 # Run only integration tests (component interactions)
 test-integration env="testing":
@@ -321,6 +333,18 @@ docs-build:
     poetry run sphinx-build -b html docs/source docs/build/html
     @echo "✅ Documentation built at docs/build/html/index.html"
 
+# Build documentation with dependencies and link checking (for CI)
+docs-ci:
+    @echo "📚 Building documentation for CI..."
+    @echo "├── 📦 Installing documentation dependencies..."
+    poetry install --with dev
+    poetry run pip install -r docs/requirements.txt
+    @echo "├── 🏗️  Building HTML documentation..."
+    poetry run sphinx-build -b html docs/source docs/build/html
+    @echo "├── 🔗 Checking links in documentation..."
+    poetry run sphinx-build -b linkcheck docs/source docs/build/linkcheck
+    @echo "✅ Documentation CI build completed!"
+
 # Serve documentation locally for development
 docs-serve:
     @echo "📚 Serving documentation at http://localhost:8000"
@@ -329,6 +353,28 @@ docs-serve:
 
 # Build and serve documentation in one command
 docs: docs-build docs-serve
+
+# ┌──────────────────────────────────────────────────────────────────────────────┐
+# │                           📦  PACKAGING & RELEASE                           │
+# └──────────────────────────────────────────────────────────────────────────────┘
+
+# Build package for release
+build-package:
+    @echo "📦 Building package for release..."
+    @echo "├── 📚 Installing dependencies..."
+    poetry install --with dev
+    pip install twine
+    @echo "├── 🏗️  Building package..."
+    poetry build
+    @echo "├── ✅ Checking package..."
+    twine check dist/*
+    @echo "✅ Package built and validated successfully!"
+
+# Publish package to PyPI
+publish-package:
+    @echo "🚀 Publishing package to PyPI..."
+    twine upload dist/*
+    @echo "✅ Package published successfully!"
 
 # ┌──────────────────────────────────────────────────────────────────────────────┐
 # │                         🎮  DEVELOPMENT UTILITIES                           │

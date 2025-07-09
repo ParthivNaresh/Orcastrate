@@ -136,9 +136,7 @@ resource "local_file" "test" {
 
         # The validation command itself should succeed (return code 0)
         # but the configuration should be marked as invalid
-        assert result[
-            "success"
-        ], f"Validation failed: {result.get('error', 'Unknown error')}"
+        assert result["success"], f"Validation failed: {result}"
         if "valid" in result:
             assert result["valid"] is False  # Configuration is invalid
 

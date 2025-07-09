@@ -43,11 +43,6 @@ jobs:
       if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       run: just install
 
-    - name: Load CI environment
-      run: |
-        # Create .env file for application configuration  
-        cp scripts/env/ci.env .env
-        echo "✅ CI environment loaded from scripts/env/ci.env"
 
     - name: Set environment variables
       run: |

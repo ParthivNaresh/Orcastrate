@@ -23,7 +23,7 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
 
     - name: Install Just
-      uses: extractions/setup-just@v1
+      uses: extractions/setup-just@v2
 
     - name: Install Poetry
       uses: snok/install-poetry@v1

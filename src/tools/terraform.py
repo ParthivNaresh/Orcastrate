@@ -516,28 +516,31 @@ class TerraformTool(Tool):
         """Validate Terraform configuration files."""
         result = await self._run_terraform_command(["terraform", "validate", "-json"])
 
-        if result["success"]:
-            try:
-                validation_data = json.loads(result["output"])
-                return {
-                    "success": True,
-                    "valid": validation_data.get("valid", False),
-                    "error_count": validation_data.get("error_count", 0),
-                    "warning_count": validation_data.get("warning_count", 0),
-                    "diagnostics": validation_data.get("diagnostics", []),
-                }
-            except json.JSONDecodeError:
+        # Try to parse JSON output even if command failed
+        # terraform validate returns non-zero exit code for invalid configs but still produces JSON
+        try:
+            validation_data = json.loads(result["output"])
+            return {
+                "success": True,
+                "valid": validation_data.get("valid", False),
+                "error_count": validation_data.get("error_count", 0),
+                "warning_count": validation_data.get("warning_count", 0),
+                "diagnostics": validation_data.get("diagnostics", []),
+            }
+        except json.JSONDecodeError:
+            # If JSON parsing fails, return success based on command success
+            if result["success"]:
                 return {
                     "success": True,
                     "valid": True,
                     "output": result["output"],
                 }
-        else:
-            return {
-                "success": False,
-                "error": result.get("error"),
-                "output": result["output"],
-            }
+            else:
+                return {
+                    "success": False,
+                    "error": result.get("error"),
+                    "output": result["output"],
+                }
 
     async def _show_action(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Show current state or plan."""
@@ -593,10 +596,19 @@ class TerraformTool(Tool):
                 "count": len(resources),
             }
         else:
-            return {
-                "success": False,
-                "error": result.get("error"),
-            }
+            # Handle the case when no state file exists (empty state)
+            error_msg = result.get("error", "")
+            if "No state file was found" in error_msg:
+                return {
+                    "success": True,
+                    "resources": [],
+                    "count": 0,
+                }
+            else:
+                return {
+                    "success": False,
+                    "error": result.get("error"),
+                }
 
     async def _state_show_action(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Show a resource in Terraform state."""

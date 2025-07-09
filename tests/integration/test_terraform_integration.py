@@ -56,7 +56,7 @@ terraform {
 
 # Simple local file resource for testing
 resource "local_file" "test" {
-  content  = "Hello, Terraform!"
+  content  = "Hello, Terraform"
   filename = "${path.module}/test_output.txt"
 }
 
@@ -114,11 +114,12 @@ output "test_file_content" {
     @pytest.mark.asyncio
     async def test_validate_invalid_config(self, terraform_tool):
         """Test Terraform validate with invalid configuration."""
-        # Create invalid configuration
+        # Create configuration with invalid syntax (not invalid resource type)
         invalid_config = """
-resource "invalid_resource_type" "test" {
-  invalid_argument = "value"
-}
+resource "local_file" "test" {
+  content = "test"
+  filename = "${path.module}/test.txt"
+  # Missing closing brace to make it invalid
 """
         config_file = os.path.join(
             terraform_tool.terraform_config.working_dir, "main.tf"
@@ -126,15 +127,18 @@ resource "invalid_resource_type" "test" {
         with open(config_file, "w") as f:
             f.write(invalid_config)
 
+        # Init should fail with syntax error
         await terraform_tool._init_action({})
+        # Init may still succeed, but validation should catch syntax errors
 
         # Test validate
         result = await terraform_tool._validate_action({})
 
-        # Note: This might still succeed depending on Terraform version
-        # as validation may not catch all errors until plan/apply
+        # The validation command itself should succeed (return code 0)
+        # but the configuration should be marked as invalid
         assert result["success"]  # The command itself succeeds
-        # The actual validation result depends on Terraform's behavior
+        if "valid" in result:
+            assert result["valid"] is False  # Configuration is invalid
 
     @pytest.mark.asyncio
     async def test_plan_command(self, terraform_tool):
@@ -248,7 +252,7 @@ filename="${path.module}/test.txt"
 
             with open(test_file, "r") as f:
                 content = f.read()
-            assert content == "Hello, Terraform!"
+            assert content == "Hello, Terraform"
 
             # 4. Show state
             show_result = await terraform_tool._show_action({})
@@ -451,7 +455,10 @@ output "filename" {
         self._create_simple_terraform_config(
             terraform_tool.terraform_config.working_dir
         )
-        await terraform_tool._init_action({})
+        init_result = await terraform_tool._init_action({})
+        assert init_result[
+            "success"
+        ], f"Init failed: {init_result.get('error', 'Unknown error')}"
 
         # Test state list on empty state
         state_list_result = await terraform_tool._state_list_action({})

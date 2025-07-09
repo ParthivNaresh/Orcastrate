@@ -89,5 +89,14 @@ jobs:
         echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY || 'test-key' }}" >> $GITHUB_ENV
         echo "ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY || 'test-key' }}" >> $GITHUB_ENV
 
-    - name: Run integration tests
-      run: just test-integration testing
+    - name: Run integration tests with coverage
+      run: just test-integration-coverage testing
+
+    - name: Upload coverage reports for SonarQube
+      if: matrix.python-version == '3.11'
+      uses: actions/upload-artifact@v4
+      with:
+        name: integration-tests-coverage
+        path: |
+          coverage-integration.xml
+          htmlcov-integration/

@@ -193,6 +193,18 @@ test-integration env="testing":
     poetry run python -m pytest tests/integration/ -v --tb=short
     @echo "✅ Integration tests completed!"
 
+# Run integration tests with coverage
+test-integration-coverage env="testing":
+    @echo "🧪 Running integration tests with coverage analysis..."
+    poetry run python -m pytest tests/integration/ \
+        --cov=src \
+        --cov-report=term-missing \
+        --cov-report=html:htmlcov-integration \
+        --cov-report=xml:coverage-integration.xml \
+        --cov-fail-under=65 \
+        -v
+    @echo "📊 Integration test coverage report generated: htmlcov-integration/index.html"
+
 # Run tests in watch mode for development
 test-watch env="testing":
     @echo "👀 Starting test watch mode (Ctrl+C to stop)..."
@@ -271,6 +283,22 @@ test-live env="testing":
     @echo "├── 🧪 Running live tests..."
     poetry run python -m pytest tests/live/ --live -v --tb=short
     @echo "└── ✅ Live tests completed!"
+
+# Run live tests with coverage
+test-live-coverage env="testing":
+    @echo "🐳 Running live tests with coverage analysis..."
+    @echo "├── 🔍 Checking Docker infrastructure..."
+    @just docker-status > /dev/null || (echo "❌ Docker infrastructure not running. Start with 'just docker-start'" && exit 1)
+    @echo "├── 🧪 Running live tests with coverage..."
+    poetry run python -m pytest tests/live/ \
+        --cov=src \
+        --cov-report=term-missing \
+        --cov-report=html:htmlcov-live \
+        --cov-report=xml:coverage-live.xml \
+        --cov-fail-under=65 \
+        --live \
+        -v
+    @echo "└── 📊 Live test coverage report generated: htmlcov-live/index.html"
 
 # Run live tests for specific AWS services
 test-live-aws:

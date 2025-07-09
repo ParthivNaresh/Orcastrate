@@ -103,26 +103,26 @@ status:
 lint:
     @echo "🔍 Running comprehensive code quality checks..."
     @echo "├── 🧼 Running autoflake (remove unused imports)..."
-    python -m autoflake --check --recursive --remove-all-unused-imports --remove-unused-variables --quiet src/ tests/
+    poetry run python -m autoflake --check --recursive --remove-all-unused-imports --remove-unused-variables --quiet src/ tests/
     @echo "├── ⚫ Running black (code formatting)..."
-    python -m black --check --diff src/ tests/
+    poetry run python -m black --check --diff src/ tests/
     @echo "├── 📚 Running isort (import sorting)..."
-    python -m isort --check-only --diff src/ tests/
+    poetry run python -m isort --check-only --diff src/ tests/
     @echo "├── 🐍 Running flake8 (style checking)..."
-    python -m flake8 src/ tests/
+    poetry run python -m flake8 src/ tests/
     @echo "└── 🔬 Running mypy (static type checking)..."
-    python -m mypy src/ --ignore-missing-imports
+    poetry run python -m mypy src/ --ignore-missing-imports
     @echo "✅ All linting checks passed!"
 
 # Auto-fix all fixable linting issues
 lint-fix:
     @echo "🔧 Auto-fixing code quality issues..."
     @echo "├── 🧼 Running autoflake (removing unused imports)..."
-    python -m autoflake --in-place --recursive --remove-all-unused-imports --remove-unused-variables src/ tests/
+    poetry run python -m autoflake --in-place --recursive --remove-all-unused-imports --remove-unused-variables src/ tests/
     @echo "├── ⚫ Running black (formatting code)..."
-    python -m black src/ tests/
+    poetry run python -m black src/ tests/
     @echo "├── 📚 Running isort (sorting imports)..."
-    python -m isort src/ tests/
+    poetry run python -m isort src/ tests/
     @echo "└── ✅ Code formatting completed!"
     @echo ""
     @echo "🔍 Re-running checks to verify fixes..."
@@ -131,20 +131,20 @@ lint-fix:
 # Quick verification of linting status (no diffs, just pass/fail)
 lint-verify:
     @echo "🔍 Verifying code quality..."
-    python -m autoflake --check --recursive --remove-all-unused-imports --remove-unused-variables src/ tests/ > /dev/null
-    python -m black --check src/ tests/ > /dev/null
-    python -m isort --check-only src/ tests/ > /dev/null
-    python -m flake8 src/ tests/ > /dev/null
-    python -m mypy src/ --ignore-missing-imports > /dev/null
+    poetry run python -m autoflake --check --recursive --remove-all-unused-imports --remove-unused-variables src/ tests/ > /dev/null
+    poetry run python -m black --check src/ tests/ > /dev/null
+    poetry run python -m isort --check-only src/ tests/ > /dev/null
+    poetry run python -m flake8 src/ tests/ > /dev/null
+    poetry run python -m mypy src/ --ignore-missing-imports > /dev/null
     @echo "✅ All linting checks passed!"
 
 # Run security analysis tools
 security:
     @echo "🔒 Running security analysis..."
     @echo "├── 🛡️  Running bandit (security linting)..."
-    python -m bandit -r src/ -f json -o bandit-report.json || true
+    poetry run python -m bandit -r src/ -f json -o bandit-report.json || true
     @echo "└── 🔐 Running safety (dependency vulnerability check)..."
-    python -m safety scan || true
+    poetry run python -m safety scan || true
     @echo "✅ Security analysis completed (check bandit-report.json)"
 
 # ┌──────────────────────────────────────────────────────────────────────────────┐
@@ -155,14 +155,14 @@ security:
 test env="testing":
     @echo "🧪 Running unit and integration tests..."
     @just load-env {{env}} > /dev/null
-    python -m pytest tests/unit/ tests/integration/ -v --tb=short
+    poetry run python -m pytest tests/unit/ tests/integration/ -v --tb=short
     @echo "✅ All tests completed!"
 
 # Run tests with detailed coverage report
 test-coverage env="testing":
     @echo "🧪 Running tests with coverage analysis..."
     @just load-env {{env}} > /dev/null
-    python -m pytest tests/unit/ tests/integration/ \
+    poetry run python -m pytest tests/unit/ tests/integration/ \
         --cov=src \
         --cov-report=term-missing \
         --cov-report=html:htmlcov \
@@ -175,26 +175,26 @@ test-coverage env="testing":
 test-unit env="testing":
     @echo "🧪 Running unit tests only..."
     @just load-env {{env}} > /dev/null
-    python -m pytest tests/unit/ -v --tb=short
+    poetry run python -m pytest tests/unit/ -v --tb=short
     @echo "✅ Unit tests completed!"
 
 # Run only integration tests (component interactions)
 test-integration env="testing":
     @echo "🧪 Running integration tests only..."
     @just load-env {{env}} > /dev/null
-    python -m pytest tests/integration/ -v --tb=short
+    poetry run python -m pytest tests/integration/ -v --tb=short
     @echo "✅ Integration tests completed!"
 
 # Run tests in watch mode for development
 test-watch env="testing":
     @echo "👀 Starting test watch mode (Ctrl+C to stop)..."
     @just load-env {{env}} > /dev/null
-    python -m pytest tests/unit/ tests/integration/ --lf -x -v --tb=short -f
+    poetry run python -m pytest tests/unit/ tests/integration/ --lf -x -v --tb=short -f
 
 # Run specific test file or pattern
 test-file file:
     @echo "🧪 Running specific test: {{file}}..."
-    python -m pytest {{file}} -v --tb=short
+    poetry run python -m pytest {{file}} -v --tb=short
 
 # ┌──────────────────────────────────────────────────────────────────────────────┐
 # │                        🐳  DOCKER & LIVE TESTING                            │
@@ -263,18 +263,18 @@ test-live env="testing":
     @just docker-status > /dev/null || (echo "❌ Docker infrastructure not running. Start with 'just docker-start'" && exit 1)
     @echo "├── 🧪 Running live tests..."
     @just load-env {{env}} > /dev/null
-    python -m pytest tests/live/ --live -v --tb=short
+    poetry run python -m pytest tests/live/ --live -v --tb=short
     @echo "└── ✅ Live tests completed!"
 
 # Run live tests for specific AWS services
 test-live-aws:
     @echo "🐳 Running AWS live integration tests..."
-    python -m pytest tests/live/test_aws_live.py --live -v --tb=short
+    poetry run python -m pytest tests/live/test_aws_live.py --live -v --tb=short
 
 # Run live tests for multi-cloud operations
 test-live-multicloud:
     @echo "🐳 Running multi-cloud live integration tests..."
-    python -m pytest tests/live/test_multicloud_live.py --live -v --tb=short
+    poetry run python -m pytest tests/live/test_multicloud_live.py --live -v --tb=short
 
 # Run comprehensive live test suite with infrastructure management
 test-live-full:

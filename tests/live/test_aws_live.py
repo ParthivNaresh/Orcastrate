@@ -158,7 +158,7 @@ class TestAWSLiveIntegration:
         assert "account_id" in result.output
         assert "user_id" in result.output
         assert "arn" in result.output
-        assert result.output["region"] == "us-east-1"
+        assert result.output["region"] == "us-west-2"
 
     @pytest.mark.asyncio
     async def test_ec2_instance_lifecycle_live(

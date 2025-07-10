@@ -172,8 +172,8 @@ class TestDockerTool:
             )
 
             assert result["success"] is True
-            assert result["image_name"] == "my-app"
-            assert result["tag"] == "v1.0"
+            assert result["image_name"] == "my-app:v1.0"  # Now returns full tag
+            assert result["tag"] == "my-app:v1.0"
             assert "Successfully built" in result["build_output"]
 
             # Verify command was constructed correctly
@@ -246,8 +246,12 @@ class TestDockerTool:
 
             assert result["success"] is True
             assert len(result["containers"]) == 2
-            assert result["containers"][0]["ID"] == "abc123"
-            assert result["containers"][1]["Image"] == "redis:6"
+            assert (
+                result["containers"][0]["container_id"] == "abc123"
+            )  # Now uses normalized field names
+            assert (
+                result["containers"][1]["image"] == "redis:6"
+            )  # Now uses normalized field names
 
     @pytest.mark.asyncio
     async def test_compose_up_success(self, docker_tool):
@@ -261,6 +265,7 @@ class TestDockerTool:
 
             docker_tool._docker_available = True
             docker_tool._compose_available = True
+            docker_tool._compose_cmd = ["docker", "compose"]  # Set the compose command
 
             result = await docker_tool._compose_up(
                 {
@@ -279,7 +284,9 @@ class TestDockerTool:
             # Verify command was constructed correctly
             mock_run.assert_called_once()
             call_args = mock_run.call_args[0][0]
-            assert "docker-compose" in call_args
+            assert (
+                "docker" in call_args and "compose" in call_args
+            )  # Modern docker compose syntax
             assert "-p" in call_args
             assert "myproject" in call_args
             assert "up" in call_args

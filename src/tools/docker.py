@@ -35,6 +35,7 @@ class DockerTool(Tool):
         self._docker_available = False
         self._compose_available = False
         self._docker_version: Optional[str] = None
+        self._compose_cmd: Optional[List[str]] = None
 
     async def get_schema(self) -> ToolSchema:
         """Return the Docker tool schema."""
@@ -286,10 +287,22 @@ class DockerTool(Tool):
             self._docker_version = result["stdout"].strip()
             self._docker_available = True
 
-            # Check Docker Compose availability
-            compose_result = await self._run_command(["docker-compose", "--version"])
+            # Check Docker Compose availability (try both modern and legacy)
+            # Try modern docker compose first
+            compose_result = await self._run_command(["docker", "compose", "version"])
             if compose_result["returncode"] == 0:
                 self._compose_available = True
+                self._compose_cmd = ["docker", "compose"]
+            else:
+                # Fallback to legacy docker-compose
+                compose_result = await self._run_command(
+                    ["docker-compose", "--version"]
+                )
+                if compose_result["returncode"] == 0:
+                    self._compose_available = True
+                    self._compose_cmd = ["docker-compose"]
+                else:
+                    self._compose_cmd = None
 
             return {"docker_available": True, "version": self._docker_version}
 
@@ -468,6 +481,13 @@ class DockerTool(Tool):
         else:
             image_tag = tag or image_name or ""
 
+        # If no explicit tag is provided, Docker will add :latest
+        # Ensure our return value reflects what Docker actually creates
+        if ":" not in image_tag:
+            full_image_tag = f"{image_tag}:latest"
+        else:
+            full_image_tag = image_tag
+
         if not context_path:
             raise ToolError("context_path or path parameter is required")
         if not image_tag:
@@ -504,8 +524,8 @@ class DockerTool(Tool):
             raise ToolError(f"Docker build failed: {result['stderr']}")
 
         return {
-            "image_name": image_name or image_tag,
-            "tag": tag or image_tag,
+            "image_name": full_image_tag,  # Return the full tag that Docker actually creates
+            "tag": full_image_tag,
             "build_output": result["stdout"],
             "success": True,
         }
@@ -703,8 +723,28 @@ class DockerTool(Tool):
                 if line:
                     try:
                         container_data = json.loads(line)
-                        # Keep original field names from Docker output
-                        containers.append(container_data)
+                        # Normalize field names for consistent API
+                        # Docker returns Names as a string, extract the actual name
+                        names_str = container_data.get("Names", "")
+                        # Names typically comes as "/container-name" so strip the leading slash
+                        name = names_str.lstrip("/") if names_str else ""
+
+                        normalized_container = {
+                            "container_id": container_data.get("ID", ""),
+                            "image": container_data.get("Image", ""),
+                            "command": container_data.get("Command", ""),
+                            "created": container_data.get("CreatedAt", ""),
+                            "status": container_data.get("Status", ""),
+                            "state": container_data.get("State", ""),
+                            "ports": container_data.get("Ports", ""),
+                            "names": names_str,  # Keep original for compatibility
+                            "name": name,  # Add parsed name field
+                            "size": container_data.get("Size", ""),
+                            "labels": container_data.get("Labels", ""),
+                            "mounts": container_data.get("Mounts", ""),
+                            "networks": container_data.get("Networks", ""),
+                        }
+                        containers.append(normalized_container)
                     except json.JSONDecodeError:
                         continue
 
@@ -776,8 +816,13 @@ class DockerTool(Tool):
         """Start services with Docker Compose."""
         if not self._compose_available:
             raise ToolError("Docker Compose is not available")
+        if not self._compose_cmd:
+            raise ToolError("Docker Compose command not available")
 
-        cmd = ["docker-compose", "-f", params.get("compose_file", "docker-compose.yml")]
+        cmd = self._compose_cmd + [
+            "-f",
+            params.get("compose_file", "docker-compose.yml"),
+        ]
 
         if params.get("project_name"):
             cmd.extend(["-p", params["project_name"]])
@@ -806,8 +851,13 @@ class DockerTool(Tool):
         """Stop and remove services with Docker Compose."""
         if not self._compose_available:
             raise ToolError("Docker Compose is not available")
+        if not self._compose_cmd:
+            raise ToolError("Docker Compose command not available")
 
-        cmd = ["docker-compose", "-f", params.get("compose_file", "docker-compose.yml")]
+        cmd = self._compose_cmd + [
+            "-f",
+            params.get("compose_file", "docker-compose.yml"),
+        ]
 
         if params.get("project_name"):
             cmd.extend(["-p", params["project_name"]])

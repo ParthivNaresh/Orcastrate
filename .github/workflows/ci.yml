@@ -19,7 +19,6 @@ jobs:
 
   live-tests:
     name: "Live Tests"
-    if: github.event_name == 'push' && (contains(github.ref, 'refs/heads/main') || contains(github.ref, 'refs/heads/develop'))
     needs: [unit-tests, integration-tests]
     uses: ./.github/workflows/test-live.yml
     secrets: inherit
@@ -36,7 +35,7 @@ jobs:
 
   sonarcloud:
     name: "SonarCloud Analysis"
-    needs: [unit-tests, integration-tests]
+    needs: [unit-tests, integration-tests, live-tests]
     uses: ./.github/workflows/sonarqube.yml
     secrets: inherit
     with:

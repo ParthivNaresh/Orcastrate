@@ -321,20 +321,20 @@ class DockerTool(Tool):
                 if action == "build_image":
                     # Support both old and new parameter names
                     context_path = params.get("path") or params.get("context_path")
-                    image_name = params.get("tag") or params.get("image_name")
+                    tag_or_image = params.get("tag") or params.get("image_name")
 
                     if not context_path:
                         errors.append("context_path is required for build_image")
-                    if not image_name:
-                        errors.append("image_name is required for build_image")
+                    if not tag_or_image:
+                        errors.append("tag or image_name is required for build_image")
 
                     # Normalize parameters for consistency
                     if context_path:
                         normalized_params["context_path"] = context_path
                         normalized_params["path"] = context_path
-                    if image_name:
-                        normalized_params["image_name"] = image_name
-                        normalized_params["tag"] = image_name
+
+                    # Don't double-set both image_name and tag if only one was provided
+                    # Let the build_image method handle the logic of combining them
 
                 elif action == "create_container":
                     if not params.get("image"):
@@ -478,15 +478,10 @@ class DockerTool(Tool):
         # Build the full image tag
         if image_name and tag:
             image_tag = f"{image_name}:{tag}"
+            user_facing_name = image_tag
         else:
             image_tag = tag or image_name or ""
-
-        # If no explicit tag is provided, Docker will add :latest
-        # Ensure our return value reflects what Docker actually creates
-        if ":" not in image_tag:
-            full_image_tag = f"{image_tag}:latest"
-        else:
-            full_image_tag = image_tag
+            user_facing_name = image_tag  # Return what user provided
 
         if not context_path:
             raise ToolError("context_path or path parameter is required")
@@ -524,8 +519,8 @@ class DockerTool(Tool):
             raise ToolError(f"Docker build failed: {result['stderr']}")
 
         return {
-            "image_name": full_image_tag,  # Return the full tag that Docker actually creates
-            "tag": full_image_tag,
+            "image_name": user_facing_name,  # Return what user can use to reference the image
+            "tag": user_facing_name,
             "build_output": result["stdout"],
             "success": True,
         }

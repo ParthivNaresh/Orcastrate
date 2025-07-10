@@ -112,7 +112,7 @@ class TestDockerTool:
         result = validator.validate("build_image", {})
         assert result.valid is False
         assert "context_path is required for build_image" in result.errors
-        assert "image_name is required for build_image" in result.errors
+        assert "tag or image_name is required for build_image" in result.errors
 
     @pytest.mark.asyncio
     async def test_validate_run_container_params(self, docker_tool):
@@ -172,7 +172,9 @@ class TestDockerTool:
             )
 
             assert result["success"] is True
-            assert result["image_name"] == "my-app:v1.0"  # Now returns full tag
+            assert (
+                result["image_name"] == "my-app:v1.0"
+            )  # Still returns combined tag when both provided
             assert result["tag"] == "my-app:v1.0"
             assert "Successfully built" in result["build_output"]
 

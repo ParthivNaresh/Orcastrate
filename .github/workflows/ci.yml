@@ -35,6 +35,7 @@ jobs:
 
   sonarcloud:
     name: "SonarCloud Analysis"
+    if: always()
     needs: [unit-tests, integration-tests, live-tests]
     uses: ./.github/workflows/sonarqube.yml
     secrets: inherit

@@ -12,6 +12,8 @@ import tempfile
 import time
 from typing import Any, Dict, List, Optional
 
+import aiofiles
+
 from .base import CostEstimate, Tool, ToolConfig, ToolError, ToolSchema
 
 
@@ -744,8 +746,8 @@ class TerraformTool(Tool):
 
             # Write to file if working directory is available
             config_file = os.path.join(self.terraform_config.working_dir, "main.tf")
-            with open(config_file, "w") as f:
-                f.write(full_hcl)
+            async with aiofiles.open(config_file, "w") as f:
+                await f.write(full_hcl)
 
             return {
                 "success": True,

@@ -35,6 +35,7 @@ class MultiCloudTool(Tool):
         super().__init__(config)
         self.manager = MultiCloudManager()
         self._initialized_providers: set[CloudProvider] = set()
+        self._provider_configs: dict[str, dict[str, Any]] = {}
 
     async def get_schema(self) -> ToolSchema:
         """Return the multi-cloud tool schema."""
@@ -385,8 +386,15 @@ class MultiCloudTool(Tool):
                 # Register AWS provider if not already registered
                 register_provider(CloudProvider.AWS, AWSProvider)
 
-                # Create AWS provider instance
+                # Create AWS provider instance using stored config if available
                 aws_config = self.config.environment.get("aws", {})
+                if provider_name in self._provider_configs:
+                    stored_config = self._provider_configs[provider_name]
+                    # Merge stored credentials and config with environment config
+                    aws_config.update(stored_config.get("config", {}))
+                    if "credentials" in stored_config:
+                        aws_config["credentials"] = stored_config["credentials"]
+
                 aws_provider = AWSProvider(aws_config)
                 await aws_provider.initialize()
                 self.manager.register_provider(aws_provider)
@@ -875,11 +883,17 @@ class MultiCloudTool(Tool):
     async def _register_provider(self, params: dict[str, Any]) -> dict[str, Any]:
         """Register a cloud provider."""
         provider_name = params["provider"]
-        params["credentials"]
-        params.get("config", {})
+        credentials = params["credentials"]
+        config = params.get("config", {})
 
         # Provider configuration is handled during initialization
         # The credentials are passed during provider initialization
+
+        # Store credentials and config for provider initialization
+        self._provider_configs[provider_name] = {
+            "credentials": credentials,
+            "config": config,
+        }
 
         # Initialize provider
         await self._ensure_provider_initialized(provider_name)

@@ -3919,6 +3919,18 @@ shellingham = ">=1.3.0"
 typing-extensions = ">=3.7.4.3"
 
 [[package]]
+name = "types-aiofiles"
+version = "24.1.0.20250708"
+description = "Typing stubs for aiofiles"
+optional = false
+python-versions = ">=3.9"
+groups = ["dev"]
+files = [
+    {file = "types_aiofiles-24.1.0.20250708-py3-none-any.whl", hash = "sha256:07f8f06465fd415d9293467d1c66cd074b2c3b62b679e26e353e560a8cf63720"},
+    {file = "types_aiofiles-24.1.0.20250708.tar.gz", hash = "sha256:c8207ed7385491ce5ba94da02658164ebd66b69a44e892288c9f20cbbf5284ff"},
+]
+
+[[package]]
 name = "types-pymysql"
 version = "1.1.0.20250708"
 description = "Typing stubs for PyMySQL"
@@ -4156,4 +4168,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10.0"
-content-hash = "d54e0964f23effb13e34df372138301c2cbdbd13c7d90e3fc45cf082444f6463"
+content-hash = "556882f987d3bc7f536e7ba846ad34f98564770b13eec38710d38b10056c5477"

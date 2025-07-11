@@ -483,10 +483,12 @@ class AWSProvider(MultiCloudProvider):
 
             if result.success:
                 monthly_cost = Decimal(str(result.output["total_estimated_cost"]))
-                monthly_cost / Decimal("720")
+                hourly_cost = monthly_cost / Decimal(
+                    "720"
+                )  # 720 hours in a month (30 * 24)
 
                 return CostEstimate(
-                    estimated_cost=float(monthly_cost), currency="USD", confidence=0.8
+                    estimated_cost=float(hourly_cost), currency="USD", confidence=0.8
                 )
 
         # Default estimation

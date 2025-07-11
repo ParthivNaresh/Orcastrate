@@ -72,6 +72,7 @@ PyMySQL = "*"
 types-PyMySQL = "*"
 docker = "*"
 urllib3 = "*"
+types-aiofiles = "^24.1.0.20250708"
 
 [tool.poetry.scripts]
 orcastrate = "src.cli.main:cli"

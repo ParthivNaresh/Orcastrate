@@ -1,17 +1,17 @@
 {
   "errors": [],
-  "generated_at": "2025-07-08T01:06:08Z",
+  "generated_at": "2025-07-11T22:53:16Z",
   "metrics": {
     "_totals": {
       "CONFIDENCE.HIGH": 1,
       "CONFIDENCE.LOW": 0,
-      "CONFIDENCE.MEDIUM": 7,
+      "CONFIDENCE.MEDIUM": 5,
       "CONFIDENCE.UNDEFINED": 0,
       "SEVERITY.HIGH": 0,
       "SEVERITY.LOW": 1,
-      "SEVERITY.MEDIUM": 7,
+      "SEVERITY.MEDIUM": 5,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 16636,
+      "loc": 17553,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -96,13 +96,13 @@
     "src/cli/main.py": {
       "CONFIDENCE.HIGH": 1,
       "CONFIDENCE.LOW": 0,
-      "CONFIDENCE.MEDIUM": 3,
+      "CONFIDENCE.MEDIUM": 1,
       "CONFIDENCE.UNDEFINED": 0,
       "SEVERITY.HIGH": 0,
       "SEVERITY.LOW": 1,
-      "SEVERITY.MEDIUM": 3,
+      "SEVERITY.MEDIUM": 1,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 275,
+      "loc": 280,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -128,7 +128,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 1,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 246,
+      "loc": 260,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -206,7 +206,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 513,
+      "loc": 533,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -219,7 +219,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 484,
+      "loc": 502,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -232,7 +232,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 439,
+      "loc": 545,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -258,7 +258,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 769,
+      "loc": 771,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -284,7 +284,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 196,
+      "loc": 349,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -297,7 +297,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 332,
+      "loc": 352,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -310,7 +310,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 195,
+      "loc": 287,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -323,7 +323,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 513,
+      "loc": 871,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -388,7 +388,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 918,
+      "loc": 923,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -427,7 +427,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 370,
+      "loc": 373,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -440,7 +440,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 930,
+      "loc": 932,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -453,7 +453,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 656,
+      "loc": 685,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -466,7 +466,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 679,
+      "loc": 697,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -479,7 +479,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 717,
+      "loc": 722,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -492,7 +492,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 948,
+      "loc": 986,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -596,7 +596,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 814,
+      "loc": 822,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -609,16 +609,16 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 839,
+      "loc": 860,
       "nosec": 0,
       "skipped_tests": 0
     }
   },
   "results": [
     {
-      "code": "30         logging.StreamHandler(),\n31         logging.FileHandler(\"/tmp/orcastrate/orcastrate.log\"),\n32     ],\n",
-      "col_offset": 28,
-      "end_col_offset": 60,
+      "code": "26 # Ensure log directory exists before configuring logging\n27 LOG_DIR = Path(\"/tmp/orcastrate\")\n28 LOG_DIR.mkdir(parents=True, exist_ok=True)\n",
+      "col_offset": 15,
+      "end_col_offset": 32,
       "filename": "src/cli/main.py",
       "issue_confidence": "MEDIUM",
       "issue_cwe": {
@@ -627,36 +627,16 @@
       },
       "issue_severity": "MEDIUM",
       "issue_text": "Probable insecure usage of temp file/directory.",
-      "line_number": 31,
+      "line_number": 27,
       "line_range": [
-        31
+        27
       ],
-      "more_info": "https://bandit.readthedocs.io/en/1.8.5/plugins/b108_hardcoded_tmp_directory.html",
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b108_hardcoded_tmp_directory.html",
       "test_id": "B108",
       "test_name": "hardcoded_tmp_directory"
     },
     {
-      "code": "174     # Ensure log directory exists\n175     Path(\"/tmp/orcastrate\").mkdir(parents=True, exist_ok=True)\n176 \n",
-      "col_offset": 9,
-      "end_col_offset": 26,
-      "filename": "src/cli/main.py",
-      "issue_confidence": "MEDIUM",
-      "issue_cwe": {
-        "id": 377,
-        "link": "https://cwe.mitre.org/data/definitions/377.html"
-      },
-      "issue_severity": "MEDIUM",
-      "issue_text": "Probable insecure usage of temp file/directory.",
-      "line_number": 175,
-      "line_range": [
-        175
-      ],
-      "more_info": "https://bandit.readthedocs.io/en/1.8.5/plugins/b108_hardcoded_tmp_directory.html",
-      "test_id": "B108",
-      "test_name": "hardcoded_tmp_directory"
-    },
-    {
-      "code": "212                 click.echo(\"\ud83d\udd0d Dry run mode - generating plan only...\")\n213                 assert (\n214                     agent.planner is not None\n215                 ), \"Planner must be initialized before use\"\n216                 plan = await agent.planner.create_plan(requirements)\n",
+      "code": "216                 click.echo(\"\ud83d\udd0d Dry run mode - generating plan only...\")\n217                 assert (\n218                     agent.planner is not None\n219                 ), \"Planner must be initialized before use\"\n220                 plan = await agent.planner.create_plan(requirements)\n",
       "col_offset": 16,
       "end_col_offset": 59,
       "filename": "src/cli/main.py",
@@ -667,38 +647,18 @@
       },
       "issue_severity": "LOW",
       "issue_text": "Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
-      "line_number": 213,
+      "line_number": 217,
       "line_range": [
-        213,
-        214,
-        215
+        217,
+        218,
+        219
       ],
-      "more_info": "https://bandit.readthedocs.io/en/1.8.5/plugins/b101_assert_used.html",
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b101_assert_used.html",
       "test_id": "B101",
       "test_name": "assert_used"
     },
     {
-      "code": "328     \"\"\"Show recent logs.\"\"\"\n329     log_file = Path(\"/tmp/orcastrate/orcastrate.log\")\n330 \n",
-      "col_offset": 20,
-      "end_col_offset": 52,
-      "filename": "src/cli/main.py",
-      "issue_confidence": "MEDIUM",
-      "issue_cwe": {
-        "id": 377,
-        "link": "https://cwe.mitre.org/data/definitions/377.html"
-      },
-      "issue_severity": "MEDIUM",
-      "issue_text": "Probable insecure usage of temp file/directory.",
-      "line_number": 329,
-      "line_range": [
-        329
-      ],
-      "more_info": "https://bandit.readthedocs.io/en/1.8.5/plugins/b108_hardcoded_tmp_directory.html",
-      "test_id": "B108",
-      "test_name": "hardcoded_tmp_directory"
-    },
-    {
-      "code": "242     debug: bool = Field(default=False, env=\"DEBUG\")\n243     api_host: str = Field(default=\"0.0.0.0\", env=\"API_HOST\")\n244     api_port: int = Field(default=8000, env=\"API_PORT\")\n",
+      "code": "259     debug: bool = Field(default=False, env=\"DEBUG\")\n260     api_host: str = Field(default=\"0.0.0.0\", env=\"API_HOST\")\n261     api_port: int = Field(default=8000, env=\"API_PORT\")\n",
       "col_offset": 34,
       "end_col_offset": 43,
       "filename": "src/config/settings.py",
@@ -709,11 +669,11 @@
       },
       "issue_severity": "MEDIUM",
       "issue_text": "Possible binding to all interfaces.",
-      "line_number": 243,
+      "line_number": 260,
       "line_range": [
-        243
+        260
       ],
-      "more_info": "https://bandit.readthedocs.io/en/1.8.5/plugins/b104_hardcoded_bind_all_interfaces.html",
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b104_hardcoded_bind_all_interfaces.html",
       "test_id": "B104",
       "test_name": "hardcoded_bind_all_interfaces"
     },
@@ -733,7 +693,7 @@
       "line_range": [
         843
       ],
-      "more_info": "https://bandit.readthedocs.io/en/1.8.5/plugins/b108_hardcoded_tmp_directory.html",
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b108_hardcoded_tmp_directory.html",
       "test_id": "B108",
       "test_name": "hardcoded_tmp_directory"
     },
@@ -753,7 +713,7 @@
       "line_range": [
         171
       ],
-      "more_info": "https://bandit.readthedocs.io/en/1.8.5/plugins/b108_hardcoded_tmp_directory.html",
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b108_hardcoded_tmp_directory.html",
       "test_id": "B108",
       "test_name": "hardcoded_tmp_directory"
     },
@@ -773,7 +733,7 @@
       "line_range": [
         272
       ],
-      "more_info": "https://bandit.readthedocs.io/en/1.8.5/plugins/b108_hardcoded_tmp_directory.html",
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b108_hardcoded_tmp_directory.html",
       "test_id": "B108",
       "test_name": "hardcoded_tmp_directory"
     }

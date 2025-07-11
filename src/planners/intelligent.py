@@ -971,13 +971,19 @@ class IntelligentPlanner(Planner):
         """Generate initial plan from context."""
         # Extract requirements from context
         requirements_text = context.get("requirements_text", "")
-        context.get("technologies", [])
+        technologies = context.get("technologies", [])
         constraints = context.get("constraints", {})
+
+        # Enhanced context with technologies for planning
+        enhanced_context = {
+            **context,
+            "detected_technologies": technologies,
+        }
 
         # Use our intelligent create_plan method
         plan_steps = await self.create_intelligent_plan(
             requirements=requirements_text,
-            context=context,
+            context=enhanced_context,
             available_tools=list(self._available_tools),
             constraints=constraints,
         )

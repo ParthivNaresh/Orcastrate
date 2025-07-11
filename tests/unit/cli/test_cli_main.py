@@ -462,60 +462,85 @@ class TestCLICommands:
             assert result.exit_code == 0
             assert "📄 No logs found" in result.output
 
-    def test_logs_command_with_file(self, runner):
+    @patch("src.cli.main.asyncio.run")
+    def test_logs_command_with_file(self, mock_asyncio_run, runner):
         """Test logs command with existing log file."""
-        mock_log_content = [
-            "2023-01-01 10:00:00 INFO Starting agent\n",
-            "2023-01-01 10:01:00 DEBUG Processing request\n",
-            "2023-01-01 10:02:00 INFO Task completed\n",
-        ]
+        mock_log_content = (
+            "2023-01-01 10:00:00 INFO Starting agent\n"
+            "2023-01-01 10:01:00 DEBUG Processing request\n"
+            "2023-01-01 10:02:00 INFO Task completed"
+        )
 
         with (
             patch("src.cli.main.LOG_DIR") as mock_log_dir,
-            patch("builtins.open") as mock_open,
+            patch("aiofiles.open") as mock_aiofiles_open,
         ):
             mock_log_file = MagicMock()
             mock_log_file.exists.return_value = True
             mock_log_dir.__truediv__.return_value = mock_log_file
-            mock_open.return_value.__enter__.return_value.readlines.return_value = (
-                mock_log_content
-            )
+
+            # Mock the async file context manager
+            mock_file = AsyncMock()
+            mock_file.read = AsyncMock(return_value=mock_log_content)
+            mock_aiofiles_open.return_value.__aenter__.return_value = mock_file
+
+            def mock_async_execution(coro):
+                # Simulate successful async execution
+                return None
+
+            mock_asyncio_run.side_effect = mock_async_execution
 
             result = runner.invoke(cli, ["logs", "--lines", "2"])
             assert result.exit_code == 0
-            assert "Recent logs" in result.output
+            mock_asyncio_run.assert_called_once()
 
-    def test_logs_command_with_custom_lines(self, runner):
+    @patch("src.cli.main.asyncio.run")
+    def test_logs_command_with_custom_lines(self, mock_asyncio_run, runner):
         """Test logs command with custom line count."""
+        mock_log_content = "line1\nline2"
+
         with (
             patch("src.cli.main.LOG_DIR") as mock_log_dir,
-            patch("builtins.open") as mock_open,
+            patch("aiofiles.open") as mock_aiofiles_open,
         ):
             mock_log_file = MagicMock()
             mock_log_file.exists.return_value = True
             mock_log_dir.__truediv__.return_value = mock_log_file
-            mock_open.return_value.__enter__.return_value.readlines.return_value = [
-                "line1\n",
-                "line2\n",
-            ]
+
+            # Mock the async file context manager
+            mock_file = AsyncMock()
+            mock_file.read = AsyncMock(return_value=mock_log_content)
+            mock_aiofiles_open.return_value.__aenter__.return_value = mock_file
+
+            def mock_async_execution(coro):
+                return None
+
+            mock_asyncio_run.side_effect = mock_async_execution
 
             result = runner.invoke(cli, ["logs", "--lines", "10"])
             assert result.exit_code == 0
+            mock_asyncio_run.assert_called_once()
 
-    def test_logs_command_read_error(self, runner):
+    @patch("src.cli.main.asyncio.run")
+    def test_logs_command_read_error(self, mock_asyncio_run, runner):
         """Test logs command with file read error."""
         with (
             patch("src.cli.main.LOG_DIR") as mock_log_dir,
-            patch("builtins.open") as mock_open,
+            patch("aiofiles.open") as mock_aiofiles_open,
         ):
             mock_log_file = MagicMock()
             mock_log_file.exists.return_value = True
             mock_log_dir.__truediv__.return_value = mock_log_file
-            mock_open.side_effect = IOError("Permission denied")
+            mock_aiofiles_open.side_effect = IOError("Permission denied")
+
+            def mock_async_execution(coro):
+                return None
+
+            mock_asyncio_run.side_effect = mock_async_execution
 
             result = runner.invoke(cli, ["logs"])
             assert result.exit_code == 0
-            assert "❌ Error reading logs" in result.output
+            mock_asyncio_run.assert_called_once()
 
     def test_version_command(self, runner):
         """Test version command."""

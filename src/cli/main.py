@@ -13,6 +13,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Optional
 
+import aiofiles
 import click
 
 from ..agent.base import Requirements
@@ -245,8 +246,8 @@ def create(description, framework, database, cloud_provider, output, dry_run):
 
             # Output result
             if output:
-                with open(output, "w") as f:
-                    json.dump(result, f, indent=2, default=str)
+                async with aiofiles.open(output, "w") as f:
+                    await f.write(json.dumps(result, indent=2, default=str))
                 click.echo(f"📄 Result saved to {output}")
 
             # Display summary
@@ -329,27 +330,32 @@ def tools():
 @click.option("--lines", "-n", default=50, help="Number of log lines to show")
 def logs(lines):
     """Show recent logs."""
-    log_file = LOG_DIR / "orcastrate.log"
 
-    if not log_file.exists():
-        click.echo("📄 No logs found")
-        return
+    async def _logs():
+        log_file = LOG_DIR / "orcastrate.log"
 
-    try:
-        with open(log_file, "r") as f:
-            log_lines = f.readlines()
+        if not log_file.exists():
+            click.echo("📄 No logs found")
+            return
 
-        # Show last N lines
-        recent_lines = log_lines[-lines:] if len(log_lines) > lines else log_lines
+        try:
+            async with aiofiles.open(log_file, "r") as f:
+                content = await f.read()
+                log_lines = content.splitlines()
 
-        click.echo(f"📄 Recent logs (last {len(recent_lines)} lines):")
-        click.echo()
+            # Show last N lines
+            recent_lines = log_lines[-lines:] if len(log_lines) > lines else log_lines
 
-        for line in recent_lines:
-            click.echo(line.rstrip())
+            click.echo(f"📄 Recent logs (last {len(recent_lines)} lines):")
+            click.echo()
 
-    except Exception as e:
-        click.echo(f"❌ Error reading logs: {e}")
+            for line in recent_lines:
+                click.echo(line)
+
+        except Exception as e:
+            click.echo(f"❌ Error reading logs: {e}")
+
+    asyncio.run(_logs())
 
 
 @cli.command()

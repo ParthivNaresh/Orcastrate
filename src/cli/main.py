@@ -22,13 +22,17 @@ from ..executors.concrete_executor import ConcreteExecutor
 from ..planners.base import PlannerConfig, PlanningStrategy
 from ..planners.template_planner import TemplatePlanner
 
+# Ensure log directory exists before configuring logging
+LOG_DIR = Path("/tmp/orcastrate")
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
         logging.StreamHandler(),
-        logging.FileHandler("/tmp/orcastrate/orcastrate.log"),
+        logging.FileHandler(LOG_DIR / "orcastrate.log"),
     ],
 )
 
@@ -171,8 +175,7 @@ def cli(ctx, verbose):
     if verbose:
         logging.getLogger().setLevel(logging.DEBUG)
 
-    # Ensure log directory exists
-    Path("/tmp/orcastrate").mkdir(parents=True, exist_ok=True)
+    # Log directory already created at module level
 
     ctx.ensure_object(dict)
 
@@ -326,7 +329,7 @@ def tools():
 @click.option("--lines", "-n", default=50, help="Number of log lines to show")
 def logs(lines):
     """Show recent logs."""
-    log_file = Path("/tmp/orcastrate/orcastrate.log")
+    log_file = LOG_DIR / "orcastrate.log"
 
     if not log_file.exists():
         click.echo("📄 No logs found")

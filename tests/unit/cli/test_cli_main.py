@@ -453,20 +453,14 @@ class TestCLICommands:
 
     def test_logs_command_no_file(self, runner):
         """Test logs command when no log file exists."""
-        # Create a temporary directory for this test
-        import os
-        import tempfile
+        with patch("src.cli.main.LOG_DIR") as mock_log_dir:
+            mock_log_file = MagicMock()
+            mock_log_file.exists.return_value = False
+            mock_log_dir.__truediv__.return_value = mock_log_file
 
-        with tempfile.TemporaryDirectory() as tmpdir:
-            os.path.join(tmpdir, "orcastrate.log")
-            with patch("src.cli.main.Path") as mock_path:
-                mock_path_instance = MagicMock()
-                mock_path_instance.exists.return_value = False
-                mock_path.return_value = mock_path_instance
-
-                result = runner.invoke(cli, ["logs"])
-                assert result.exit_code == 0
-                assert "📄 No logs found" in result.output
+            result = runner.invoke(cli, ["logs"])
+            assert result.exit_code == 0
+            assert "📄 No logs found" in result.output
 
     def test_logs_command_with_file(self, runner):
         """Test logs command with existing log file."""
@@ -477,12 +471,12 @@ class TestCLICommands:
         ]
 
         with (
-            patch("src.cli.main.Path") as mock_path,
+            patch("src.cli.main.LOG_DIR") as mock_log_dir,
             patch("builtins.open") as mock_open,
         ):
-            mock_path_instance = MagicMock()
-            mock_path_instance.exists.return_value = True
-            mock_path.return_value = mock_path_instance
+            mock_log_file = MagicMock()
+            mock_log_file.exists.return_value = True
+            mock_log_dir.__truediv__.return_value = mock_log_file
             mock_open.return_value.__enter__.return_value.readlines.return_value = (
                 mock_log_content
             )
@@ -494,12 +488,12 @@ class TestCLICommands:
     def test_logs_command_with_custom_lines(self, runner):
         """Test logs command with custom line count."""
         with (
-            patch("src.cli.main.Path") as mock_path,
+            patch("src.cli.main.LOG_DIR") as mock_log_dir,
             patch("builtins.open") as mock_open,
         ):
-            mock_path_instance = MagicMock()
-            mock_path_instance.exists.return_value = True
-            mock_path.return_value = mock_path_instance
+            mock_log_file = MagicMock()
+            mock_log_file.exists.return_value = True
+            mock_log_dir.__truediv__.return_value = mock_log_file
             mock_open.return_value.__enter__.return_value.readlines.return_value = [
                 "line1\n",
                 "line2\n",
@@ -511,12 +505,12 @@ class TestCLICommands:
     def test_logs_command_read_error(self, runner):
         """Test logs command with file read error."""
         with (
-            patch("src.cli.main.Path") as mock_path,
+            patch("src.cli.main.LOG_DIR") as mock_log_dir,
             patch("builtins.open") as mock_open,
         ):
-            mock_path_instance = MagicMock()
-            mock_path_instance.exists.return_value = True
-            mock_path.return_value = mock_path_instance
+            mock_log_file = MagicMock()
+            mock_log_file.exists.return_value = True
+            mock_log_dir.__truediv__.return_value = mock_log_file
             mock_open.side_effect = IOError("Permission denied")
 
             result = runner.invoke(cli, ["logs"])

@@ -111,6 +111,7 @@ git push origin feature/your-feature-name
 # Create pull request via GitHub/GitLab UI
 ```
 
+(coding-standards)=
 ## Coding Standards
 
 ### Python Style

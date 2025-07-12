@@ -1,0 +1,163 @@
+[tool.poetry]
+name = "orcastrate"
+version = "1.0.0"
+description = "Production-Grade Development Environment Agent"
+authors = ["Parthiv Naresh <parthivnaresh@gmail.com>"]
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/orcastrate/orcastrate"
+documentation = "https://docs.orcastrate.dev"
+keywords = ["development", "environment", "automation", "devops", "containers"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Systems Administration",
+]
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10.0"
+fastapi = "*"
+pydantic = "*"
+uvicorn = "*"
+psycopg2-binary = "*"
+redis = "*"
+boto3 = "*"
+google-cloud-core = "*"
+google-cloud-storage = "*"
+google-cloud-compute = "*"
+azure-identity = "*"
+openai = "*"
+anthropic = "*"
+prometheus-client = "*"
+opentelemetry-api = "*"
+click = "*"
+pyyaml = "*"
+jinja2 = "*"
+aiofiles = "*"
+httpx = "*"
+requests = "*"
+asyncpg = "*"
+aiomysql = "*"
+motor = "*"
+pydantic-settings = "*"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "*"
+pytest-asyncio = "*"
+pytest-cov = "*"
+black = "*"
+flake8 = "*"
+mypy = "*"
+isort = "*"
+lxml = "*"
+autoflake = "*"
+pre-commit = "*"
+sphinx = "*"
+sphinx-rtd-theme = "*"
+myst-parser = "*"
+bandit = "*"
+safety = "*"
+testcontainers = "*"
+localstack = "*"
+pymongo = "*"
+PyMySQL = "*"
+types-PyMySQL = "*"
+docker = "*"
+urllib3 = "*"
+types-aiofiles = "^24.1.0.20250708"
+
+[tool.poetry.scripts]
+orcastrate = "src.cli.main:cli"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ['py310']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["src"]
+skip_glob = ["*/migrations/*"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+disallow_untyped_decorators = false
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+ignore_missing_imports = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = "src.config.settings"
+ignore_errors = true
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers --strict-config --disable-warnings"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "live: Live integration tests with real services",
+    "localstack: Tests requiring LocalStack",
+    "docker_required: Tests requiring Docker daemon",
+    "terraform_required: Tests requiring Terraform binary",
+    "e2e: End-to-end tests",
+    "slow: Slow tests",
+]
+asyncio_mode = "auto"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/tests/*", "*/test_*.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]

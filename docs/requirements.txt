@@ -1,0 +1,6 @@
+# Additional documentation dependencies not in main pyproject.toml
+sphinx-autodoc-typehints>=1.19.0
+sphinxcontrib-mermaid>=0.7.0
+sphinx-autoapi>=2.1.0
+sphinx-external-toc>=0.3.0
+nbsphinx>=0.8.0

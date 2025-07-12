@@ -135,6 +135,6 @@ python demo.py
 
 ## Support
 
-- **Documentation**: [Full documentation](docs/)
-- **Issues**: [GitHub Issues](https://github.com/orcastrate/orcastrate/issues)
+- **Documentation**: [Full documentation](index.rst)
+- **Issues**: [GitHub Issues](https://github.com/ParthivNaresh/Orcastrate/issues)
 - **Security**: Report security issues privately to <security@orcastrate.dev>

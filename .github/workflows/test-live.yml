@@ -1,10 +1,7 @@
 name: Live Tests
 
 on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main, develop ]
+  # Only trigger via workflow_call from ci.yml to avoid duplicate runs
   workflow_call:
 
 jobs:

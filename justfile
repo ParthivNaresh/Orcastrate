@@ -324,18 +324,27 @@ test-live-full:
 # Run all CI checks (matches GitHub Actions pipeline)
 ci-check env="ci":
     @echo "🚀 Running complete CI/CD pipeline checks..."
-    @echo "├── 🧹 Code quality and linting..."
+    @echo "├── 🧹 Code linting and formatting..."
     @just lint
     @echo "├── 🔒 Security analysis..."
     @just security
-    @echo "├── 🧪 Unit and integration tests..."
+    @echo "├── 📚 Documentation build..."
+    @just docs-ci
+    @echo "├── 🧪 Unit and integration tests (after quality gates)..."
     @just test-coverage {{env}}
     @echo "└── ✅ All CI checks passed!"
 
 # Run full CI pipeline including live tests (for comprehensive validation)
 ci-full env="ci":
     @echo "🚀 Running full CI/CD pipeline with live tests..."
-    @just ci-check {{env}}
+    @echo "├── 🧹 Code linting and formatting..."
+    @just lint
+    @echo "├── 🔒 Security analysis..."
+    @just security
+    @echo "├── 📚 Documentation build..."
+    @just docs-ci
+    @echo "├── 🧪 Unit and integration tests (after quality gates)..."
+    @just test-coverage {{env}}
     @echo "├── 🐳 Starting live test infrastructure..."
     @just docker-start docker
     @echo "├── 🧪 Running live integration tests..."

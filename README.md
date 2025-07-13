@@ -33,6 +33,358 @@
 
 ---
 
+## 🔄 How Orcastrate Works: From Natural Language to Running Environment
+
+Orcastrate transforms natural language descriptions into fully deployed development environments through an intelligent, multi-stage workflow. Here's exactly how it works:
+
+### Overview: The Complete Workflow
+
+```
+User Input → Requirements Analysis → Intelligent Planning → Tool Execution → Environment Ready
+     ↓              ↓                      ↓                 ↓              ↓
+"FastAPI with    Technology           Plan Steps        Docker Build    Live Environment
+PostgreSQL"      Detection            Generated         AWS Deploy      + Feedback
+```
+
+### Step-by-Step Process
+
+#### 🎯 **Step 1: Natural Language Input & CLI Processing**
+**Location**: `src/cli/main.py` → `OrcastrateAgent.create_environment()`
+
+```bash
+# User runs command
+$ orcastrate create "FastAPI REST API with PostgreSQL database and Redis caching"
+```
+
+**What happens internally:**
+1. **CLI Parsing**: Click framework captures the natural language description
+2. **Requirements Object Creation**: Raw text converted to structured `Requirements` object
+3. **Context Gathering**: CLI options, environment variables, and user preferences collected
+4. **Agent Initialization**: OrcastrateAgent loads all available tools and planners
+
+```python
+# Internal representation
+requirements = Requirements(
+    description="FastAPI REST API with PostgreSQL database and Redis caching",
+    framework=None,  # Will be detected
+    database=None,   # Will be detected
+    cloud_provider="aws"  # Default or user-specified
+)
+```
+
+---
+
+#### 🧠 **Step 2: Requirements Analysis & Technology Detection**
+**Location**: `src/planners/analysis/requirements_analyzer.py` → `RequirementsAnalyzer.analyze()`
+
+**Phase 2A: Rule-Based Analysis**
+```python
+# Pattern matching against 90+ technology signatures
+detected_technologies = {
+    "framework": "fastapi",      # "FastAPI" keyword detected
+    "database": "postgresql",    # "PostgreSQL" keyword detected  
+    "cache": "redis",           # "Redis" keyword detected
+    "language": "python",       # Inferred from FastAPI
+    "container": "docker"       # Standard for web apps
+}
+```
+
+**Phase 2B: LLM-Powered Deep Analysis** (OpenAI/Anthropic)
+```python
+# AI analyzes requirements for sophisticated understanding
+llm_analysis = {
+    "architecture_pattern": "microservices_ready",
+    "performance_requirements": "medium_load",
+    "security_level": "standard_web_app",
+    "scaling_strategy": "horizontal_scaling_capable",
+    "estimated_complexity": "medium"
+}
+```
+
+**Phase 2C: Constraint Extraction**
+```python
+# System identifies constraints and requirements
+constraints = {
+    "budget": "optimize_for_development",  # No production costs mentioned
+    "timeline": "fast_setup",             # Standard development speed
+    "security": "basic_web_security",     # No special security mentioned
+    "compliance": "none_specified"        # No compliance requirements
+}
+```
+
+---
+
+#### 📋 **Step 3: Intelligent Plan Generation**
+**Location**: `src/planners/intelligent.py` → `IntelligentPlanner.create_intelligent_plan()`
+
+**Phase 3A: Plan Strategy Selection**
+```python
+# System chooses planning approach based on complexity
+if complex_requirements and llm_available:
+    strategy = "llm_powered_planning"
+else:
+    strategy = "rule_based_planning"
+```
+
+**Phase 3B: Step Generation**
+```python
+# Generated plan steps with dependencies
+plan_steps = [
+    {
+        "id": "setup_project_structure",
+        "tool": "filesystem",
+        "action": "create_directory_structure",
+        "parameters": {"template": "fastapi_project"},
+        "dependencies": [],
+        "estimated_duration": 5
+    },
+    {
+        "id": "generate_dockerfile", 
+        "tool": "docker",
+        "action": "generate_dockerfile",
+        "parameters": {"base_image": "python:3.11-slim", "framework": "fastapi"},
+        "dependencies": ["setup_project_structure"],
+        "estimated_duration": 10
+    },
+    {
+        "id": "setup_database",
+        "tool": "docker",
+        "action": "create_compose_service",
+        "parameters": {"service": "postgresql", "version": "15"},
+        "dependencies": ["generate_dockerfile"],
+        "estimated_duration": 15
+    },
+    {
+        "id": "setup_redis",
+        "tool": "docker", 
+        "action": "create_compose_service",
+        "parameters": {"service": "redis", "version": "7"},
+        "dependencies": ["setup_database"],
+        "estimated_duration": 10
+    },
+    {
+        "id": "build_and_start",
+        "tool": "docker",
+        "action": "compose_up",
+        "parameters": {"build": True, "detach": True},
+        "dependencies": ["setup_redis"],
+        "estimated_duration": 30
+    }
+]
+```
+
+**Phase 3C: Plan Optimization**
+```python
+# System optimizes for cost, performance, and reliability
+optimizations = {
+    "parallel_execution": ["setup_database", "setup_redis"],  # Can run together
+    "resource_optimization": "development_sizing",
+    "cost_estimation": "$0.15/hour estimated",
+    "risk_assessment": "low_risk_standard_stack"
+}
+```
+
+---
+
+#### ⚡ **Step 4: Plan Execution & Tool Orchestration**
+**Location**: `src/executors/concrete_executor.py` → `ConcreteExecutor._execute_plan_with_strategy()`
+
+**Phase 4A: Dependency Resolution**
+```python
+# Creates execution order respecting dependencies
+execution_order = [
+    "setup_project_structure",    # No dependencies
+    "generate_dockerfile",        # Depends on project structure
+    ["setup_database", "setup_redis"],  # Can run in parallel
+    "build_and_start"            # Depends on all previous
+]
+```
+
+**Phase 4B: Tool Execution Loop**
+```python
+# For each step in execution order
+for step_id in execution_order:
+    # Get the appropriate tool
+    tool = get_tool(step.tool)  # e.g., DockerTool, AWSCloudTool
+    
+    # Validate parameters
+    validation = await tool.validate(step.action, step.parameters)
+    
+    # Execute with retry logic
+    result = await tool.execute(step.action, step.parameters)
+    
+    # Store artifacts and update progress
+    context.artifacts[step_id] = result.output
+    progress = calculate_progress(executed_steps, total_steps)
+```
+
+**Phase 4C: Real-Time Progress Updates**
+```
+🔧 Setting up project structure... ✅ Complete (5s)
+🐳 Generating Dockerfile... ✅ Complete (8s)  
+🗄️  Setting up PostgreSQL... ✅ Complete (12s)
+⚡ Setting up Redis... ✅ Complete (9s)
+🏗️  Building and starting services... ✅ Complete (28s)
+```
+
+---
+
+#### 🛠️ **Step 5: Tool-Specific Execution Examples**
+
+**Docker Tool Execution** (`src/tools/docker.py`):
+```python
+# When executing "generate_dockerfile" action
+async def _generate_dockerfile(self, params):
+    dockerfile_content = f"""
+    FROM python:3.11-slim
+    WORKDIR /app
+    COPY requirements.txt .
+    RUN pip install -r requirements.txt
+    COPY . .
+    EXPOSE 8000
+    CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+    """
+    
+    # Write to filesystem
+    await self._write_file("Dockerfile", dockerfile_content)
+    return {"dockerfile_path": "/app/Dockerfile", "size": len(dockerfile_content)}
+```
+
+**Filesystem Tool Execution** (`src/tools/filesystem.py`):
+```python
+# When executing "create_directory_structure" action  
+async def _create_directory_structure(self, params):
+    structure = {
+        "app/": ["main.py", "models.py", "database.py"],
+        "tests/": ["test_main.py"],
+        "": ["requirements.txt", "docker-compose.yml", ".env"]
+    }
+    
+    created_files = []
+    for directory, files in structure.items():
+        for file in files:
+            file_path = os.path.join(directory, file)
+            await self._create_file(file_path, get_template_content(file))
+            created_files.append(file_path)
+    
+    return {"created_files": created_files, "project_root": os.getcwd()}
+```
+
+---
+
+#### ✅ **Step 6: Result Aggregation & User Feedback**
+**Location**: `src/cli/main.py` → Result display logic
+
+**Phase 6A: Execution Summary**
+```python
+execution_result = {
+    "success": True,
+    "execution_id": "exec_20250713_143022",
+    "duration": 62.3,  # seconds
+    "artifacts": {
+        "project_directory": "/Users/user/my-fastapi-app",
+        "services": {
+            "web": {"port": 8000, "status": "running"},
+            "postgres": {"port": 5432, "status": "running"}, 
+            "redis": {"port": 6379, "status": "running"}
+        },
+        "endpoints": [
+            "http://localhost:8000",
+            "http://localhost:8000/docs",  # FastAPI auto-docs
+            "http://localhost:8000/redoc"
+        ]
+    },
+    "metrics": {
+        "total_steps": 5,
+        "successful_steps": 5,
+        "parallel_optimizations": 2,
+        "estimated_cost": "$0.15/hour"
+    }
+}
+```
+
+**Phase 6B: User-Friendly Output**
+```
+🎉 Environment created successfully!
+
+📁 Project: /Users/user/my-fastapi-app
+⏱️ Duration: 62.3 seconds
+✅ Steps completed: 5/5
+
+🌐 Your FastAPI application is ready:
+   • API: http://localhost:8000
+   • Docs: http://localhost:8000/docs  
+   • ReDoc: http://localhost:8000/redoc
+
+🗄️  Database connections:
+   • PostgreSQL: localhost:5432
+   • Redis: localhost:6379
+
+💡 Next steps:
+   • cd /Users/user/my-fastapi-app
+   • Edit app/main.py to add your API endpoints
+   • Visit http://localhost:8000/docs to test your API
+
+💰 Estimated cost: $0.15/hour for development
+```
+
+---
+
+### 🏗️ **Architecture Flow Diagram**
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   User Input    │    │  Requirements    │    │  Intelligence   │
+│  Natural Lang.  │───▶│    Analysis      │───▶│   Planning      │
+│                 │    │                  │    │                 │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+                              │                           │
+                              ▼                           ▼
+                    ┌──────────────────┐         ┌─────────────────┐
+                    │   Technology     │         │   Plan Steps    │
+                    │   Detection      │         │  w/ Dependencies│
+                    │  (90+ patterns)  │         │                 │
+                    └──────────────────┘         └─────────────────┘
+                                                          │
+                                                          ▼
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│     Result      │    │     Tool         │    │   Execution     │
+│   & Feedback    │◀───│   Integration    │◀───│     Engine      │
+│                 │    │                  │    │                 │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+```
+
+### 🔧 **Available Tools & Capabilities**
+
+| Tool Category | Implementation Status | Capabilities |
+|---------------|----------------------|--------------|
+| **🐳 Docker** | ✅ Fully Implemented | Dockerfile generation, container orchestration, compose services |
+| **☁️ AWS Cloud** | ✅ Production Ready | EC2, RDS, ECS, Lambda, cost estimation |
+| **📁 Filesystem** | ✅ Fully Implemented | Project structure, file templates, security validation |
+| **🔧 Git** | ✅ Fully Implemented | Repository initialization, branching, commit automation |
+| **🔒 Security** | ✅ Framework Ready | Permission validation, pattern detection, audit logging |
+| **📊 Multi-Cloud** | ✅ AWS + Framework | Cloud-agnostic abstraction (GCP/Azure ready) |
+
+### 🎛️ **Execution Strategies**
+
+Orcastrate supports multiple execution strategies based on plan complexity:
+
+- **Sequential**: Steps executed one after another (safe, predictable)
+- **Parallel**: Independent steps executed concurrently (faster execution)  
+- **Pipeline**: Streaming execution with intermediate results (memory efficient)
+- **Adaptive**: Dynamic strategy selection based on resource availability
+
+### 📈 **Monitoring & Observability**
+
+Throughout execution, Orcastrate provides:
+- **Real-time progress updates** with step-by-step feedback
+- **Resource monitoring** (CPU, memory, network usage)
+- **Cost tracking** with real-time AWS pricing integration
+- **Error handling** with automatic retry and rollback capabilities
+- **Audit logging** for security and compliance requirements
+
+---
+
 ## ✅ Phase 1: Foundation & Core Architecture (COMPLETED)
 
 ### 1.1 Project Infrastructure Setup ✅

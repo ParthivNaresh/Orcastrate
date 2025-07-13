@@ -66,4 +66,4 @@ licensed under the same MIT License that covers the project.
 For license questions or concerns, please contact:
 
 - Email: <legal@orcastrate.dev>
-- GitHub: <https://github.com/orcastrate/orcastrate>
+- GitHub: <https://github.com/ParthivNaresh/Orcastrate>

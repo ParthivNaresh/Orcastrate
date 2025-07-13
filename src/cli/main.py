@@ -177,7 +177,6 @@ def cli(ctx, verbose):
         logging.getLogger().setLevel(logging.DEBUG)
 
     # Log directory already created at module level
-
     ctx.ensure_object(dict)
 
 

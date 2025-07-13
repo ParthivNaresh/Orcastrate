@@ -328,14 +328,23 @@ ci-check env="ci":
     @just lint
     @echo "├── 🔒 Security analysis..."
     @just security
-    @echo "├── 🧪 Unit and integration tests..."
+    @echo "├── 📚 Documentation build..."
+    @just docs-ci
+    @echo "├── 🧪 Unit and integration tests (after quality checks)..."
     @just test-coverage {{env}}
     @echo "└── ✅ All CI checks passed!"
 
 # Run full CI pipeline including live tests (for comprehensive validation)
 ci-full env="ci":
     @echo "🚀 Running full CI/CD pipeline with live tests..."
-    @just ci-check {{env}}
+    @echo "├── 🧹 Code quality and linting..."
+    @just lint
+    @echo "├── 🔒 Security analysis..."
+    @just security
+    @echo "├── 📚 Documentation build..."
+    @just docs-ci
+    @echo "├── 🧪 Unit and integration tests (after quality checks)..."
+    @just test-coverage {{env}}
     @echo "├── 🐳 Starting live test infrastructure..."
     @just docker-start docker
     @echo "├── 🧪 Running live integration tests..."

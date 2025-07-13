@@ -7,22 +7,6 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  unit-tests:
-    name: "Unit Tests"
-    uses: ./.github/workflows/test-unit.yml
-    secrets: inherit
-
-  integration-tests:
-    name: "Integration Tests"
-    uses: ./.github/workflows/test-integration.yml
-    secrets: inherit
-
-  live-tests:
-    name: "Live Tests"
-    # Removed dependency - live tests are independent infrastructure tests
-    uses: ./.github/workflows/test-live.yml
-    secrets: inherit
-
   code-quality:
     name: "Code Quality"
     uses: ./.github/workflows/quality.yml
@@ -31,6 +15,24 @@ jobs:
   documentation:
     name: "Documentation"
     uses: ./.github/workflows/docs.yml
+    secrets: inherit
+
+  unit-tests:
+    name: "Unit Tests"
+    needs: [code-quality, documentation]
+    uses: ./.github/workflows/test-unit.yml
+    secrets: inherit
+
+  integration-tests:
+    name: "Integration Tests"
+    needs: [code-quality, documentation]
+    uses: ./.github/workflows/test-integration.yml
+    secrets: inherit
+
+  live-tests:
+    name: "Live Tests"
+    needs: [code-quality, documentation]
+    uses: ./.github/workflows/test-live.yml
     secrets: inherit
 
   sonarcloud:

@@ -118,11 +118,19 @@ class TestEndToEndWorkflow:
         assert plan.estimated_duration > 0
 
         # Verify expected steps are present
-        step_names = [step.get("name", "") for step in plan.steps]
+        step_names = [
+            step.name if hasattr(step, "name") else step.get("name", "")
+            for step in plan.steps
+        ]
         assert any("directory" in name.lower() for name in step_names)
         assert any("git" in name.lower() for name in step_names)
         assert any("package" in name.lower() for name in step_names)
-        assert any("docker" in name.lower() for name in step_names)
+        # Enhanced Template Planner only adds Docker for multi-service apps
+        # Basic Node.js app gets: directory, git, package.json, main file
+        assert any(
+            "main" in name.lower() or "application" in name.lower()
+            for name in step_names
+        )
 
     @pytest.mark.asyncio
     async def test_fastapi_workflow_plan_generation(self, planner):
@@ -294,60 +302,72 @@ class TestEndToEndWorkflow:
         # (This depends on implementation details)
 
     @pytest.mark.asyncio
-    async def test_template_selection_nodejs(self, planner):
-        """Test template selection for Node.js requirements."""
+    async def test_technology_detection_nodejs(self, planner):
+        """Test technology detection for Node.js requirements."""
         requirements = Requirements(
             description="Node.js application with Express framework", framework="nodejs"
         )
 
-        # Access internal method for testing
-        template = await planner._select_template(requirements)
+        # Test the new technology detection system
+        detected = planner.detect_technologies(requirements.description)
 
-        assert template is not None
-        assert template["framework"] == "nodejs"
-        assert "node" in template["name"].lower()
+        assert detected.framework == "nodejs"
+        # Test that plan can be generated
+        plan = await planner.create_plan(requirements)
+        assert plan is not None
 
     @pytest.mark.asyncio
-    async def test_template_selection_fastapi(self, planner):
-        """Test template selection for FastAPI requirements."""
+    async def test_technology_detection_fastapi(self, planner):
+        """Test technology detection for FastAPI requirements."""
         requirements = Requirements(
             description="Python FastAPI REST API", framework="fastapi"
         )
 
-        template = await planner._select_template(requirements)
+        # Test the new technology detection system
+        detected = planner.detect_technologies(requirements.description)
 
-        assert template is not None
-        assert template["framework"] == "fastapi"
-        assert "fastapi" in template["name"].lower()
+        assert detected.framework == "fastapi"
+        # Test that plan can be generated
+        plan = await planner.create_plan(requirements)
+        assert plan is not None
 
     @pytest.mark.asyncio
-    async def test_template_selection_fallback(self, planner):
-        """Test template selection fallback for generic requirements."""
+    async def test_technology_detection_fallback(self, planner):
+        """Test technology detection fallback for generic requirements."""
         requirements = Requirements(description="A web application", framework=None)
 
-        template = await planner._select_template(requirements)
-
-        assert template is not None
-        # Should fallback to a default template
+        # Test that even without explicit framework, we can still create a plan
+        plan = await planner.create_plan(requirements)
+        assert plan is not None
+        assert len(plan.steps) > 0
 
     @pytest.mark.asyncio
-    async def test_variable_extraction(self, planner):
-        """Test variable extraction from requirements."""
+    async def test_project_name_generation_integration(self, planner):
+        """Test project name generation integration."""
         requirements = Requirements(
             description="My awesome Node.js web application", framework="nodejs"
         )
 
-        variables = planner._extract_variables(requirements)
+        # Test project name generation directly
+        project_name = planner._generate_project_name(requirements.description)
 
-        assert "project_name" in variables
-        assert "project_path" in variables
-        assert "description" in variables
-        assert "framework" in variables
+        assert project_name
+        assert "my" in project_name or "awesome" in project_name
 
-        assert variables["framework"] == "nodejs"
-        assert variables["description"] == requirements.description
-        assert variables["project_name"]  # Should be non-empty
-        assert "/tmp/orcastrate" in variables["project_path"]
+        # Test that plan generation works with variable substitution
+        plan = await planner.create_plan(requirements)
+        assert plan is not None
+        # Check that variables were properly substituted in steps
+        for step in plan.steps:
+            # Parameters should not contain unsubstituted variables
+            step_params = (
+                step.parameters
+                if hasattr(step, "parameters")
+                else step.get("parameters", {})
+            )
+            step_str = str(step_params)
+            assert "{project_name}" not in step_str
+            assert "{project_path}" not in step_str
 
     @pytest.mark.asyncio
     async def test_project_name_generation(self, planner):
@@ -367,8 +387,8 @@ class TestEndToEndWorkflow:
             )
 
     @pytest.mark.asyncio
-    async def test_variable_replacement(self, planner):
-        """Test variable replacement in templates."""
+    async def test_variable_substitution(self, planner):
+        """Test variable substitution in step data."""
         template_data = {
             "name": "{project_name}",
             "path": "{project_path}/src",
@@ -381,7 +401,7 @@ class TestEndToEndWorkflow:
             "framework": "nodejs",
         }
 
-        result = planner._replace_variables(template_data, variables)
+        result = planner._substitute_variables(template_data, variables)
 
         assert result["name"] == "my-app"
         assert result["path"] == "/tmp/my-app/src"

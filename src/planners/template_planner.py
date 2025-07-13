@@ -159,6 +159,12 @@ class TemplatePlanner(Planner):
         composed_steps.extend(self._get_base_steps(step_counter))
         step_counter = len(composed_steps) + 1
 
+        # Add security documentation for projects with databases
+        if technologies.databases or technologies.cache:
+            security_steps = self._get_security_documentation_steps(step_counter)
+            composed_steps.extend(security_steps)
+            step_counter = len(composed_steps) + 1
+
         # Add framework steps
         if technologies.framework:
             framework_steps = self._get_framework_steps(
@@ -313,7 +319,7 @@ class TemplatePlanner(Planner):
                     "action": "write_file",
                     "parameters": {
                         "path": "{project_path}/.env",
-                        "content": "# Database Configuration\nPOSTGRES_DB={project_name}_db\nPOSTGRES_USER=postgres\nPOSTGRES_PASSWORD=secret123\nDATABASE_URL=postgresql://postgres:secret123@localhost:5432/{project_name}_db\n",
+                        "content": "# Database Configuration\n# Copy from .env.example and update with secure values\nPOSTGRES_DB={project_name}_db\nPOSTGRES_USER=${POSTGRES_USER:-postgres}\nPOSTGRES_PASSWORD=${POSTGRES_PASSWORD:-your-postgres-password}\nPOSTGRES_HOST=${POSTGRES_HOST:-localhost}\nPOSTGRES_PORT=${POSTGRES_PORT:-5432}\nDATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-your-postgres-password}@${POSTGRES_HOST:-localhost}:${POSTGRES_PORT:-5432}/{project_name}_db\n\n# SECURITY WARNING: Change POSTGRES_PASSWORD in production!\n# Generate secure password: python -c 'import secrets; print(secrets.token_urlsafe(32))'\n",
                     },
                     "dependencies": ["setup_directory"],
                     "estimated_duration": 10.0,
@@ -330,7 +336,7 @@ class TemplatePlanner(Planner):
                     "action": "write_file",
                     "parameters": {
                         "path": "{project_path}/.env.redis",
-                        "content": "# Redis Configuration\nREDIS_URL=redis://localhost:6379\nREDIS_DB=0\n",
+                        "content": "# Redis Configuration\nREDIS_URL=${REDIS_URL:-redis://localhost:6379}\nREDIS_DB=${REDIS_DB:-0}\nREDIS_HOST=${REDIS_HOST:-localhost}\nREDIS_PORT=${REDIS_PORT:-6379}\n",
                     },
                     "dependencies": ["setup_directory"],
                     "estimated_duration": 5.0,
@@ -427,7 +433,10 @@ class TemplatePlanner(Planner):
         """Generate docker-compose.yml content based on detected technologies."""
         app_port = "3000" if technologies.framework == "nodejs" else "8000"
 
-        compose = f"""version: '3.8'
+        compose = f"""# WARNING: Update environment variables in production!
+# See .env.example for secure configuration
+# Generate secure passwords: python -c 'import secrets; print(secrets.token_urlsafe(32))'
+version: '3.8'
 services:
   app:
     build: .
@@ -435,6 +444,8 @@ services:
       - "{app_port}:{app_port}"
     environment:
       - NODE_ENV=development
+    env_file:
+      - .env  # Create from .env.example
     depends_on:"""
 
         services = []
@@ -453,8 +464,8 @@ services:
     image: postgres:15
     environment:
       - POSTGRES_DB={project_name}_db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=secret123
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-your-postgres-password}
     ports:
       - "5432:5432"
     volumes:
@@ -645,6 +656,27 @@ services:
         clean_name = re.sub(r"[^a-zA-Z0-9\s]", "", description.lower())
         words = clean_name.split()[:3]  # Take first 3 words
         return "-".join(words) if words else "orcastrate-project"
+
+    def _get_security_documentation_steps(
+        self, start_counter: int
+    ) -> List[Dict[str, Any]]:
+        """Generate security documentation for database projects."""
+        return [
+            {
+                "id": "create_security_readme",
+                "name": "Create Security Documentation",
+                "description": "Create security best practices documentation",
+                "tool": "filesystem",
+                "action": "write_file",
+                "parameters": {
+                    "path": "{project_path}/SECURITY.md",
+                    "content": "# Security Configuration\n\n## Database Security\n\n⚠️ **IMPORTANT**: This project uses database services that require secure configuration.\n\n### Environment Variables\n\nThis project uses environment variables for configuration. See `.env.example` for all variables.\n\n### Database Passwords\n\n1. **Never use default passwords in production**\n2. **Generate secure passwords**:\n   ```bash\n   python -c 'import secrets; print(secrets.token_urlsafe(32))'\n   ```\n3. **Set environment variables**:\n   ```bash\n   export POSTGRES_PASSWORD=\"your-secure-password\"\n   ```\n\n### Docker Compose Security\n\n- Change default passwords in docker-compose.yml\n- Use environment variable substitution: `${POSTGRES_PASSWORD}`\n- Mount secrets as files (recommended for production)\n\n### Production Checklist\n\n- [ ] Change all default passwords\n- [ ] Use environment variables for all secrets\n- [ ] Enable SSL/TLS for database connections\n- [ ] Restrict database network access\n- [ ] Regular security updates\n- [ ] Monitor for suspicious activity\n\n### References\n\n- [OWASP Database Security](https://owasp.org/www-community/vulnerabilities/Insecure_Storage)\n- [Docker Secrets Management](https://docs.docker.com/engine/swarm/secrets/)\n",
+                },
+                "dependencies": ["setup_directory"],
+                "estimated_duration": 5.0,
+                "estimated_cost": 0.0,
+            }
+        ]
 
     def _substitute_variables(
         self, step_data: Dict[str, Any], variables: Dict[str, str]

@@ -1,0 +1,900 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture &mdash; Orcastrate v1.0.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Development Guide" href="development.html" />
+    <link rel="prev" title="Examples" href="examples.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Orcastrate
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#install-dependencies">Install Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#first-steps">First Steps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#explore-available-templates">1. Explore Available Templates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#create-your-first-environment">2. Create Your First Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#check-tool-status">3. Check Tool Status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#run-the-interactive-demo">4. Run the Interactive Demo</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#basic-concepts">Basic Concepts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#requirements">Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#templates">Templates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#tools">Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#plans">Plans</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide.html">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#core-workflow">Core Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#requirements-processing">1. Requirements Processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#plan-generation">2. Plan Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#plan-validation">3. Plan Validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#execution">4. Execution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#command-line-interface">Command Line Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#basic-commands">Basic Commands</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="user_guide.html#list-templates">List Templates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user_guide.html#create-environment">Create Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user_guide.html#check-tools">Check Tools</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user_guide.html#view-logs">View Logs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user_guide.html#version-information">Version Information</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#templates">Templates</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#node-js-web-application">Node.js Web Application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#python-fastapi-application">Python FastAPI Application</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#tools">Tools</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#filesystem-tool">Filesystem Tool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#git-tool">Git Tool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#docker-tool">Docker Tool</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#configuration">Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#planner-configuration">Planner Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#executor-configuration">Executor Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#tool-configuration">Tool Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#error-handling">Error Handling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#plan-validation-errors">Plan Validation Errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#execution-errors">Execution Errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#recovery-mechanisms">Recovery Mechanisms</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#best-practices">Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#requirements-writing">Requirements Writing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#template-selection">Template Selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#tool-management">Tool Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#security">Security</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli_reference.html">CLI Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#synopsis">Synopsis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#global-options">Global Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#commands">Commands</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#create">create</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#templates">templates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#tools">tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#logs">logs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#version">version</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#environment-variables">Environment Variables</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#orcastrate-log-level">ORCASTRATE_LOG_LEVEL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#orcastrate-config-path">ORCASTRATE_CONFIG_PATH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#orcastrate-work-dir">ORCASTRATE_WORK_DIR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#orcastrate-cache-dir">ORCASTRATE_CACHE_DIR</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#exit-codes">Exit Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#configuration-file">Configuration File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#tool-not-available">Tool Not Available</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#permission-errors">Permission Errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#log-analysis">Log Analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#common-issues">Common Issues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#basic-usage-examples">Basic Usage Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#creating-a-node-js-web-application">Creating a Node.js Web Application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#creating-a-python-fastapi-service">Creating a Python FastAPI Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#using-the-programmatic-api">Using the Programmatic API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#advanced-examples">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#custom-template-creation">Custom Template Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#tool-integration-example">Tool Integration Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#error-handling-example">Error Handling Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#configuration-example">Configuration Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#real-world-scenarios">Real-World Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#microservices-architecture">Microservices Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#full-stack-application">Full-Stack Application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#development-environment-setup">Development Environment Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#troubleshooting-examples">Troubleshooting Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#debug-mode">Debug Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#dry-run-testing">Dry Run Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#tool-diagnostics">Tool Diagnostics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#core-components">Core Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#agent-layer">Agent Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#planning-layer">Planning Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#execution-layer">Execution Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tool-layer">Tool Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#security-layer">Security Layer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#data-flow">Data Flow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#requirements-processing">1. Requirements Processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plan-generation">2. Plan Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plan-execution">3. Plan Execution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#design-patterns">Design Patterns</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hexagonal-architecture">Hexagonal Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#template-method-pattern">Template Method Pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#strategy-pattern">Strategy Pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#observer-pattern">Observer Pattern</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#component-interactions">Component Interactions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#planning-phase">Planning Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#execution-phase">Execution Phase</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-structure">Module Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-management">Configuration Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hierarchical-configuration">Hierarchical Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-sources">Configuration Sources</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#error-handling-strategy">Error Handling Strategy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#error-categories">Error Categories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#error-recovery">Error Recovery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#error-propagation">Error Propagation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-considerations">Performance Considerations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#async-await-design">Async/Await Design</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#caching-strategy">Caching Strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#resource-management">Resource Management</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#security-architecture">Security Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#defense-in-depth">Defense in Depth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#security-boundaries">Security Boundaries</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-architecture">Testing Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#test-categories">Test Categories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-structure">Test Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mock-strategy">Mock Strategy</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#extensibility">Extensibility</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#adding-new-tools">Adding New Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-new-planners">Adding New Planners</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-new-templates">Adding New Templates</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="development.html#development-setup">Development Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#clone-and-setup">Clone and Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#project-structure">Project Structure</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#development-workflow">Development Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#feature-development">1. Feature Development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#testing">2. Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#code-quality">3. Code Quality</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#adding-new-components">Adding New Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#adding-a-new-tool">Adding a New Tool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#adding-a-new-planner">Adding a New Planner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#adding-a-new-template">Adding a New Template</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#code-style-guidelines">Code Style Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#python-style">Python Style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#naming-conventions">Naming Conventions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#documentation-style">Documentation Style</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#testing-guidelines">Testing Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#test-structure">Test Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#test-categories">Test Categories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#mocking-strategy">Mocking Strategy</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#debugging">Debugging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#logging">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#debug-tools">Debug Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#performance-profiling">Performance Profiling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#release-process">Release Process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#version-management">Version Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#release-checklist">Release Checklist</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#automated-checks">Automated Checks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#test-structure">Test Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#running-tests">Running Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#basic-test-execution">Basic Test Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#test-coverage">Test Coverage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#parallel-test-execution">Parallel Test Execution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#test-categories">Test Categories</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#unit-tests">Unit Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#integration-tests">Integration Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#end-to-end-tests">End-to-End Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#test-configuration">Test Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#pytest-configuration">Pytest Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#fixtures">Fixtures</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#mocking-strategies">Mocking Strategies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#external-dependencies">External Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#filesystem-operations">Filesystem Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#network-operations">Network Operations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#test-data-management">Test Data Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#test-fixtures">Test Fixtures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#loading-test-data">Loading Test Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#performance-testing">Performance Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#load-testing">Load Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#memory-testing">Memory Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#continuous-integration">Continuous Integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#github-actions">GitHub Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#gitlab-ci">GitLab CI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#test-best-practices">Test Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#test-organization">Test Organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#test-data">Test Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#assertion-guidelines">Assertion Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#error-testing">Error Testing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to Orcastrate</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#getting-started">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#fork-and-clone">Fork and Clone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#development-setup">Development Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#contribution-types">Contribution Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#bug-reports">Bug Reports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#feature-requests">Feature Requests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#code-contributions">Code Contributions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#development-workflow">Development Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#create-a-branch">1. Create a Branch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#make-changes">2. Make Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#test-your-changes">3. Test Your Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#submit-pull-request">4. Submit Pull Request</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#coding-standards">Coding Standards</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#python-style">Python Style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#code-quality-tools">Code Quality Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#example-code-style">Example Code Style</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#testing-guidelines">Testing Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#test-requirements">Test Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#test-structure">Test Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#test-coverage">Test Coverage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#documentation">Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#documentation-requirements">Documentation Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#documentation-style">Documentation Style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#building-documentation">Building Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#submitting-changes">Submitting Changes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#pull-request-guidelines">Pull Request Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#pull-request-template">Pull Request Template</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#review-process">Review Process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#community-guidelines">Community Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#code-of-conduct">Code of Conduct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#communication">Communication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#getting-help">Getting Help</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#release-process">Release Process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#version-numbering">Version Numbering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#release-checklist">Release Checklist</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#recognition">Recognition</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/modules.html#core-modules">Core Modules</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#unreleased">[Unreleased]</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#added">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">[1.0.0] - 2025-07-04</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">Added</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#features">Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#templates">Templates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#cli-commands">CLI Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#technical-highlights">Technical Highlights</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#documentation">Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#performance">Performance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#security">Security</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">[0.9.0] - 2025-07-03</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">Added</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#changed">Changed</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">[0.1.0] - 2025-07-01</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id6">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#migration-guide">Migration Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#from-0-9-x-to-1-0-0">From 0.9.x to 1.0.0</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#support">Support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="license.html#mit-license">MIT License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#third-party-licenses">Third-Party Licenses</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="license.html#python-dependencies">Python Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="license.html#development-dependencies">Development Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="license.html#documentation-dependencies">Documentation Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#attribution">Attribution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#contribution-license-agreement">Contribution License Agreement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#contact">Contact</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Orcastrate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Architecture</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/architecture.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="architecture">
+<h1>Architecture<a class="headerlink" href="#architecture" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>Orcastrate follows a hexagonal (ports and adapters) architecture that separates core business logic from external dependencies. This design enables high testability, maintainability, and extensibility.</p>
+</section>
+<section id="core-components">
+<h2>Core Components<a class="headerlink" href="#core-components" title="Link to this heading"></a></h2>
+<section id="agent-layer">
+<h3>Agent Layer<a class="headerlink" href="#agent-layer" title="Link to this heading"></a></h3>
+<p>The top-level orchestration layer that coordinates the entire workflow.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────┐
+│                 Agent Layer                         │
+├─────────────────────────────────────────────────────┤
+│  • OrcastrateAgent: Main workflow coordinator       │
+│  • AgentCoordinator: Multi-agent collaboration      │
+│  • Requirements: Natural language processing        │
+└─────────────────────────────────────────────────────┘
+</pre></div>
+</div>
+</section>
+<section id="planning-layer">
+<h3>Planning Layer<a class="headerlink" href="#planning-layer" title="Link to this heading"></a></h3>
+<p>Transforms requirements into executable plans.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────┐
+│                Planning Layer                       │
+├─────────────────────────────────────────────────────┤
+│  • Planner (Abstract): Planning interface          │
+│  • TemplatePlanner: Template-based planning        │
+│  • PlanStructure: Plan representation              │
+│  • RiskAssessment: Risk analysis                   │
+└─────────────────────────────────────────────────────┘
+</pre></div>
+</div>
+</section>
+<section id="execution-layer">
+<h3>Execution Layer<a class="headerlink" href="#execution-layer" title="Link to this heading"></a></h3>
+<p>Executes plans using concrete tools.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────┐
+│               Execution Layer                       │
+├─────────────────────────────────────────────────────┤
+│  • Executor (Abstract): Execution interface        │
+│  • ConcreteExecutor: Tool-based execution          │
+│  • ExecutionContext: Execution state               │
+│  • ExecutionResult: Execution outcomes             │
+└─────────────────────────────────────────────────────┘
+</pre></div>
+</div>
+</section>
+<section id="tool-layer">
+<h3>Tool Layer<a class="headerlink" href="#tool-layer" title="Link to this heading"></a></h3>
+<p>Concrete implementations for specific operations.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────┐
+│                 Tool Layer                          │
+├─────────────────────────────────────────────────────┤
+│  • Tool (Abstract): Tool interface                 │
+│  • FileSystemTool: File operations                 │
+│  • GitTool: Version control                        │
+│  • DockerTool: Containerization                    │
+└─────────────────────────────────────────────────────┘
+</pre></div>
+</div>
+</section>
+<section id="security-layer">
+<h3>Security Layer<a class="headerlink" href="#security-layer" title="Link to this heading"></a></h3>
+<p>Cross-cutting security concerns.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────┐
+│                Security Layer                       │
+├─────────────────────────────────────────────────────┤
+│  • SecurityManager: Permission validation          │
+│  • PathValidator: Path traversal protection        │
+│  • ResourceLimiter: Resource usage controls        │
+└─────────────────────────────────────────────────────┘
+</pre></div>
+</div>
+</section>
+</section>
+<section id="data-flow">
+<h2>Data Flow<a class="headerlink" href="#data-flow" title="Link to this heading"></a></h2>
+<section id="requirements-processing">
+<h3>1. Requirements Processing<a class="headerlink" href="#requirements-processing" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Natural Language → Requirements → Validation → Structured Data
+</pre></div>
+</div>
+</section>
+<section id="plan-generation">
+<h3>2. Plan Generation<a class="headerlink" href="#plan-generation" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Requirements → Template Selection → Plan Generation → Risk Assessment
+</pre></div>
+</div>
+</section>
+<section id="plan-execution">
+<h3>3. Plan Execution<a class="headerlink" href="#plan-execution" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Plan → Validation → Tool Selection → Step Execution → Result Collection
+</pre></div>
+</div>
+</section>
+</section>
+<section id="design-patterns">
+<h2>Design Patterns<a class="headerlink" href="#design-patterns" title="Link to this heading"></a></h2>
+<section id="hexagonal-architecture">
+<h3>Hexagonal Architecture<a class="headerlink" href="#hexagonal-architecture" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Core</strong>: Business logic independent of external concerns</p></li>
+<li><p><strong>Ports</strong>: Interfaces defining contracts</p></li>
+<li><p><strong>Adapters</strong>: Concrete implementations for external systems</p></li>
+</ul>
+</section>
+<section id="template-method-pattern">
+<h3>Template Method Pattern<a class="headerlink" href="#template-method-pattern" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Abstract base classes define workflow structure</p></li>
+<li><p>Concrete implementations provide specific behavior</p></li>
+<li><p>Ensures consistent interfaces across components</p></li>
+</ul>
+</section>
+<section id="strategy-pattern">
+<h3>Strategy Pattern<a class="headerlink" href="#strategy-pattern" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Pluggable algorithms for planning and execution</p></li>
+<li><p>Runtime strategy selection based on requirements</p></li>
+<li><p>Easy addition of new strategies</p></li>
+</ul>
+</section>
+<section id="observer-pattern">
+<h3>Observer Pattern<a class="headerlink" href="#observer-pattern" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Event-driven notifications during execution</p></li>
+<li><p>Progress monitoring and logging</p></li>
+<li><p>Decoupled communication between components</p></li>
+</ul>
+</section>
+</section>
+<section id="component-interactions">
+<h2>Component Interactions<a class="headerlink" href="#component-interactions" title="Link to this heading"></a></h2>
+<section id="planning-phase">
+<h3>Planning Phase<a class="headerlink" href="#planning-phase" title="Link to this heading"></a></h3>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>sequenceDiagram
+    participant A as Agent
+    participant P as Planner
+    participant T as Template
+    participant V as Validator
+    
+    A-&gt;&gt;P: create_plan(requirements)
+    P-&gt;&gt;T: select_template(requirements)
+    T--&gt;&gt;P: template_data
+    P-&gt;&gt;P: generate_steps()
+    P-&gt;&gt;V: assess_risks(plan)
+    V--&gt;&gt;P: risk_assessment
+    P--&gt;&gt;A: plan
+</pre></div>
+</div>
+</section>
+<section id="execution-phase">
+<h3>Execution Phase<a class="headerlink" href="#execution-phase" title="Link to this heading"></a></h3>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>sequenceDiagram
+    participant A as Agent
+    participant E as Executor
+    participant T as Tool
+    participant S as Security
+    
+    A-&gt;&gt;E: execute_plan(plan)
+    E-&gt;&gt;E: validate_requirements()
+    E-&gt;&gt;T: execute(action, params)
+    T-&gt;&gt;S: validate_permissions()
+    S--&gt;&gt;T: validation_result
+    T-&gt;&gt;T: perform_operation()
+    T--&gt;&gt;E: operation_result
+    E--&gt;&gt;A: execution_result
+</pre></div>
+</div>
+</section>
+</section>
+<section id="module-structure">
+<h2>Module Structure<a class="headerlink" href="#module-structure" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>src/
+├── agent/                 # Agent layer
+│   ├── base.py           # Core models and interfaces
+│   └── coordinator.py    # Multi-agent coordination
+├── planners/             # Planning layer
+│   ├── base.py           # Abstract planner interface
+│   └── template_planner.py # Template-based implementation
+├── executors/            # Execution layer
+│   ├── base.py           # Abstract executor interface
+│   └── concrete_executor.py # Tool-based implementation
+├── tools/                # Tool layer
+│   ├── base.py           # Tool interface and utilities
+│   ├── filesystem.py     # Filesystem operations
+│   ├── git.py            # Git operations
+│   └── docker.py         # Docker operations
+├── security/             # Security layer
+│   └── manager.py        # Security management
+├── cli/                  # Command-line interface
+│   └── main.py           # CLI implementation
+└── api/                  # REST API (future)
+    └── __init__.py
+</pre></div>
+</div>
+</section>
+<section id="configuration-management">
+<h2>Configuration Management<a class="headerlink" href="#configuration-management" title="Link to this heading"></a></h2>
+<section id="hierarchical-configuration">
+<h3>Hierarchical Configuration<a class="headerlink" href="#hierarchical-configuration" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Default values in code</p></li>
+<li><p>System configuration files</p></li>
+<li><p>User configuration files</p></li>
+<li><p>Environment variables</p></li>
+<li><p>Command-line arguments</p></li>
+</ol>
+</section>
+<section id="configuration-sources">
+<h3>Configuration Sources<a class="headerlink" href="#configuration-sources" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Default configuration</span>
+<span class="n">DEFAULT_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;planner&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;strategy&quot;</span><span class="p">:</span> <span class="s2">&quot;template_matching&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;max_plan_steps&quot;</span><span class="p">:</span> <span class="mi">20</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># File-based configuration</span>
+<span class="c1"># ~/.orcastrate/config.yaml</span>
+<span class="c1"># /etc/orcastrate/config.yaml</span>
+
+<span class="c1"># Environment variables</span>
+<span class="c1"># ORCASTRATE_PLANNER_STRATEGY=template_matching</span>
+
+<span class="c1"># Command-line overrides</span>
+<span class="c1"># --planner-strategy template_matching</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="error-handling-strategy">
+<h2>Error Handling Strategy<a class="headerlink" href="#error-handling-strategy" title="Link to this heading"></a></h2>
+<section id="error-categories">
+<h3>Error Categories<a class="headerlink" href="#error-categories" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>User Errors</strong>: Invalid input, missing requirements</p></li>
+<li><p><strong>System Errors</strong>: Tool failures, resource constraints</p></li>
+<li><p><strong>Configuration Errors</strong>: Invalid settings, missing dependencies</p></li>
+<li><p><strong>Network Errors</strong>: Connectivity issues, timeouts</p></li>
+</ol>
+</section>
+<section id="error-recovery">
+<h3>Error Recovery<a class="headerlink" href="#error-recovery" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Retry Logic</strong>: Exponential backoff for transient failures</p></li>
+<li><p><strong>Graceful Degradation</strong>: Continue with available tools</p></li>
+<li><p><strong>Rollback</strong>: Undo partial changes on failure</p></li>
+<li><p><strong>User Feedback</strong>: Clear error messages with suggestions</p></li>
+</ol>
+</section>
+<section id="error-propagation">
+<h3>Error Propagation<a class="headerlink" href="#error-propagation" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">ToolError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="c1"># Log error with context</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tool execution failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># Add to execution context</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">add_error</span><span class="p">(</span><span class="n">step_id</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+    <span class="c1"># Decide on continuation strategy</span>
+    <span class="k">if</span> <span class="n">should_continue</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+        <span class="k">continue</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ExecutionError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Critical failure: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="performance-considerations">
+<h2>Performance Considerations<a class="headerlink" href="#performance-considerations" title="Link to this heading"></a></h2>
+<section id="async-await-design">
+<h3>Async/Await Design<a class="headerlink" href="#async-await-design" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Non-blocking I/O operations</p></li>
+<li><p>Concurrent tool execution</p></li>
+<li><p>Efficient resource utilization</p></li>
+</ul>
+</section>
+<section id="caching-strategy">
+<h3>Caching Strategy<a class="headerlink" href="#caching-strategy" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Template caching for faster plan generation</p></li>
+<li><p>Tool schema caching for validation</p></li>
+<li><p>Result caching for repeated operations</p></li>
+</ul>
+</section>
+<section id="resource-management">
+<h3>Resource Management<a class="headerlink" href="#resource-management" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Connection pooling for external services</p></li>
+<li><p>Memory management for large files</p></li>
+<li><p>Timeout management for long operations</p></li>
+</ul>
+</section>
+</section>
+<section id="security-architecture">
+<h2>Security Architecture<a class="headerlink" href="#security-architecture" title="Link to this heading"></a></h2>
+<section id="defense-in-depth">
+<h3>Defense in Depth<a class="headerlink" href="#defense-in-depth" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Input Validation</strong>: Sanitize all user inputs</p></li>
+<li><p><strong>Path Validation</strong>: Prevent directory traversal</p></li>
+<li><p><strong>Permission Checks</strong>: Validate operation permissions</p></li>
+<li><p><strong>Resource Limits</strong>: Prevent resource exhaustion</p></li>
+<li><p><strong>Audit Logging</strong>: Track all operations</p></li>
+</ol>
+</section>
+<section id="security-boundaries">
+<h3>Security Boundaries<a class="headerlink" href="#security-boundaries" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>User Input → Validation → Business Logic → Tool Layer → External Systems
+     ↓           ↓             ↓           ↓            ↓
+   Sanitize → Authorize → Rate Limit → Sandbox → Monitor
+</pre></div>
+</div>
+</section>
+</section>
+<section id="testing-architecture">
+<h2>Testing Architecture<a class="headerlink" href="#testing-architecture" title="Link to this heading"></a></h2>
+<section id="test-categories">
+<h3>Test Categories<a class="headerlink" href="#test-categories" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Unit Tests</strong>: Individual component testing</p></li>
+<li><p><strong>Integration Tests</strong>: Component interaction testing</p></li>
+<li><p><strong>End-to-End Tests</strong>: Full workflow testing</p></li>
+<li><p><strong>Performance Tests</strong>: Load and stress testing</p></li>
+</ol>
+</section>
+<section id="test-structure">
+<h3>Test Structure<a class="headerlink" href="#test-structure" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>tests/
+├── unit/                 # Unit tests by component
+│   ├── agent/
+│   ├── planners/
+│   ├── executors/
+│   ├── tools/
+│   └── security/
+├── integration/          # Integration tests
+│   └── test_end_to_end.py
+└── performance/          # Performance tests
+    └── test_load.py
+</pre></div>
+</div>
+</section>
+<section id="mock-strategy">
+<h3>Mock Strategy<a class="headerlink" href="#mock-strategy" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Mock external dependencies (Docker, Git)</p></li>
+<li><p>Use real implementations for core logic</p></li>
+<li><p>Dependency injection for testability</p></li>
+</ul>
+</section>
+</section>
+<section id="extensibility">
+<h2>Extensibility<a class="headerlink" href="#extensibility" title="Link to this heading"></a></h2>
+<section id="adding-new-tools">
+<h3>Adding New Tools<a class="headerlink" href="#adding-new-tools" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Inherit from <code class="docutils literal notranslate"><span class="pre">Tool</span></code> base class</p></li>
+<li><p>Implement required methods</p></li>
+<li><p>Register with executor</p></li>
+<li><p>Add configuration options</p></li>
+</ol>
+</section>
+<section id="adding-new-planners">
+<h3>Adding New Planners<a class="headerlink" href="#adding-new-planners" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Inherit from <code class="docutils literal notranslate"><span class="pre">Planner</span></code> base class</p></li>
+<li><p>Implement planning strategy</p></li>
+<li><p>Register with agent</p></li>
+<li><p>Add strategy configuration</p></li>
+</ol>
+</section>
+<section id="adding-new-templates">
+<h3>Adding New Templates<a class="headerlink" href="#adding-new-templates" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Define template structure</p></li>
+<li><p>Add to template library</p></li>
+<li><p>Configure selection criteria</p></li>
+<li><p>Test with requirements</p></li>
+</ol>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="development.html" class="btn btn-neutral float-right" title="Development Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Orcastrate Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

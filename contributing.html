@@ -1,0 +1,954 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contributing to Orcastrate &mdash; Orcastrate v1.0.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="api/modules.html" />
+    <link rel="prev" title="Testing Guide" href="testing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Orcastrate
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#install-dependencies">Install Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#first-steps">First Steps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#explore-available-templates">1. Explore Available Templates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#create-your-first-environment">2. Create Your First Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#check-tool-status">3. Check Tool Status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#run-the-interactive-demo">4. Run the Interactive Demo</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#basic-concepts">Basic Concepts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#requirements">Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#templates">Templates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#tools">Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#plans">Plans</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide.html">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#core-workflow">Core Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#requirements-processing">1. Requirements Processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#plan-generation">2. Plan Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#plan-validation">3. Plan Validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#execution">4. Execution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#command-line-interface">Command Line Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#basic-commands">Basic Commands</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="user_guide.html#list-templates">List Templates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user_guide.html#create-environment">Create Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user_guide.html#check-tools">Check Tools</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user_guide.html#view-logs">View Logs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user_guide.html#version-information">Version Information</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#templates">Templates</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#node-js-web-application">Node.js Web Application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#python-fastapi-application">Python FastAPI Application</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#tools">Tools</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#filesystem-tool">Filesystem Tool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#git-tool">Git Tool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#docker-tool">Docker Tool</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#configuration">Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#planner-configuration">Planner Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#executor-configuration">Executor Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#tool-configuration">Tool Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#error-handling">Error Handling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#plan-validation-errors">Plan Validation Errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#execution-errors">Execution Errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#recovery-mechanisms">Recovery Mechanisms</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#best-practices">Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#requirements-writing">Requirements Writing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#template-selection">Template Selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#tool-management">Tool Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#security">Security</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli_reference.html">CLI Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#synopsis">Synopsis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#global-options">Global Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#commands">Commands</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#create">create</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#templates">templates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#tools">tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#logs">logs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#version">version</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#environment-variables">Environment Variables</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#orcastrate-log-level">ORCASTRATE_LOG_LEVEL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#orcastrate-config-path">ORCASTRATE_CONFIG_PATH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#orcastrate-work-dir">ORCASTRATE_WORK_DIR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#orcastrate-cache-dir">ORCASTRATE_CACHE_DIR</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#exit-codes">Exit Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#configuration-file">Configuration File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#tool-not-available">Tool Not Available</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#permission-errors">Permission Errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#log-analysis">Log Analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#common-issues">Common Issues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#basic-usage-examples">Basic Usage Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#creating-a-node-js-web-application">Creating a Node.js Web Application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#creating-a-python-fastapi-service">Creating a Python FastAPI Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#using-the-programmatic-api">Using the Programmatic API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#advanced-examples">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#custom-template-creation">Custom Template Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#tool-integration-example">Tool Integration Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#error-handling-example">Error Handling Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#configuration-example">Configuration Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#real-world-scenarios">Real-World Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#microservices-architecture">Microservices Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#full-stack-application">Full-Stack Application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#development-environment-setup">Development Environment Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#troubleshooting-examples">Troubleshooting Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#debug-mode">Debug Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#dry-run-testing">Dry Run Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#tool-diagnostics">Tool Diagnostics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#core-components">Core Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#agent-layer">Agent Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#planning-layer">Planning Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#execution-layer">Execution Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#tool-layer">Tool Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#security-layer">Security Layer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#data-flow">Data Flow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#requirements-processing">1. Requirements Processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#plan-generation">2. Plan Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#plan-execution">3. Plan Execution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#design-patterns">Design Patterns</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#hexagonal-architecture">Hexagonal Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#template-method-pattern">Template Method Pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#strategy-pattern">Strategy Pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#observer-pattern">Observer Pattern</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#component-interactions">Component Interactions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#planning-phase">Planning Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#execution-phase">Execution Phase</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#module-structure">Module Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#configuration-management">Configuration Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#hierarchical-configuration">Hierarchical Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#configuration-sources">Configuration Sources</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#error-handling-strategy">Error Handling Strategy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#error-categories">Error Categories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#error-recovery">Error Recovery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#error-propagation">Error Propagation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#performance-considerations">Performance Considerations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#async-await-design">Async/Await Design</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#caching-strategy">Caching Strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#resource-management">Resource Management</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#security-architecture">Security Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#defense-in-depth">Defense in Depth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#security-boundaries">Security Boundaries</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#testing-architecture">Testing Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#test-categories">Test Categories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#test-structure">Test Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#mock-strategy">Mock Strategy</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#extensibility">Extensibility</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#adding-new-tools">Adding New Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#adding-new-planners">Adding New Planners</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#adding-new-templates">Adding New Templates</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="development.html#development-setup">Development Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#clone-and-setup">Clone and Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#project-structure">Project Structure</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#development-workflow">Development Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#feature-development">1. Feature Development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#testing">2. Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#code-quality">3. Code Quality</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#adding-new-components">Adding New Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#adding-a-new-tool">Adding a New Tool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#adding-a-new-planner">Adding a New Planner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#adding-a-new-template">Adding a New Template</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#code-style-guidelines">Code Style Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#python-style">Python Style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#naming-conventions">Naming Conventions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#documentation-style">Documentation Style</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#testing-guidelines">Testing Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#test-structure">Test Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#test-categories">Test Categories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#mocking-strategy">Mocking Strategy</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#debugging">Debugging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#logging">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#debug-tools">Debug Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#performance-profiling">Performance Profiling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#release-process">Release Process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#version-management">Version Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#release-checklist">Release Checklist</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#automated-checks">Automated Checks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#test-structure">Test Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#running-tests">Running Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#basic-test-execution">Basic Test Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#test-coverage">Test Coverage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#parallel-test-execution">Parallel Test Execution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#test-categories">Test Categories</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#unit-tests">Unit Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#integration-tests">Integration Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#end-to-end-tests">End-to-End Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#test-configuration">Test Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#pytest-configuration">Pytest Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#fixtures">Fixtures</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#mocking-strategies">Mocking Strategies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#external-dependencies">External Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#filesystem-operations">Filesystem Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#network-operations">Network Operations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#test-data-management">Test Data Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#test-fixtures">Test Fixtures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#loading-test-data">Loading Test Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#performance-testing">Performance Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#load-testing">Load Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#memory-testing">Memory Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#continuous-integration">Continuous Integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#github-actions">GitHub Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#gitlab-ci">GitLab CI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#test-best-practices">Test Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#test-organization">Test Organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#test-data">Test Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#assertion-guidelines">Assertion Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#error-testing">Error Testing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing to Orcastrate</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fork-and-clone">Fork and Clone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#development-setup">Development Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#contribution-types">Contribution Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bug-reports">Bug Reports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#feature-requests">Feature Requests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#code-contributions">Code Contributions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#development-workflow">Development Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#create-a-branch">1. Create a Branch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#make-changes">2. Make Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-your-changes">3. Test Your Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#submit-pull-request">4. Submit Pull Request</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#coding-standards">Coding Standards</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#python-style">Python Style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#code-quality-tools">Code Quality Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-code-style">Example Code Style</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-guidelines">Testing Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#test-requirements">Test Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-structure">Test Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-coverage">Test Coverage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#documentation-requirements">Documentation Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#documentation-style">Documentation Style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#building-documentation">Building Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#submitting-changes">Submitting Changes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pull-request-guidelines">Pull Request Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pull-request-template">Pull Request Template</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#review-process">Review Process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#community-guidelines">Community Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#code-of-conduct">Code of Conduct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#communication">Communication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getting-help">Getting Help</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#release-process">Release Process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#version-numbering">Version Numbering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#release-checklist">Release Checklist</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#recognition">Recognition</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/modules.html#core-modules">Core Modules</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#unreleased">[Unreleased]</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#added">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">[1.0.0] - 2025-07-04</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">Added</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#features">Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#templates">Templates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#cli-commands">CLI Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#technical-highlights">Technical Highlights</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#documentation">Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#performance">Performance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#security">Security</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">[0.9.0] - 2025-07-03</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">Added</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#changed">Changed</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">[0.1.0] - 2025-07-01</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id6">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#migration-guide">Migration Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#from-0-9-x-to-1-0-0">From 0.9.x to 1.0.0</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#support">Support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="license.html#mit-license">MIT License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#third-party-licenses">Third-Party Licenses</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="license.html#python-dependencies">Python Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="license.html#development-dependencies">Development Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="license.html#documentation-dependencies">Documentation Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#attribution">Attribution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#contribution-license-agreement">Contribution License Agreement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#contact">Contact</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Orcastrate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Contributing to Orcastrate</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/contributing.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="contributing-to-orcastrate">
+<h1>Contributing to Orcastrate<a class="headerlink" href="#contributing-to-orcastrate" title="Link to this heading"></a></h1>
+<p>We welcome contributions to Orcastrate! This guide will help you get started with contributing to the project.</p>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h2>
+<section id="fork-and-clone">
+<h3>Fork and Clone<a class="headerlink" href="#fork-and-clone" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Fork the repository on GitHub/GitLab</p></li>
+<li><p>Clone your fork locally:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/yourusername/orcastrate.git
+<span class="nb">cd</span><span class="w"> </span>orcastrate
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Add the upstream remote:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>upstream<span class="w"> </span>https://github.com/original/orcastrate.git
+</pre></div>
+</div>
+</section>
+<section id="development-setup">
+<h3>Development Setup<a class="headerlink" href="#development-setup" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create virtual environment</span>
+python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+<span class="nb">source</span><span class="w"> </span>venv/bin/activate<span class="w">  </span><span class="c1"># On Windows: venv\Scripts\activate</span>
+
+<span class="c1"># Install dependencies</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements-dev.txt
+
+<span class="c1"># Install pre-commit hooks</span>
+pre-commit<span class="w"> </span>install
+</pre></div>
+</div>
+</section>
+</section>
+<section id="contribution-types">
+<h2>Contribution Types<a class="headerlink" href="#contribution-types" title="Link to this heading"></a></h2>
+<section id="bug-reports">
+<h3>Bug Reports<a class="headerlink" href="#bug-reports" title="Link to this heading"></a></h3>
+<p>When reporting bugs, please include:</p>
+<ul class="simple">
+<li><p><strong>Clear description</strong> of the issue</p></li>
+<li><p><strong>Steps to reproduce</strong> the problem</p></li>
+<li><p><strong>Expected behavior</strong> vs actual behavior</p></li>
+<li><p><strong>Environment details</strong> (OS, Python version, etc.)</p></li>
+<li><p><strong>Logs or error messages</strong> if applicable</p></li>
+</ul>
+</section>
+<section id="feature-requests">
+<h3>Feature Requests<a class="headerlink" href="#feature-requests" title="Link to this heading"></a></h3>
+<p>For new features, please:</p>
+<ul class="simple">
+<li><p><strong>Describe the use case</strong> and problem it solves</p></li>
+<li><p><strong>Provide examples</strong> of how it would be used</p></li>
+<li><p><strong>Consider the scope</strong> and complexity</p></li>
+<li><p><strong>Discuss alternatives</strong> if applicable</p></li>
+</ul>
+</section>
+<section id="code-contributions">
+<h3>Code Contributions<a class="headerlink" href="#code-contributions" title="Link to this heading"></a></h3>
+<p>We accept contributions for:</p>
+<ul class="simple">
+<li><p><strong>New tools</strong> (Docker, Kubernetes, cloud providers, etc.)</p></li>
+<li><p><strong>New planners</strong> (AI-based, rule-based, etc.)</p></li>
+<li><p><strong>Template improvements</strong> (new templates, better existing ones)</p></li>
+<li><p><strong>Bug fixes</strong> and improvements</p></li>
+<li><p><strong>Documentation</strong> updates</p></li>
+<li><p><strong>Test coverage</strong> improvements</p></li>
+</ul>
+</section>
+</section>
+<section id="development-workflow">
+<h2>Development Workflow<a class="headerlink" href="#development-workflow" title="Link to this heading"></a></h2>
+<section id="create-a-branch">
+<h3>1. Create a Branch<a class="headerlink" href="#create-a-branch" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Update your main branch</span>
+git<span class="w"> </span>checkout<span class="w"> </span>main
+git<span class="w"> </span>pull<span class="w"> </span>upstream<span class="w"> </span>main
+
+<span class="c1"># Create feature branch</span>
+git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/your-feature-name
+</pre></div>
+</div>
+</section>
+<section id="make-changes">
+<h3>2. Make Changes<a class="headerlink" href="#make-changes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Follow the <a class="reference internal" href="#coding-standards">coding standards</a></p></li>
+<li><p>Add tests for new functionality</p></li>
+<li><p>Update documentation as needed</p></li>
+<li><p>Keep commits focused and atomic</p></li>
+</ul>
+</section>
+<section id="test-your-changes">
+<h3>3. Test Your Changes<a class="headerlink" href="#test-your-changes" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run tests</span>
+pytest
+
+<span class="c1"># Check code quality</span>
+make<span class="w"> </span>lint
+make<span class="w"> </span>format
+
+<span class="c1"># Test specific areas</span>
+pytest<span class="w"> </span>tests/unit/tools/<span class="w">  </span><span class="c1"># If you added a tool</span>
+pytest<span class="w"> </span>tests/integration/<span class="w">  </span><span class="c1"># Integration tests</span>
+</pre></div>
+</div>
+</section>
+<section id="submit-pull-request">
+<h3>4. Submit Pull Request<a class="headerlink" href="#submit-pull-request" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Push your branch</span>
+git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>feature/your-feature-name
+
+<span class="c1"># Create pull request via GitHub/GitLab UI</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="coding-standards">
+<span id="id1"></span><h2>Coding Standards<a class="headerlink" href="#coding-standards" title="Link to this heading"></a></h2>
+<section id="python-style">
+<h3>Python Style<a class="headerlink" href="#python-style" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Follow PEP 8</strong> with 88-character line limit (Black formatter)</p></li>
+<li><p><strong>Use type hints</strong> for all function parameters and return values</p></li>
+<li><p><strong>Add docstrings</strong> for all public methods and classes</p></li>
+<li><p><strong>Use descriptive names</strong> for variables and functions</p></li>
+</ul>
+</section>
+<section id="code-quality-tools">
+<h3>Code Quality Tools<a class="headerlink" href="#code-quality-tools" title="Link to this heading"></a></h3>
+<p>We use the following tools to maintain code quality:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Automatic formatting</span>
+black<span class="w"> </span>src/<span class="w"> </span>tests/
+isort<span class="w"> </span>src/<span class="w"> </span>tests/
+
+<span class="c1"># Linting</span>
+flake8<span class="w"> </span>src/<span class="w"> </span>tests/
+pylint<span class="w"> </span>src/
+
+<span class="c1"># Type checking</span>
+mypy<span class="w"> </span>src/
+
+<span class="c1"># Security scanning</span>
+bandit<span class="w"> </span>-r<span class="w"> </span>src/
+</pre></div>
+</div>
+</section>
+<section id="example-code-style">
+<h3>Example Code Style<a class="headerlink" href="#example-code-style" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ExampleClass</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Example class demonstrating coding standards.</span>
+<span class="sd">    </span>
+<span class="sd">    This class shows the preferred style for Orcastrate contributions</span>
+<span class="sd">    including docstrings, type hints, and error handling.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        config: Configuration object for the class.</span>
+<span class="sd">        optional_param: Optional parameter with default value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ExampleConfig</span><span class="p">,</span> <span class="n">optional_param</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optional_param</span> <span class="o">=</span> <span class="n">optional_param</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+    
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ProcessedItem</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process a list of data items.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: List of data dictionaries to process.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            List of processed items.</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            ProcessingError: If data processing fails.</span>
+<span class="sd">            ValidationError: If input data is invalid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;Data list cannot be empty&quot;</span><span class="p">)</span>
+        
+        <span class="n">processed_items</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">processed_item</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_single_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                <span class="n">processed_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">processed_item</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to process item </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">ProcessingError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+        
+        <span class="k">return</span> <span class="n">processed_items</span>
+    
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_process_single_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ProcessedItem</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process a single data item.&quot;&quot;&quot;</span>
+        <span class="c1"># Implementation details</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="testing-guidelines">
+<h2>Testing Guidelines<a class="headerlink" href="#testing-guidelines" title="Link to this heading"></a></h2>
+<section id="test-requirements">
+<h3>Test Requirements<a class="headerlink" href="#test-requirements" title="Link to this heading"></a></h3>
+<p>All contributions must include appropriate tests:</p>
+<ul class="simple">
+<li><p><strong>Unit tests</strong> for individual components</p></li>
+<li><p><strong>Integration tests</strong> for component interactions</p></li>
+<li><p><strong>End-to-end tests</strong> for complete workflows (when applicable)</p></li>
+</ul>
+</section>
+<section id="test-structure">
+<h3>Test Structure<a class="headerlink" href="#test-structure" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncMock</span><span class="p">,</span> <span class="n">patch</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.tools.example_tool</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExampleTool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.tools.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolConfig</span><span class="p">,</span> <span class="n">ToolError</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestExampleTool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test suite for ExampleTool.&quot;&quot;&quot;</span>
+    
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tool_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create tool configuration for testing.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ToolConfig</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;example_tool&quot;</span><span class="p">,</span>
+            <span class="n">version</span><span class="o">=</span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+            <span class="n">retry_count</span><span class="o">=</span><span class="mi">3</span>
+        <span class="p">)</span>
+    
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">tool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_config</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create and initialize tool instance.&quot;&quot;&quot;</span>
+        <span class="n">tool</span> <span class="o">=</span> <span class="n">ExampleTool</span><span class="p">(</span><span class="n">tool_config</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">tool</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">tool</span>
+    
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_successful_operation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test successful tool operation.&quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;example_action&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">})</span>
+        
+        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span> <span class="ow">is</span> <span class="kc">True</span>
+        <span class="k">assert</span> <span class="s2">&quot;expected_output&quot;</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">output</span>
+    
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_error_handling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test tool error handling.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">ToolError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">&quot;Invalid parameter&quot;</span><span class="p">):</span>
+            <span class="k">await</span> <span class="n">tool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;example_action&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;invalid&quot;</span><span class="p">:</span> <span class="s2">&quot;param&quot;</span><span class="p">})</span>
+    
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+    <span class="nd">@patch</span><span class="p">(</span><span class="s1">&#39;src.tools.example_tool.external_dependency&#39;</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_with_mocked_dependency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_dependency</span><span class="p">,</span> <span class="n">tool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test tool with mocked external dependency.&quot;&quot;&quot;</span>
+        <span class="n">mock_dependency</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="s2">&quot;mocked_result&quot;</span>
+        
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;example_action&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">})</span>
+        
+        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span> <span class="ow">is</span> <span class="kc">True</span>
+        <span class="n">mock_dependency</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="test-coverage">
+<h3>Test Coverage<a class="headerlink" href="#test-coverage" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Aim for <strong>90%+ test coverage</strong> for new code</p></li>
+<li><p>Test both <strong>success and failure scenarios</strong></p></li>
+<li><p>Include <strong>edge cases</strong> and <strong>boundary conditions</strong></p></li>
+<li><p>Mock <strong>external dependencies</strong> appropriately</p></li>
+</ul>
+</section>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h2>
+<section id="documentation-requirements">
+<h3>Documentation Requirements<a class="headerlink" href="#documentation-requirements" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Update user documentation</strong> for new features</p></li>
+<li><p><strong>Add API documentation</strong> for new classes/methods</p></li>
+<li><p><strong>Include examples</strong> for complex functionality</p></li>
+<li><p><strong>Update CLI reference</strong> for new commands</p></li>
+</ul>
+</section>
+<section id="documentation-style">
+<h3>Documentation Style<a class="headerlink" href="#documentation-style" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Use <strong>clear, concise language</strong></p></li>
+<li><p>Include <strong>code examples</strong> where helpful</p></li>
+<li><p>Follow <strong>existing documentation structure</strong></p></li>
+<li><p>Use <strong>proper markdown formatting</strong></p></li>
+</ul>
+</section>
+<section id="building-documentation">
+<h3>Building Documentation<a class="headerlink" href="#building-documentation" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install documentation dependencies</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>docs/requirements.txt
+
+<span class="c1"># Build documentation</span>
+<span class="nb">cd</span><span class="w"> </span>docs
+make<span class="w"> </span>html
+
+<span class="c1"># View documentation</span>
+open<span class="w"> </span>build/html/index.html
+</pre></div>
+</div>
+</section>
+</section>
+<section id="submitting-changes">
+<h2>Submitting Changes<a class="headerlink" href="#submitting-changes" title="Link to this heading"></a></h2>
+<section id="pull-request-guidelines">
+<h3>Pull Request Guidelines<a class="headerlink" href="#pull-request-guidelines" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Clear title</strong> describing the change</p></li>
+<li><p><strong>Detailed description</strong> of what and why</p></li>
+<li><p><strong>Link to related issues</strong> if applicable</p></li>
+<li><p><strong>Test coverage</strong> maintained or improved</p></li>
+<li><p><strong>Documentation</strong> updated as needed</p></li>
+</ol>
+</section>
+<section id="pull-request-template">
+<h3>Pull Request Template<a class="headerlink" href="#pull-request-template" title="Link to this heading"></a></h3>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span><span class="gu">## Description</span>
+Brief description of changes made.
+
+<span class="gu">## Type of Change</span>
+<span class="k">- [ ]</span> Bug fix
+<span class="k">- [ ]</span> New feature
+<span class="k">- [ ]</span> Breaking change
+<span class="k">- [ ]</span> Documentation update
+
+<span class="gu">## Testing</span>
+<span class="k">- [ ]</span> Unit tests added/updated
+<span class="k">- [ ]</span> Integration tests added/updated
+<span class="k">- [ ]</span> All tests passing
+<span class="k">- [ ]</span> Test coverage maintained
+
+<span class="gu">## Documentation</span>
+<span class="k">- [ ]</span> Documentation updated
+<span class="k">- [ ]</span> Examples added/updated
+<span class="k">- [ ]</span> API documentation updated
+
+<span class="gu">## Checklist</span>
+<span class="k">- [ ]</span> Code follows style guidelines
+<span class="k">- [ ]</span> Self-review completed
+<span class="k">- [ ]</span> Changes tested locally
+<span class="k">- [ ]</span> Related issues linked
+
+<span class="gu">## Additional Notes</span>
+Any additional information or context.
+</pre></div>
+</div>
+</section>
+<section id="review-process">
+<h3>Review Process<a class="headerlink" href="#review-process" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Automated checks</strong> must pass (tests, linting, etc.)</p></li>
+<li><p><strong>Code review</strong> by maintainers</p></li>
+<li><p><strong>Integration testing</strong> in CI environment</p></li>
+<li><p><strong>Documentation review</strong> for user-facing changes</p></li>
+<li><p><strong>Final approval</strong> and merge</p></li>
+</ol>
+</section>
+</section>
+<section id="community-guidelines">
+<h2>Community Guidelines<a class="headerlink" href="#community-guidelines" title="Link to this heading"></a></h2>
+<section id="code-of-conduct">
+<h3>Code of Conduct<a class="headerlink" href="#code-of-conduct" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Be respectful</strong> and inclusive</p></li>
+<li><p><strong>Focus on constructive feedback</strong></p></li>
+<li><p><strong>Help others learn</strong> and grow</p></li>
+<li><p><strong>Assume good intentions</strong></p></li>
+</ul>
+</section>
+<section id="communication">
+<h3>Communication<a class="headerlink" href="#communication" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Use GitHub/GitLab issues</strong> for bug reports and feature requests</p></li>
+<li><p><strong>Use pull requests</strong> for code discussions</p></li>
+<li><p><strong>Be patient</strong> with response times</p></li>
+<li><p><strong>Ask questions</strong> if anything is unclear</p></li>
+</ul>
+</section>
+<section id="getting-help">
+<h3>Getting Help<a class="headerlink" href="#getting-help" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Check existing issues</strong> before creating new ones</p></li>
+<li><p><strong>Search documentation</strong> for answers</p></li>
+<li><p><strong>Provide context</strong> when asking questions</p></li>
+<li><p><strong>Share relevant logs</strong> and error messages</p></li>
+</ul>
+</section>
+</section>
+<section id="release-process">
+<h2>Release Process<a class="headerlink" href="#release-process" title="Link to this heading"></a></h2>
+<section id="version-numbering">
+<h3>Version Numbering<a class="headerlink" href="#version-numbering" title="Link to this heading"></a></h3>
+<p>We follow <a class="reference external" href="https://semver.org/">Semantic Versioning</a>:</p>
+<ul class="simple">
+<li><p><strong>MAJOR</strong>: Breaking changes</p></li>
+<li><p><strong>MINOR</strong>: New features (backward compatible)</p></li>
+<li><p><strong>PATCH</strong>: Bug fixes (backward compatible)</p></li>
+</ul>
+</section>
+<section id="release-checklist">
+<h3>Release Checklist<a class="headerlink" href="#release-checklist" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Update version numbers</strong></p></li>
+<li><p><strong>Update changelog</strong></p></li>
+<li><p><strong>Run full test suite</strong></p></li>
+<li><p><strong>Build and test documentation</strong></p></li>
+<li><p><strong>Create release tag</strong></p></li>
+<li><p><strong>Deploy to package repositories</strong></p></li>
+</ol>
+</section>
+</section>
+<section id="recognition">
+<h2>Recognition<a class="headerlink" href="#recognition" title="Link to this heading"></a></h2>
+<p>Contributors are recognized in:</p>
+<ul class="simple">
+<li><p><strong>Changelog</strong> for each release</p></li>
+<li><p><strong>Contributors file</strong> in the repository</p></li>
+<li><p><strong>Release notes</strong> for significant contributions</p></li>
+</ul>
+<p>Thank you for contributing to Orcastrate! 🚀</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="testing.html" class="btn btn-neutral float-left" title="Testing Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api/modules.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Orcastrate Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

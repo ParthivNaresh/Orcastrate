@@ -1,0 +1,1006 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Integration Testing &mdash; Orcastrate v1.0.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Orcastrate
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#install-dependencies">Install Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#first-steps">First Steps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#explore-available-templates">1. Explore Available Templates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#create-your-first-environment">2. Create Your First Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#check-tool-status">3. Check Tool Status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#run-the-interactive-demo">4. Run the Interactive Demo</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#basic-concepts">Basic Concepts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#requirements">Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#templates">Templates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#tools">Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#plans">Plans</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide.html">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#core-workflow">Core Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#requirements-processing">1. Requirements Processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#plan-generation">2. Plan Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#plan-validation">3. Plan Validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#execution">4. Execution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#command-line-interface">Command Line Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#basic-commands">Basic Commands</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="user_guide.html#list-templates">List Templates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user_guide.html#create-environment">Create Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user_guide.html#check-tools">Check Tools</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user_guide.html#view-logs">View Logs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user_guide.html#version-information">Version Information</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#templates">Templates</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#node-js-web-application">Node.js Web Application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#python-fastapi-application">Python FastAPI Application</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#tools">Tools</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#filesystem-tool">Filesystem Tool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#git-tool">Git Tool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#docker-tool">Docker Tool</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#configuration">Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#planner-configuration">Planner Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#executor-configuration">Executor Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#tool-configuration">Tool Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#error-handling">Error Handling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#plan-validation-errors">Plan Validation Errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#execution-errors">Execution Errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#recovery-mechanisms">Recovery Mechanisms</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#best-practices">Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#requirements-writing">Requirements Writing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#template-selection">Template Selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#tool-management">Tool Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide.html#security">Security</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli_reference.html">CLI Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#synopsis">Synopsis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#global-options">Global Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#commands">Commands</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#create">create</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#templates">templates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#tools">tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#logs">logs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#version">version</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#environment-variables">Environment Variables</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#orcastrate-log-level">ORCASTRATE_LOG_LEVEL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#orcastrate-config-path">ORCASTRATE_CONFIG_PATH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#orcastrate-work-dir">ORCASTRATE_WORK_DIR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#orcastrate-cache-dir">ORCASTRATE_CACHE_DIR</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#exit-codes">Exit Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#configuration-file">Configuration File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli_reference.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#tool-not-available">Tool Not Available</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#permission-errors">Permission Errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#log-analysis">Log Analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli_reference.html#common-issues">Common Issues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#basic-usage-examples">Basic Usage Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#creating-a-node-js-web-application">Creating a Node.js Web Application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#creating-a-python-fastapi-service">Creating a Python FastAPI Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#using-the-programmatic-api">Using the Programmatic API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#advanced-examples">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#custom-template-creation">Custom Template Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#tool-integration-example">Tool Integration Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#error-handling-example">Error Handling Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#configuration-example">Configuration Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#real-world-scenarios">Real-World Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#microservices-architecture">Microservices Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#full-stack-application">Full-Stack Application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#development-environment-setup">Development Environment Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#troubleshooting-examples">Troubleshooting Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#debug-mode">Debug Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#dry-run-testing">Dry Run Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#tool-diagnostics">Tool Diagnostics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#core-components">Core Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#agent-layer">Agent Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#planning-layer">Planning Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#execution-layer">Execution Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#tool-layer">Tool Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#security-layer">Security Layer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#data-flow">Data Flow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#requirements-processing">1. Requirements Processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#plan-generation">2. Plan Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#plan-execution">3. Plan Execution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#design-patterns">Design Patterns</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#hexagonal-architecture">Hexagonal Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#template-method-pattern">Template Method Pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#strategy-pattern">Strategy Pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#observer-pattern">Observer Pattern</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#component-interactions">Component Interactions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#planning-phase">Planning Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#execution-phase">Execution Phase</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#module-structure">Module Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#configuration-management">Configuration Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#hierarchical-configuration">Hierarchical Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#configuration-sources">Configuration Sources</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#error-handling-strategy">Error Handling Strategy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#error-categories">Error Categories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#error-recovery">Error Recovery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#error-propagation">Error Propagation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#performance-considerations">Performance Considerations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#async-await-design">Async/Await Design</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#caching-strategy">Caching Strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#resource-management">Resource Management</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#security-architecture">Security Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#defense-in-depth">Defense in Depth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#security-boundaries">Security Boundaries</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#testing-architecture">Testing Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#test-categories">Test Categories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#test-structure">Test Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#mock-strategy">Mock Strategy</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#extensibility">Extensibility</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#adding-new-tools">Adding New Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#adding-new-planners">Adding New Planners</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#adding-new-templates">Adding New Templates</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="development.html#development-setup">Development Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#clone-and-setup">Clone and Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#project-structure">Project Structure</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#development-workflow">Development Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#feature-development">1. Feature Development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#testing">2. Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#code-quality">3. Code Quality</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#adding-new-components">Adding New Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#adding-a-new-tool">Adding a New Tool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#adding-a-new-planner">Adding a New Planner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#adding-a-new-template">Adding a New Template</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#code-style-guidelines">Code Style Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#python-style">Python Style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#naming-conventions">Naming Conventions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#documentation-style">Documentation Style</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#testing-guidelines">Testing Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#test-structure">Test Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#test-categories">Test Categories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#mocking-strategy">Mocking Strategy</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#debugging">Debugging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#logging">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#debug-tools">Debug Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#performance-profiling">Performance Profiling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#release-process">Release Process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="development.html#version-management">Version Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#release-checklist">Release Checklist</a></li>
+<li class="toctree-l3"><a class="reference internal" href="development.html#automated-checks">Automated Checks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#test-structure">Test Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#running-tests">Running Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#basic-test-execution">Basic Test Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#test-coverage">Test Coverage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#parallel-test-execution">Parallel Test Execution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#test-categories">Test Categories</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#unit-tests">Unit Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#integration-tests">Integration Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#end-to-end-tests">End-to-End Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#test-configuration">Test Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#pytest-configuration">Pytest Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#fixtures">Fixtures</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#mocking-strategies">Mocking Strategies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#external-dependencies">External Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#filesystem-operations">Filesystem Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#network-operations">Network Operations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#test-data-management">Test Data Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#test-fixtures">Test Fixtures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#loading-test-data">Loading Test Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#performance-testing">Performance Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#load-testing">Load Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#memory-testing">Memory Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#continuous-integration">Continuous Integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#github-actions">GitHub Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#gitlab-ci">GitLab CI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#test-best-practices">Test Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#test-organization">Test Organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#test-data">Test Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#assertion-guidelines">Assertion Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html#error-testing">Error Testing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to Orcastrate</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#getting-started">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#fork-and-clone">Fork and Clone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#development-setup">Development Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#contribution-types">Contribution Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#bug-reports">Bug Reports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#feature-requests">Feature Requests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#code-contributions">Code Contributions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#development-workflow">Development Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#create-a-branch">1. Create a Branch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#make-changes">2. Make Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#test-your-changes">3. Test Your Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#submit-pull-request">4. Submit Pull Request</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#coding-standards">Coding Standards</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#python-style">Python Style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#code-quality-tools">Code Quality Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#example-code-style">Example Code Style</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#testing-guidelines">Testing Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#test-requirements">Test Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#test-structure">Test Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#test-coverage">Test Coverage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#documentation">Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#documentation-requirements">Documentation Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#documentation-style">Documentation Style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#building-documentation">Building Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#submitting-changes">Submitting Changes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#pull-request-guidelines">Pull Request Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#pull-request-template">Pull Request Template</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#review-process">Review Process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#community-guidelines">Community Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#code-of-conduct">Code of Conduct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#communication">Communication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#getting-help">Getting Help</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#release-process">Release Process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#version-numbering">Version Numbering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#release-checklist">Release Checklist</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#recognition">Recognition</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/modules.html#core-modules">Core Modules</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#unreleased">[Unreleased]</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#added">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">[1.0.0] - 2025-07-04</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">Added</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#features">Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#templates">Templates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#cli-commands">CLI Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#technical-highlights">Technical Highlights</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#documentation">Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#performance">Performance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#security">Security</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">[0.9.0] - 2025-07-03</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">Added</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#changed">Changed</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">[0.1.0] - 2025-07-01</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id6">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#migration-guide">Migration Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#from-0-9-x-to-1-0-0">From 0.9.x to 1.0.0</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#support">Support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="license.html#mit-license">MIT License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#third-party-licenses">Third-Party Licenses</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="license.html#python-dependencies">Python Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="license.html#development-dependencies">Development Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="license.html#documentation-dependencies">Documentation Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#attribution">Attribution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#contribution-license-agreement">Contribution License Agreement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#contact">Contact</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Orcastrate</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Live Integration Testing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/live_testing.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="live-integration-testing">
+<h1>Live Integration Testing<a class="headerlink" href="#live-integration-testing" title="Link to this heading"></a></h1>
+<p>This document explains how to run live integration tests that use real services instead of mocks.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>Orcastrate includes comprehensive live integration tests that run against real services:</p>
+<ul class="simple">
+<li><p><strong>LocalStack</strong> - AWS services simulation</p></li>
+<li><p><strong>Docker</strong> - Real Docker daemon</p></li>
+<li><p><strong>Databases</strong> - PostgreSQL, MySQL, MongoDB, Redis</p></li>
+<li><p><strong>Storage</strong> - MinIO (S3-compatible)</p></li>
+<li><p><strong>Search</strong> - Elasticsearch</p></li>
+</ul>
+<p>These tests verify that our tools work correctly with actual APIs and services.</p>
+</section>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<section id="required-software">
+<h3>Required Software<a class="headerlink" href="#required-software" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Docker Desktop or Docker Engine</p></li>
+<li><p>Docker Compose V2</p></li>
+<li><p>Python 3.8+ with Poetry</p></li>
+<li><p>At least 4GB available RAM</p></li>
+<li><p>10GB available disk space</p></li>
+</ul>
+</section>
+<section id="system-requirements">
+<h3>System Requirements<a class="headerlink" href="#system-requirements" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>macOS, Linux, or Windows with WSL2</p></li>
+<li><p>Docker daemon running and accessible</p></li>
+<li><p>Ports 4566, 5432, 3306, 6379, 27017, 9000, 9200 available</p></li>
+</ul>
+</section>
+</section>
+<section id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h2>
+<section id="start-test-infrastructure">
+<h3>1. Start Test Infrastructure<a class="headerlink" href="#start-test-infrastructure" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start all test services</span>
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.test.yml<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--wait
+
+<span class="c1"># Verify services are healthy</span>
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.test.yml<span class="w"> </span>ps
+</pre></div>
+</div>
+</section>
+<section id="run-live-tests">
+<h3>2. Run Live Tests<a class="headerlink" href="#run-live-tests" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run all live tests</span>
+python<span class="w"> </span>scripts/run_live_tests.py
+
+<span class="c1"># Run specific test categories</span>
+pytest<span class="w"> </span>tests/live/<span class="w"> </span>--live<span class="w"> </span>-v
+
+<span class="c1"># Run only AWS tests</span>
+pytest<span class="w"> </span>tests/live/test_aws_live.py<span class="w"> </span>--live<span class="w"> </span>-v
+
+<span class="c1"># Run only Docker tests  </span>
+pytest<span class="w"> </span>tests/live/test_docker_live.py<span class="w"> </span>--live<span class="w"> </span>-v
+</pre></div>
+</div>
+</section>
+<section id="cleanup">
+<h3>3. Cleanup<a class="headerlink" href="#cleanup" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Stop and remove all test services</span>
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.test.yml<span class="w"> </span>down<span class="w"> </span>-v<span class="w"> </span>--remove-orphans
+</pre></div>
+</div>
+</section>
+</section>
+<section id="test-infrastructure">
+<h2>Test Infrastructure<a class="headerlink" href="#test-infrastructure" title="Link to this heading"></a></h2>
+<section id="services-overview">
+<h3>Services Overview<a class="headerlink" href="#services-overview" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Service</p></th>
+<th class="head"><p>Port</p></th>
+<th class="head"><p>Purpose</p></th>
+<th class="head"><p>Health Check</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>LocalStack</p></td>
+<td><p>4566</p></td>
+<td><p>AWS services simulation</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">curl</span> <span class="pre">http://localhost:4566/_localstack/health</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>PostgreSQL</p></td>
+<td><p>5432</p></td>
+<td><p>Relational database testing</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pg_isready</span> <span class="pre">-h</span> <span class="pre">localhost</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>MySQL</p></td>
+<td><p>3306</p></td>
+<td><p>Alternative SQL database</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mysqladmin</span> <span class="pre">ping</span> <span class="pre">-h</span> <span class="pre">localhost</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Redis</p></td>
+<td><p>6379</p></td>
+<td><p>Cache and pub/sub testing</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">redis-cli</span> <span class="pre">ping</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>MongoDB</p></td>
+<td><p>27017</p></td>
+<td><p>NoSQL database testing</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mongosh</span> <span class="pre">--eval</span> <span class="pre">&quot;db.runCommand('ping')&quot;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>MinIO</p></td>
+<td><p>9000</p></td>
+<td><p>S3-compatible storage</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">curl</span> <span class="pre">http://localhost:9000/minio/health/live</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Elasticsearch</p></td>
+<td><p>9200</p></td>
+<td><p>Search engine testing</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">curl</span> <span class="pre">http://localhost:9200/_cluster/health</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="container-networking">
+<h3>Container Networking<a class="headerlink" href="#container-networking" title="Link to this heading"></a></h3>
+<p>All test services run in the <code class="docutils literal notranslate"><span class="pre">orcastrate-test-network</span></code> Docker network and can communicate with each other using service names as hostnames.</p>
+</section>
+</section>
+<section id="running-tests">
+<h2>Running Tests<a class="headerlink" href="#running-tests" title="Link to this heading"></a></h2>
+<section id="using-the-helper-script">
+<h3>Using the Helper Script<a class="headerlink" href="#using-the-helper-script" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">scripts/run_live_tests.py</span></code> script provides convenient test execution with infrastructure management:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run all tests with automatic infrastructure management</span>
+python<span class="w"> </span>scripts/run_live_tests.py
+
+<span class="c1"># Skip infrastructure startup (if already running)</span>
+python<span class="w"> </span>scripts/run_live_tests.py<span class="w"> </span>--no-infrastructure
+
+<span class="c1"># Keep infrastructure running after tests</span>
+python<span class="w"> </span>scripts/run_live_tests.py<span class="w"> </span>--keep-infrastructure
+
+<span class="c1"># Run specific test patterns</span>
+python<span class="w"> </span>scripts/run_live_tests.py<span class="w"> </span>--test-filter<span class="w"> </span><span class="s2">&quot;aws and ec2&quot;</span>
+
+<span class="c1"># Run specific test file</span>
+python<span class="w"> </span>scripts/run_live_tests.py<span class="w"> </span>--test-file<span class="w"> </span>test_aws_live.py
+</pre></div>
+</div>
+</section>
+<section id="direct-pytest-execution">
+<h3>Direct Pytest Execution<a class="headerlink" href="#direct-pytest-execution" title="Link to this heading"></a></h3>
+<p>You can also run tests directly with pytest:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install test dependencies</span>
+poetry<span class="w"> </span>install<span class="w"> </span>--with<span class="w"> </span>dev
+
+<span class="c1"># Set environment variables</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">LOCALSTACK_ENDPOINT</span><span class="o">=</span><span class="s2">&quot;http://localhost:4566&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">POSTGRES_HOST</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">MYSQL_HOST</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">REDIS_HOST</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">MONGODB_HOST</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span>
+
+<span class="c1"># Run tests</span>
+pytest<span class="w"> </span>tests/live/<span class="w"> </span>--live<span class="w"> </span>-v
+</pre></div>
+</div>
+</section>
+<section id="test-markers">
+<h3>Test Markers<a class="headerlink" href="#test-markers" title="Link to this heading"></a></h3>
+<p>Use pytest markers to run specific test categories:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run only LocalStack tests</span>
+pytest<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;localstack&quot;</span><span class="w"> </span>tests/live/<span class="w"> </span>--live<span class="w"> </span>-v
+
+<span class="c1"># Run only Docker tests</span>
+pytest<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docker_required&quot;</span><span class="w"> </span>tests/live/<span class="w"> </span>--live<span class="w"> </span>-v
+
+<span class="c1"># Run integration tests but exclude live tests</span>
+pytest<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;integration and not live&quot;</span><span class="w"> </span>tests/<span class="w"> </span>-v
+
+<span class="c1"># Run all tests including live tests</span>
+pytest<span class="w"> </span>--live<span class="w"> </span>-v
+</pre></div>
+</div>
+</section>
+</section>
+<section id="test-categories">
+<h2>Test Categories<a class="headerlink" href="#test-categories" title="Link to this heading"></a></h2>
+<section id="aws-live-tests-test-aws-live-py">
+<h3>AWS Live Tests (<code class="docutils literal notranslate"><span class="pre">test_aws_live.py</span></code>)<a class="headerlink" href="#aws-live-tests-test-aws-live-py" title="Link to this heading"></a></h3>
+<p>Tests the AWS Cloud Provider tool against LocalStack:</p>
+<ul class="simple">
+<li><p><strong>Account Management</strong>: Get account info, identity verification</p></li>
+<li><p><strong>EC2 Lifecycle</strong>: Create, start, stop, terminate instances</p></li>
+<li><p><strong>Security Groups</strong>: Create groups, authorize ingress rules</p></li>
+<li><p><strong>IAM Management</strong>: Create roles, attach/detach policies</p></li>
+<li><p><strong>Lambda Functions</strong>: Create, invoke, delete functions</p></li>
+<li><p><strong>RDS Databases</strong>: Create, list, delete database instances</p></li>
+<li><p><strong>Cost Estimation</strong>: Multi-resource cost calculations</p></li>
+<li><p><strong>End-to-End Workflows</strong>: Complete application deployments</p></li>
+</ul>
+<p>Example test execution:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>tests/live/test_aws_live.py::TestAWSLiveIntegration::test_ec2_instance_lifecycle_live<span class="w"> </span>--live<span class="w"> </span>-v
+</pre></div>
+</div>
+</section>
+<section id="docker-live-tests-test-docker-live-py">
+<h3>Docker Live Tests (<code class="docutils literal notranslate"><span class="pre">test_docker_live.py</span></code>)<a class="headerlink" href="#docker-live-tests-test-docker-live-py" title="Link to this heading"></a></h3>
+<p>Tests the Docker tool against a real Docker daemon:</p>
+<ul class="simple">
+<li><p><strong>Container Lifecycle</strong>: Create, start, stop, remove containers</p></li>
+<li><p><strong>Image Management</strong>: Pull, build, inspect, remove images</p></li>
+<li><p><strong>Network Management</strong>: Create networks, container connectivity</p></li>
+<li><p><strong>Volume Management</strong>: Create volumes, data persistence</p></li>
+<li><p><strong>Multi-Container Apps</strong>: Simulate docker-compose deployments</p></li>
+<li><p><strong>Dockerfile Builds</strong>: Build custom images from Dockerfiles</p></li>
+</ul>
+<p>Example test execution:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>tests/live/test_docker_live.py::TestDockerLiveIntegration::test_container_lifecycle_live<span class="w"> </span>--live<span class="w"> </span>-v
+</pre></div>
+</div>
+</section>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<section id="environment-variables">
+<h3>Environment Variables<a class="headerlink" href="#environment-variables" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">LOCALSTACK_ENDPOINT</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">http://localhost:4566</span></code></p></td>
+<td><p>LocalStack API endpoint</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">POSTGRES_HOST</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">localhost</span></code></p></td>
+<td><p>PostgreSQL host</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MYSQL_HOST</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">localhost</span></code></p></td>
+<td><p>MySQL host</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">REDIS_HOST</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">localhost</span></code></p></td>
+<td><p>Redis host</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MONGODB_HOST</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">localhost</span></code></p></td>
+<td><p>MongoDB host</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MINIO_ENDPOINT</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">http://localhost:9000</span></code></p></td>
+<td><p>MinIO S3 endpoint</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ELASTICSEARCH_HOST</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">localhost</span></code></p></td>
+<td><p>Elasticsearch host</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="docker-compose-override">
+<h3>Docker Compose Override<a class="headerlink" href="#docker-compose-override" title="Link to this heading"></a></h3>
+<p>Create <code class="docutils literal notranslate"><span class="pre">docker-compose.test.override.yml</span></code> to customize the test environment:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.8&#39;</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">localstack</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG=1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVICES=ec2,rds,lambda,iam,s3,sts,cloudformation</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;4566:4566&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8080:8080&quot;</span><span class="w">  </span><span class="c1"># LocalStack dashboard</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<section id="common-issues">
+<h3>Common Issues<a class="headerlink" href="#common-issues" title="Link to this heading"></a></h3>
+<section id="port-conflicts">
+<h4>Port Conflicts<a class="headerlink" href="#port-conflicts" title="Link to this heading"></a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check what&#39;s using a port</span>
+lsof<span class="w"> </span>-i<span class="w"> </span>:4566
+
+<span class="c1"># Kill processes using the port</span>
+sudo<span class="w"> </span>lsof<span class="w"> </span>-ti<span class="w"> </span>:4566<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span><span class="nb">kill</span><span class="w"> </span>-9
+</pre></div>
+</div>
+</section>
+<section id="docker-issues">
+<h4>Docker Issues<a class="headerlink" href="#docker-issues" title="Link to this heading"></a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check Docker daemon status</span>
+docker<span class="w"> </span>info
+
+<span class="c1"># Restart Docker Desktop</span>
+<span class="c1"># On macOS: restart Docker Desktop app</span>
+<span class="c1"># On Linux: sudo systemctl restart docker</span>
+
+<span class="c1"># Clean up Docker resources</span>
+docker<span class="w"> </span>system<span class="w"> </span>prune<span class="w"> </span>-a<span class="w"> </span>--volumes
+</pre></div>
+</div>
+</section>
+<section id="localstack-issues">
+<h4>LocalStack Issues<a class="headerlink" href="#localstack-issues" title="Link to this heading"></a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check LocalStack health</span>
+curl<span class="w"> </span>http://localhost:4566/_localstack/health
+
+<span class="c1"># View LocalStack logs</span>
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.test.yml<span class="w"> </span>logs<span class="w"> </span>localstack
+
+<span class="c1"># Reset LocalStack data</span>
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.test.yml<span class="w"> </span>down<span class="w"> </span>-v
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.test.yml<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>localstack
+</pre></div>
+</div>
+</section>
+<section id="memory-issues">
+<h4>Memory Issues<a class="headerlink" href="#memory-issues" title="Link to this heading"></a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check available memory</span>
+free<span class="w"> </span>-h<span class="w">  </span><span class="c1"># Linux</span>
+vm_stat<span class="w">  </span><span class="c1"># macOS</span>
+
+<span class="c1"># Increase Docker memory limit in Docker Desktop settings</span>
+<span class="c1"># Recommended: 4GB minimum, 8GB preferred</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="test-isolation">
+<h3>Test Isolation<a class="headerlink" href="#test-isolation" title="Link to this heading"></a></h3>
+<p>Each test should clean up its resources, but if tests fail:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clean up Docker resources</span>
+docker<span class="w"> </span>container<span class="w"> </span>prune<span class="w"> </span>-f
+docker<span class="w"> </span>image<span class="w"> </span>prune<span class="w"> </span>-f
+docker<span class="w"> </span>network<span class="w"> </span>prune<span class="w"> </span>-f
+docker<span class="w"> </span>volume<span class="w"> </span>prune<span class="w"> </span>-f
+
+<span class="c1"># Restart test infrastructure</span>
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.test.yml<span class="w"> </span>down<span class="w"> </span>-v
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.test.yml<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--wait
+</pre></div>
+</div>
+</section>
+<section id="debugging-failed-tests">
+<h3>Debugging Failed Tests<a class="headerlink" href="#debugging-failed-tests" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run single test with detailed output</span>
+pytest<span class="w"> </span>tests/live/test_aws_live.py::test_name<span class="w"> </span>--live<span class="w"> </span>-vvv<span class="w"> </span>--tb<span class="o">=</span>long
+
+<span class="c1"># Run with pdb debugger</span>
+pytest<span class="w"> </span>tests/live/test_aws_live.py::test_name<span class="w"> </span>--live<span class="w"> </span>--pdb
+
+<span class="c1"># Capture test output</span>
+pytest<span class="w"> </span>tests/live/<span class="w"> </span>--live<span class="w"> </span>-v<span class="w"> </span>--capture<span class="o">=</span>no
+</pre></div>
+</div>
+</section>
+</section>
+<section id="ci-cd-integration">
+<h2>CI/CD Integration<a class="headerlink" href="#ci-cd-integration" title="Link to this heading"></a></h2>
+<section id="github-actions">
+<h3>GitHub Actions<a class="headerlink" href="#github-actions" title="Link to this heading"></a></h3>
+<p>Add live tests to your CI pipeline:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Live Integration Tests</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">develop</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">]</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">live-tests</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Docker Buildx</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker/setup-buildx-action@v3</span>
+<span class="w">      </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Start test infrastructure</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">docker compose -f docker-compose.test.yml up -d --wait</span>
+<span class="w">      </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.9&#39;</span>
+<span class="w">      </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">pip install poetry</span>
+<span class="w">          </span><span class="no">poetry install --with dev</span>
+<span class="w">      </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run live tests</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">poetry run pytest tests/live/ --live -v</span>
+<span class="w">      </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cleanup</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always()</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">docker compose -f docker-compose.test.yml down -v --remove-orphans</span>
+</pre></div>
+</div>
+</section>
+<section id="performance-considerations">
+<h3>Performance Considerations<a class="headerlink" href="#performance-considerations" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Live tests are slower than unit tests (2-5 minutes vs seconds)</p></li>
+<li><p>Run live tests less frequently (e.g., on merge to main)</p></li>
+<li><p>Use parallel test execution carefully to avoid resource conflicts</p></li>
+<li><p>Consider running different test categories on different CI jobs</p></li>
+</ul>
+</section>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
+<section id="writing-live-tests">
+<h3>Writing Live Tests<a class="headerlink" href="#writing-live-tests" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Resource Cleanup</strong>: Always clean up resources in test teardown</p></li>
+<li><p><strong>Unique Names</strong>: Use <code class="docutils literal notranslate"><span class="pre">generate_unique_name()</span></code> for test resources</p></li>
+<li><p><strong>Timeouts</strong>: Set appropriate timeouts for service operations</p></li>
+<li><p><strong>Error Handling</strong>: Test both success and failure scenarios</p></li>
+<li><p><strong>Isolation</strong>: Tests should not depend on each other</p></li>
+<li><p><strong>Documentation</strong>: Clearly document what each test verifies</p></li>
+</ol>
+</section>
+<section id="test-organization">
+<h3>Test Organization<a class="headerlink" href="#test-organization" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">live</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">localstack</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestAWSLiveIntegration</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Live integration tests for AWS Cloud Provider tool.&quot;&quot;&quot;</span>
+    
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_feature_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aws_live_tool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test complete workflow for a specific feature.&quot;&quot;&quot;</span>
+        <span class="c1"># Setup</span>
+        <span class="n">resource_name</span> <span class="o">=</span> <span class="n">generate_unique_name</span><span class="p">(</span><span class="s2">&quot;test-resource&quot;</span><span class="p">)</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Test operations</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aws_live_tool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">,</span> <span class="p">{</span><span class="o">...</span><span class="p">})</span>
+            <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span>
+            
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="c1"># Cleanup</span>
+            <span class="k">await</span> <span class="n">cleanup_resources</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="monitoring-test-performance">
+<h3>Monitoring Test Performance<a class="headerlink" href="#monitoring-test-performance" title="Link to this heading"></a></h3>
+<p>Track test execution times and resource usage:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run with timing</span>
+pytest<span class="w"> </span>tests/live/<span class="w"> </span>--live<span class="w"> </span>-v<span class="w"> </span>--durations<span class="o">=</span><span class="m">10</span>
+
+<span class="c1"># Profile memory usage</span>
+pytest<span class="w"> </span>tests/live/<span class="w"> </span>--live<span class="w"> </span>--profile
+
+<span class="c1"># Generate test report</span>
+pytest<span class="w"> </span>tests/live/<span class="w"> </span>--live<span class="w"> </span>--html<span class="o">=</span>report.html
+</pre></div>
+</div>
+</section>
+</section>
+<section id="security-considerations">
+<h2>Security Considerations<a class="headerlink" href="#security-considerations" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Live tests use test credentials and isolated environments</p></li>
+<li><p>LocalStack simulates AWS but doesn’t charge real money</p></li>
+<li><p>Test data is ephemeral and cleaned up automatically</p></li>
+<li><p>Use strong passwords for test databases</p></li>
+<li><p>Ensure test environments are isolated from production</p></li>
+</ul>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading"></a></h2>
+<p>When adding new live tests:</p>
+<ol class="arabic simple">
+<li><p>Follow the existing test patterns and naming conventions</p></li>
+<li><p>Add appropriate pytest markers (<code class="docutils literal notranslate"><span class="pre">&#64;pytest.mark.live</span></code>, etc.)</p></li>
+<li><p>Include comprehensive cleanup in <code class="docutils literal notranslate"><span class="pre">finally</span></code> blocks</p></li>
+<li><p>Test both success and error scenarios</p></li>
+<li><p>Update this documentation if adding new services</p></li>
+<li><p>Ensure tests pass in CI environment</p></li>
+</ol>
+<p>For questions or issues with live testing, please create an issue in the repository.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Orcastrate Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

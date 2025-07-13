@@ -19,7 +19,7 @@ jobs:
 
   live-tests:
     name: "Live Tests"
-    needs: [unit-tests, integration-tests]
+    # Removed dependency - live tests are independent infrastructure tests
     uses: ./.github/workflows/test-live.yml
     secrets: inherit
 

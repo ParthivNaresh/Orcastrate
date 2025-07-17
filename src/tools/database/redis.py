@@ -64,7 +64,6 @@ class RedisConnection(DatabaseConnection):
 
         except Exception as e:
             self.state = ConnectionState.ERROR
-            self.logger.error(f"Failed to connect to Redis: {e}")
             raise ToolError(f"Redis connection failed: {e}")
 
     def _build_connection_url(self) -> str:

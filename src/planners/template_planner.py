@@ -102,12 +102,6 @@ class TemplatePlanner(Planner):
             if any(pattern in description_lower for pattern in patterns):
                 detected.infrastructure.append(infra)
 
-        self.logger.info(
-            f"Detected technologies: framework={detected.framework}, "
-            f"databases={detected.databases}, cache={detected.cache}, "
-            f"infrastructure={detected.infrastructure}"
-        )
-
         return detected
 
     async def _load_technology_patterns(self) -> None:
@@ -191,9 +185,6 @@ class TemplatePlanner(Planner):
             infra_steps = self._get_infrastructure_steps(technologies, step_counter)
             composed_steps.extend(infra_steps)
 
-        self.logger.info(
-            f"Composed plan with {len(composed_steps)} steps from multiple technologies"
-        )
         return composed_steps
 
     def _get_base_steps(self, start_counter: int) -> List[Dict[str, Any]]:

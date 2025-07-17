@@ -75,10 +75,29 @@ class AgentCoordinator:
         start_time = datetime.utcnow()
 
         try:
-            self.logger.info(f"Starting environment creation: {execution_id}")
+            self.logger.info(
+                "Starting environment creation",
+                extra={
+                    "execution_id": execution_id,
+                    "operation": "environment_creation",
+                    "phase": "start",
+                    "requirements_description": requirements.description,
+                    "framework": getattr(requirements, "framework", None),
+                    "database": getattr(requirements, "database", None),
+                    "cloud_provider": getattr(requirements, "cloud_provider", None),
+                },
+            )
 
             # Validate requirements
             if not await self._validate_requirements(requirements):
+                self.logger.error(
+                    "Requirements validation failed",
+                    extra={
+                        "execution_id": execution_id,
+                        "operation": "environment_creation",
+                        "phase": "validation_error",
+                    },
+                )
                 raise AgentError("Requirements validation failed")
 
             # Create execution context
@@ -92,6 +111,16 @@ class AgentCoordinator:
             async with self._execution_lock:
                 self._active_executions[execution_id] = context
 
+            self.logger.info(
+                "Execution context created",
+                extra={
+                    "execution_id": execution_id,
+                    "operation": "environment_creation",
+                    "phase": "context_created",
+                    "status": context.status.value,
+                },
+            )
+
             # Execute the workflow
             result = await self._execute_workflow(context)
 
@@ -99,10 +128,33 @@ class AgentCoordinator:
             async with self._execution_lock:
                 self._active_executions.pop(execution_id, None)
 
+            duration = (datetime.utcnow() - start_time).total_seconds()
+            self.logger.info(
+                "Environment creation completed",
+                extra={
+                    "execution_id": execution_id,
+                    "operation": "environment_creation",
+                    "phase": "complete",
+                    "success": result.success,
+                    "duration_seconds": duration,
+                },
+            )
+
             return result
 
         except Exception as e:
-            self.logger.error(f"Environment creation failed: {e}")
+            duration = (datetime.utcnow() - start_time).total_seconds()
+            self.logger.error(
+                "Environment creation failed",
+                extra={
+                    "execution_id": execution_id,
+                    "operation": "environment_creation",
+                    "phase": "error",
+                    "error_type": type(e).__name__,
+                    "error_message": str(e),
+                    "duration_seconds": duration,
+                },
+            )
 
             # Clean up on failure
             async with self._execution_lock:
@@ -112,7 +164,7 @@ class AgentCoordinator:
                 success=False,
                 execution_id=execution_id,
                 error=str(e),
-                duration=(datetime.utcnow() - start_time).total_seconds(),
+                duration=duration,
             )
 
     async def get_execution_status(self, execution_id: str) -> Optional[Dict[str, Any]]:
@@ -188,8 +240,31 @@ class AgentCoordinator:
         context.current_step = "planning"
         context.progress = 0.1
 
+        self.logger.info(
+            "Creating execution plan",
+            extra={
+                "execution_id": context.execution_id,
+                "operation": "plan_creation",
+                "phase": "start",
+                "current_step": context.current_step,
+                "progress": context.progress,
+            },
+        )
+
         plan = await self.planner.create_plan(context.requirements)
-        self.logger.info(f"Created plan with {len(plan.steps)} steps")
+
+        self.logger.info(
+            "Plan created successfully",
+            extra={
+                "execution_id": context.execution_id,
+                "operation": "plan_creation",
+                "phase": "complete",
+                "plan_id": plan.id,
+                "total_steps": len(plan.steps),
+                "estimated_duration": plan.estimated_duration,
+                "estimated_cost": plan.estimated_cost,
+            },
+        )
 
         return plan
 
@@ -216,10 +291,37 @@ class AgentCoordinator:
 
         if context.plan is None:
             raise AgentError("No plan available for execution")
+
+        self.logger.info(
+            "Starting plan execution",
+            extra={
+                "execution_id": context.execution_id,
+                "operation": "plan_execution",
+                "phase": "start",
+                "plan_id": context.plan.id,
+                "total_steps": len(context.plan.steps),
+                "current_step": context.current_step,
+                "progress": context.progress,
+            },
+        )
+
         result = await self.executor.execute_plan(context.plan)
 
         # Update progress based on execution
         context.progress = 0.9
+
+        self.logger.info(
+            "Plan execution completed",
+            extra={
+                "execution_id": context.execution_id,
+                "operation": "plan_execution",
+                "phase": "complete",
+                "plan_id": context.plan.id,
+                "success": result.success,
+                "duration": result.duration,
+                "progress": context.progress,
+            },
+        )
 
         return result
 

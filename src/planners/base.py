@@ -98,14 +98,10 @@ class Planner(ABC):
 
     async def initialize(self) -> None:
         """Initialize the planner and its components."""
-        self.logger.info("Initializing planner")
-
         try:
             await self._load_knowledge_base()
             await self._load_template_library()
             await self._initialize_optimizers()
-
-            self.logger.info("Planner initialized successfully")
 
         except Exception as e:
             self.logger.error(f"Failed to initialize planner: {e}")
@@ -124,8 +120,6 @@ class Planner(ABC):
         start_time = datetime.utcnow()
 
         try:
-            self.logger.info("Creating execution plan")
-
             # Gather context and analyze requirements
             context = await self._gather_context(requirements)
 
@@ -157,10 +151,7 @@ class Planner(ABC):
                 requirements=requirements,
             )
 
-            duration = (datetime.utcnow() - start_time).total_seconds()
-            self.logger.info(
-                f"Plan created in {duration:.2f} seconds with {len(plan.steps)} steps"
-            )
+            # duration = (datetime.utcnow() - start_time).total_seconds()
 
             return plan
 

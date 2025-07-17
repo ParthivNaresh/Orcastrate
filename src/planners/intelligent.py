@@ -5,6 +5,7 @@ This module provides AI-powered planning capabilities that understand natural la
 requirements and generate sophisticated, optimized execution plans.
 """
 
+import uuid
 from typing import Any, Dict, List, Optional, Set
 
 from ..agent.base import Plan as AgentPlan
@@ -162,8 +163,20 @@ class IntelligentPlanner(Planner):
         if constraints is None:
             constraints = {}
 
+        plan_id = str(uuid.uuid4())
+
         self.logger.info(
-            f"Creating intelligent plan for requirements: {requirements[:100]}..."
+            "Creating intelligent plan",
+            extra={
+                "plan_id": plan_id,
+                "operation": "intelligent_planning",
+                "phase": "start",
+                "requirements_length": len(requirements),
+                "requirements_preview": requirements[:100],
+                "available_tools_count": len(available_tools),
+                "strategy": self.intelligent_strategy,
+                "constraints": list(constraints.keys()) if constraints else [],
+            },
         )
 
         try:
@@ -176,28 +189,79 @@ class IntelligentPlanner(Planner):
                 and self.intelligent_strategy
                 != IntelligentPlanningStrategy.REQUIREMENTS_DRIVEN
             ):
+                self.logger.info(
+                    "Using LLM for plan generation",
+                    extra={
+                        "plan_id": plan_id,
+                        "operation": "intelligent_planning",
+                        "phase": "llm_generation",
+                        "strategy": self.intelligent_strategy,
+                        "analysis_confidence": analysis_result.analysis_confidence,
+                    },
+                )
                 plan_steps = await self._generate_llm_plan(
                     requirements, analysis_result, available_tools, constraints
                 )
             else:
+                self.logger.info(
+                    "Using rule-based plan generation",
+                    extra={
+                        "plan_id": plan_id,
+                        "operation": "intelligent_planning",
+                        "phase": "rule_based_generation",
+                        "reason": (
+                            "no_llm_client"
+                            if not self.llm_client
+                            else "requirements_driven_strategy"
+                        ),
+                        "analysis_confidence": analysis_result.analysis_confidence,
+                    },
+                )
                 # Fallback to rule-based planning
                 plan_steps = await self._generate_rule_based_plan(
                     requirements, analysis_result, available_tools, constraints
                 )
 
             # Phase 3: Optimize plan
+            self.logger.info(
+                "Optimizing plan",
+                extra={
+                    "plan_id": plan_id,
+                    "operation": "intelligent_planning",
+                    "phase": "optimization",
+                    "initial_step_count": len(plan_steps),
+                    "constraints": list(constraints.keys()) if constraints else [],
+                },
+            )
             optimized_steps = await self._optimize_intelligent_plan(
                 plan_steps, analysis_result, constraints
             )
 
             # Phase 4: Validate plan
+            self.logger.info(
+                "Validating plan",
+                extra={
+                    "plan_id": plan_id,
+                    "operation": "intelligent_planning",
+                    "phase": "validation",
+                    "optimized_step_count": len(optimized_steps),
+                },
+            )
             validation_result = await self._validate_intelligent_plan(
                 optimized_steps, requirements, analysis_result
             )
 
             if not validation_result.valid:
                 self.logger.warning(
-                    f"Plan validation failed: {validation_result.errors}"
+                    "Plan validation failed",
+                    extra={
+                        "plan_id": plan_id,
+                        "operation": "intelligent_planning",
+                        "phase": "validation_failed",
+                        "validation_errors": validation_result.errors,
+                        "validation_confidence": validation_result.confidence,
+                        "fallback_enabled": self.fallback_to_template,
+                    },
                 )
                 if self.fallback_to_template:
                     # Attempt template-based fallback
@@ -210,15 +274,41 @@ class IntelligentPlanner(Planner):
                     )
 
             self.logger.info(
-                f"Intelligent plan created with {len(optimized_steps)} steps"
+                "Intelligent plan created successfully",
+                extra={
+                    "plan_id": plan_id,
+                    "operation": "intelligent_planning",
+                    "phase": "complete",
+                    "final_step_count": len(optimized_steps),
+                    "validation_confidence": validation_result.confidence,
+                    "analysis_confidence": analysis_result.analysis_confidence,
+                },
             )
             return optimized_steps
 
         except Exception as e:
-            self.logger.error(f"Failed to create intelligent plan: {e}")
+            self.logger.error(
+                "Failed to create intelligent plan",
+                extra={
+                    "plan_id": plan_id,
+                    "operation": "intelligent_planning",
+                    "phase": "error",
+                    "error_type": type(e).__name__,
+                    "error_message": str(e),
+                    "fallback_enabled": self.fallback_to_template,
+                },
+            )
 
             if self.fallback_to_template:
-                self.logger.info("Falling back to template-based planning")
+                self.logger.info(
+                    "Falling back to template-based planning",
+                    extra={
+                        "plan_id": plan_id,
+                        "operation": "intelligent_planning",
+                        "phase": "fallback",
+                        "fallback_reason": "planning_exception",
+                    },
+                )
                 return await self._create_template_fallback_plan(
                     requirements, available_tools
                 )

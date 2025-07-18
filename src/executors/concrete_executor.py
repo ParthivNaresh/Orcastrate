@@ -108,17 +108,11 @@ class ConcreteExecutor(Executor):
             await docker_tool.initialize()
             self._tools["docker"] = docker_tool
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "🐳 Docker tool ready", 1, completed=True
-                )
+                self._progress_tracker.log_step_success("🐳 Docker tool ready", 1)
         except Exception as e:
             self.logger.warning(f"Docker tool initialization failed: {e}")
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "🐳 Docker tool failed", 1, completed=False
-                )
+                self._progress_tracker.log_step_failure("🐳 Docker tool failed", 1)
 
         try:
             # Initialize Git tool
@@ -126,17 +120,11 @@ class ConcreteExecutor(Executor):
             await git_tool.initialize()
             self._tools["git"] = git_tool
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "📦 Git tool ready", 1, completed=True
-                )
+                self._progress_tracker.log_step_success("📦 Git tool ready", 1)
         except Exception as e:
             self.logger.warning(f"Git tool initialization failed: {e}")
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "📦 Git tool failed", 1, completed=False
-                )
+                self._progress_tracker.log_step_failure("📦 Git tool failed", 1)
 
         try:
             # Initialize File System tool
@@ -144,17 +132,11 @@ class ConcreteExecutor(Executor):
             await filesystem_tool.initialize()
             self._tools["filesystem"] = filesystem_tool
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "📁 Filesystem tool ready", 1, completed=True
-                )
+                self._progress_tracker.log_step_success("📁 Filesystem tool ready", 1)
         except Exception as e:
             self.logger.error(f"File System tool initialization failed: {e}")
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "📁 Filesystem tool failed", 1, completed=False
-                )
+                self._progress_tracker.log_step_failure("📁 Filesystem tool failed", 1)
             # File system is critical - raise error
             raise ExecutorError(f"Critical tool initialization failed: {e}")
 
@@ -187,16 +169,10 @@ class ConcreteExecutor(Executor):
             await postgresql_tool.initialize()
             self._tools["postgresql"] = postgresql_tool
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "🐘 PostgreSQL tool ready", 1, completed=True
-                )
+                self._progress_tracker.log_step_success("🐘 PostgreSQL tool ready", 1)
         except Exception:
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "🐘 PostgreSQL tool failed", 1, completed=False
-                )
+                self._progress_tracker.log_step_failure("🐘 PostgreSQL tool failed", 1)
 
         # MySQL Tool
         try:
@@ -215,16 +191,10 @@ class ConcreteExecutor(Executor):
             await mysql_tool.initialize()
             self._tools["mysql"] = mysql_tool
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "🐬 MySQL tool ready", 1, completed=True
-                )
+                self._progress_tracker.log_step_success("🐬 MySQL tool ready", 1)
         except Exception:
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "🐬 MySQL tool failed", 1, completed=False
-                )
+                self._progress_tracker.log_step_failure("🐬 MySQL tool failed", 1)
 
         # MongoDB Tool
         try:
@@ -243,16 +213,10 @@ class ConcreteExecutor(Executor):
             await mongodb_tool.initialize()
             self._tools["mongodb"] = mongodb_tool
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "🍃 MongoDB tool ready", 1, completed=True
-                )
+                self._progress_tracker.log_step_success("🍃 MongoDB tool ready", 1)
         except Exception:
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "🍃 MongoDB tool failed", 1, completed=False
-                )
+                self._progress_tracker.log_step_failure("🍃 MongoDB tool failed", 1)
 
         # Redis Tool
         try:
@@ -273,16 +237,10 @@ class ConcreteExecutor(Executor):
             await redis_tool.initialize()
             self._tools["redis"] = redis_tool
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "🔴 Redis tool ready", 1, completed=True
-                )
+                self._progress_tracker.log_step_success("🔴 Redis tool ready", 1)
         except Exception:
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "🔴 Redis tool failed", 1, completed=False
-                )
+                self._progress_tracker.log_step_failure("🔴 Redis tool failed", 1)
 
     async def _initialize_infrastructure_tools(self) -> None:
         """Initialize infrastructure tools with default configurations."""
@@ -308,16 +266,10 @@ class ConcreteExecutor(Executor):
             await terraform_tool.initialize()
             self._tools["terraform"] = terraform_tool
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "🏗️ Terraform tool ready", 1, completed=True
-                )
+                self._progress_tracker.log_step_success("🏗️ Terraform tool ready", 1)
         except Exception:
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "🏗️ Terraform tool failed", 1, completed=False
-                )
+                self._progress_tracker.log_step_failure("🏗️ Terraform tool failed", 1)
 
     async def _execute_plan_with_strategy(
         self, plan: Plan, context: ExecutionContext
@@ -525,17 +477,15 @@ class ConcreteExecutor(Executor):
                         }
                     )
                     validation_results["valid"] = False
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    f"🧩 Tool {tool_name} validated", 1, completed=True
+                self._progress_tracker.log_step_success(
+                    f"🧩 Tool {tool_name} validated", 1
                 )
             except Exception as e:
                 validation_results["warnings"].append(
                     f"Could not validate tool {tool_name}: {e}"
                 )
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    f"🧩 Tool {tool_name} not validated", 1, completed=True
+                self._progress_tracker.log_step_failure(
+                    f"🧩 Tool {tool_name} not validated", 1
                 )
 
         return validation_results

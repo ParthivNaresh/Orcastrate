@@ -144,40 +144,26 @@ class OrcastrateAgent:
                 },
                 enable_rollback=True,
             )
-            self.progress_tracker.update_step_progress()
-            self.progress_tracker.add_step_message(
-                "⚙️ Configurations created", 0, completed=True
-            )
+            self.progress_tracker.log_step_success("⚙️ Configurations created")
 
             self.planner = TemplatePlanner(
                 planner_config, progress_tracker=self.progress_tracker
             )
             await self.planner.initialize()
 
-            self.progress_tracker.update_step_progress()
-            self.progress_tracker.add_step_message(
-                "📋 Planner initialized", 0, completed=True
-            )
+            self.progress_tracker.log_step_success("📋 Planner initialized")
 
             self.executor = ConcreteExecutor(
                 executor_config, progress_tracker=self.progress_tracker
             )
 
-            self.progress_tracker.update_step_progress()
-            self.progress_tracker.add_step_message(
-                "⚡ Executor set up", 0, completed=True
-            )
+            self.progress_tracker.log_step_success("⚡ Executor set up")
 
-            self.progress_tracker.add_step_message(
-                "🔧 Initializing tools...", 0, completed=True
-            )
+            self.progress_tracker.log_step_success("🔧 Initializing tools...")
 
             await self.executor.initialize()
 
-            self.progress_tracker.update_step_progress()
-            self.progress_tracker.add_step_message(
-                "🔧 Tools initialized", 0, completed=True
-            )
+            self.progress_tracker.log_step_success("🔧 Tools initialized")
 
             self.progress_tracker.complete_execution_progress()
 
@@ -208,22 +194,15 @@ class OrcastrateAgent:
                 11, f"🚀 Creating: {requirements.description[:30]}..."
             )
 
-            self.progress_tracker.add_step_message(
-                "📋 Generating plan...", 0, completed=True
-            )
+            self.progress_tracker.log_step_success("📋 Generating plan...")
 
             plan = await self.planner.create_plan(requirements)
 
             # m[step["tool"] for step in plan.steps]
 
-            self.progress_tracker.update_step_progress()
-            self.progress_tracker.add_step_message(
-                "📋 Generated execution plan", 0, completed=True
-            )
+            self.progress_tracker.log_step_success("📋 Generated execution plan")
 
-            self.progress_tracker.add_step_message(
-                "🔍 Validating plan requirements", 0, completed=True
-            )
+            self.progress_tracker.log_step_success("🔍 Validating plan requirements")
 
             validation = await self.executor.validate_plan_requirements(plan)
 
@@ -232,16 +211,10 @@ class OrcastrateAgent:
                     "missing_tools": validation.get("missing_tools", []),
                     "invalid_actions": validation.get("invalid_actions", []),
                 }
-                self.progress_tracker.update_step_progress()
-                self.progress_tracker.add_step_message(
-                    "🔍 Plan validation failed", 0, completed=False
-                )
+                self.progress_tracker.log_step_failure("🔍 Plan validation failed")
                 raise RuntimeError(f"Plan validation failed: {error_details}")
 
-            self.progress_tracker.update_step_progress()
-            self.progress_tracker.add_step_message(
-                "🔍 Validated plan requirements", 0, completed=True
-            )
+            self.progress_tracker.log_step_success("🔍 Validated plan requirements")
 
             if validation.get("warnings"):
                 for warning in validation["warnings"]:
@@ -256,17 +229,11 @@ class OrcastrateAgent:
 
             result = await self.executor.execute_plan(plan)
 
-            self.progress_tracker.update_step_progress()
-            self.progress_tracker.add_step_message(
-                "⚡ Executed plan", 0, completed=True
-            )
+            self.progress_tracker.log_step_success("⚡ Executed plan")
 
             duration = (datetime.utcnow() - start_time).total_seconds()
 
-            self.progress_tracker.update_step_progress()
-            self.progress_tracker.add_step_message(
-                "✅ Environment created!", 0, completed=True
-            )
+            self.progress_tracker.log_step_success("✅ Environment created!")
 
             self.progress_tracker.complete_execution_progress()
 

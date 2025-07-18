@@ -20,6 +20,8 @@ from src.executors.base import (
     StepExecution,
 )
 from src.executors.concrete_executor import ConcreteExecutor
+from src.logging_utils.log_manager import LogManager
+from src.logging_utils.progress_tracker import ProgressTracker
 from src.tools.base import ToolResult, ToolSchema
 
 
@@ -38,9 +40,24 @@ class TestConcreteExecutor:
         )
 
     @pytest.fixture
-    def executor(self, executor_config):
+    def mock_progress_tracker(self):
+        """Create a mock progress tracker for testing."""
+        mock_log_manager = Mock(spec=LogManager)
+        mock_log_manager.emit_event = AsyncMock()
+
+        progress_tracker = Mock(spec=ProgressTracker)
+        progress_tracker.log_manager = mock_log_manager
+        progress_tracker.update_step_progress = Mock()
+        progress_tracker.add_step_message = Mock()
+        progress_tracker.log_step_success = Mock()
+        progress_tracker.log_step_failure = Mock()
+        progress_tracker.log_step_conditional = Mock()
+        return progress_tracker
+
+    @pytest.fixture
+    def executor(self, executor_config, mock_progress_tracker):
         """Create a ConcreteExecutor instance."""
-        return ConcreteExecutor(executor_config)
+        return ConcreteExecutor(executor_config, progress_tracker=mock_progress_tracker)
 
     @pytest.fixture
     def mock_tool(self):
@@ -444,9 +461,9 @@ class TestConcreteExecutorIntegration:
         )
 
     @pytest.fixture
-    def executor(self, executor_config):
+    def executor(self, executor_config, mock_progress_tracker):
         """Create ConcreteExecutor for integration tests."""
-        return ConcreteExecutor(executor_config)
+        return ConcreteExecutor(executor_config, progress_tracker=mock_progress_tracker)
 
     @pytest.fixture
     def complex_plan(self):
@@ -602,9 +619,9 @@ class TestConcreteExecutorEdgeCases:
         )
 
     @pytest.fixture
-    def executor(self, executor_config):
+    def executor(self, executor_config, mock_progress_tracker):
         """Create ConcreteExecutor for edge case tests."""
-        return ConcreteExecutor(executor_config)
+        return ConcreteExecutor(executor_config, progress_tracker=mock_progress_tracker)
 
     @pytest.mark.asyncio
     async def test_empty_plan_validation(self, executor):

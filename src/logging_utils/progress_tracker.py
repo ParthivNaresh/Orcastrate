@@ -96,6 +96,25 @@ class ProgressTracker:
             self._current_task = None
             self._step_messages = []
 
+    def log_step_success(self, message: str, indent: int = 0) -> None:
+        """Helper method to log a successful step with progress update."""
+        self.update_step_progress()
+        self.add_step_message(message, indent, completed=True)
+
+    def log_step_failure(self, message: str, indent: int = 0) -> None:
+        """Helper method to log a failed step with progress update."""
+        self.update_step_progress()
+        self.add_step_message(message, indent, completed=False)
+
+    def log_step_conditional(
+        self, success_msg: str, failure_msg: str, success: bool, indent: int = 0
+    ) -> None:
+        """Helper method to conditionally log success or failure with progress update."""
+        if success:
+            self.log_step_success(success_msg, indent)
+        else:
+            self.log_step_failure(failure_msg, indent)
+
     def track_step_execution(
         self, step_id: str, step_name: str, correlation_id: str, execution_id: str
     ):

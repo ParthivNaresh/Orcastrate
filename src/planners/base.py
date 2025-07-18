@@ -122,50 +122,34 @@ class Planner(ABC):
             context = await self._gather_context(requirements)
 
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "🧩 Context gathered", 1, completed=True
-                )
+                self._progress_tracker.log_step_success("🧩 Context gathered", 1)
 
             initial_plan = await self._generate_initial_plan(context)
 
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "📐 Plan initialized", 1, completed=True
-                )
+                self._progress_tracker.log_step_success("📐 Plan initialized", 1)
 
             optimized_plan = await self._optimize_plan(initial_plan)
 
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "⚡ Plan optimized", 1, completed=True
-                )
+                self._progress_tracker.log_step_success("⚡ Plan optimized", 1)
 
             validation = await self._validate_plan(optimized_plan)
             if not validation.valid:
                 if self._progress_tracker:
-                    self._progress_tracker.update_step_progress()
-                    self._progress_tracker.add_step_message(
-                        "🔍 Plan validation failed", 1, completed=False
+                    self._progress_tracker.log_step_failure(
+                        "🔍 Plan validation failed", 1
                     )
                 raise PlannerError(f"Plan validation failed: {validation.errors}")
 
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "🔍 Plan validated", 1, completed=True
-                )
+                self._progress_tracker.log_step_success("🔍 Plan validated", 1)
 
             # Perform risk assessment
             risk_assessment = await self._assess_risks(optimized_plan)
 
             if self._progress_tracker:
-                self._progress_tracker.update_step_progress()
-                self._progress_tracker.add_step_message(
-                    "🛡️ Risks assessed", 1, completed=True
-                )
+                self._progress_tracker.log_step_success("🛡️ Risks assessed", 1)
 
             # Create final plan object
             plan = Plan(

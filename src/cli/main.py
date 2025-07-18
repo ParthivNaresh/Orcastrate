@@ -119,13 +119,12 @@ class OrcastrateAgent:
     async def initialize(self) -> None:
         """Initialize the agent and its components."""
         try:
-            # Start initialization progress tracking
+            # Start initialization progress tracking (increased for tool-level tracking)
             self.progress_tracker.start_execution_progress(
-                3, "🔧 Initializing Orcastrate Agent"
+                12, "🔧 Initializing Orcastrate Agent..."
             )
 
             # Create configurations
-            self.progress_tracker.update_step_progress("⚙️ Creating configurations")
             planner_config = PlannerConfig(
                 strategy=PlanningStrategy.TEMPLATE_MATCHING,
                 max_plan_steps=20,
@@ -145,37 +144,45 @@ class OrcastrateAgent:
                 },
                 enable_rollback=True,
             )
-            self.progress_tracker.add_step_message("⚙️ Creating configurations", completed=True)
-
-            # Initialize planner
-            self.progress_tracker.update_step_progress("📋 Initializing planner")
-            self.planner = TemplatePlanner(planner_config)
-            await self.planner.initialize()
-            self.progress_tracker.add_step_message("📋 Initializing planner", completed=True)
-
-            # Initialize executor (this includes tool initialization)
-            self.progress_tracker.update_step_progress("⚡ Initializing executor & tools")
-            self.executor = ConcreteExecutor(executor_config)
-            await self.executor.initialize()
-            self.progress_tracker.add_step_message("⚡ Initializing executor & tools", completed=True)
-
-            # Complete initialization
-            self.progress_tracker.complete_execution_progress()
-
-        except Exception as e:
-            # Complete progress on error
-            self.progress_tracker.complete_execution_progress()
-            
-            self.logger.error(
-                "Failed to initialize agent",
-                extra={
-                    "correlation_id": self.correlation_id,
-                    "operation": "agent_initialization",
-                    "phase": "error",
-                    "error_type": type(e).__name__,
-                    "error_message": str(e),
-                },
+            self.progress_tracker.update_step_progress()
+            self.progress_tracker.add_step_message(
+                "⚙️ Configurations created", 0, completed=True
             )
+
+            self.planner = TemplatePlanner(
+                planner_config, progress_tracker=self.progress_tracker
+            )
+            await self.planner.initialize()
+
+            self.progress_tracker.update_step_progress()
+            self.progress_tracker.add_step_message(
+                "📋 Planner initialized", 0, completed=True
+            )
+
+            self.executor = ConcreteExecutor(
+                executor_config, progress_tracker=self.progress_tracker
+            )
+
+            self.progress_tracker.update_step_progress()
+            self.progress_tracker.add_step_message(
+                "⚡ Executor set up", 0, completed=True
+            )
+
+            self.progress_tracker.add_step_message(
+                "🔧 Initializing tools...", 0, completed=True
+            )
+
+            await self.executor.initialize()
+
+            self.progress_tracker.update_step_progress()
+            self.progress_tracker.add_step_message(
+                "🔧 Tools initialized", 0, completed=True
+            )
+
+            self.progress_tracker.complete_execution_progress()
+
+        except Exception:
+            self.progress_tracker.complete_execution_progress()
             raise
 
     async def create_environment(self, requirements: Requirements) -> Dict[str, Any]:
@@ -197,40 +204,44 @@ class OrcastrateAgent:
                 )
             )
 
-            # Start progress tracking (we'll estimate 4 main phases)
             self.progress_tracker.start_execution_progress(
-                4, f"🚀 Creating: {requirements.description[:30]}..."
+                11, f"🚀 Creating: {requirements.description[:30]}..."
             )
 
-            # Generate plan
-            async with self.progress_tracker.track_step_execution(
-                "plan_generation", "📋 Generating execution plan", 
-                self.correlation_id, execution_id
-            ):
-                plan = await self.planner.create_plan(requirements)
+            self.progress_tracker.add_step_message(
+                "📋 Generating plan...", 0, completed=True
+            )
 
-            # Validate plan
-            async with self.progress_tracker.track_step_execution(
-                "plan_validation", "🔍 Validating plan requirements", 
-                self.correlation_id, execution_id
-            ):
-                validation = await self.executor.validate_plan_requirements(plan)
+            plan = await self.planner.create_plan(requirements)
+
+            # m[step["tool"] for step in plan.steps]
+
+            self.progress_tracker.update_step_progress()
+            self.progress_tracker.add_step_message(
+                "📋 Generated execution plan", 0, completed=True
+            )
+
+            self.progress_tracker.add_step_message(
+                "🔍 Validating plan requirements", 0, completed=True
+            )
+
+            validation = await self.executor.validate_plan_requirements(plan)
 
             if not validation["valid"]:
                 error_details = {
                     "missing_tools": validation.get("missing_tools", []),
                     "invalid_actions": validation.get("invalid_actions", []),
                 }
-                self.logger.error(
-                    "Plan validation failed",
-                    extra={
-                        "correlation_id": self.correlation_id,
-                        "execution_id": execution_id,
-                        "validation_errors": error_details,
-                        "phase": "validation_error",
-                    },
+                self.progress_tracker.update_step_progress()
+                self.progress_tracker.add_step_message(
+                    "🔍 Plan validation failed", 0, completed=False
                 )
                 raise RuntimeError(f"Plan validation failed: {error_details}")
+
+            self.progress_tracker.update_step_progress()
+            self.progress_tracker.add_step_message(
+                "🔍 Validated plan requirements", 0, completed=True
+            )
 
             if validation.get("warnings"):
                 for warning in validation["warnings"]:
@@ -243,22 +254,20 @@ class OrcastrateAgent:
                         },
                     )
 
-            # Execute plan
-            async with self.progress_tracker.track_step_execution(
-                "plan_execution", "⚡ Executing plan", 
-                self.correlation_id, execution_id
-            ):
-                result = await self.executor.execute_plan(plan)
+            result = await self.executor.execute_plan(plan)
+
+            self.progress_tracker.update_step_progress()
+            self.progress_tracker.add_step_message(
+                "⚡ Executed plan", 0, completed=True
+            )
 
             duration = (datetime.utcnow() - start_time).total_seconds()
 
-            # Complete progress and emit completion event
-            async with self.progress_tracker.track_step_execution(
-                "finalization", "✅ Environment created!", 
-                self.correlation_id, execution_id
-            ):
-                pass  # Just track completion
-            
+            self.progress_tracker.update_step_progress()
+            self.progress_tracker.add_step_message(
+                "✅ Environment created!", 0, completed=True
+            )
+
             self.progress_tracker.complete_execution_progress()
 
             await self.log_manager.emit_event(

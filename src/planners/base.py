@@ -7,7 +7,6 @@ from requirements using various planning strategies and algorithms.
 
 import logging
 from abc import ABC, abstractmethod
-from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
@@ -88,13 +87,14 @@ class Planner(ABC):
     It provides a consistent interface for plan creation, optimization, and validation.
     """
 
-    def __init__(self, config: PlannerConfig):
+    def __init__(self, config: PlannerConfig, progress_tracker=None):
         self.config = config
         self.logger = logging.getLogger(f"{self.__class__.__name__}")
         self._knowledge_base: Optional[Dict[str, Any]] = None
         self._template_library: Optional[Dict[str, Any]] = None
         self._cost_optimizer: Optional[Any] = None
         self._risk_analyzer: Optional[Any] = None
+        self._progress_tracker = progress_tracker
 
     async def initialize(self) -> None:
         """Initialize the planner and its components."""
@@ -117,25 +117,55 @@ class Planner(ABC):
         Returns:
             Plan: Complete execution plan
         """
-        start_time = datetime.utcnow()
-
         try:
             # Gather context and analyze requirements
             context = await self._gather_context(requirements)
 
-            # Generate initial plan based on strategy
+            if self._progress_tracker:
+                self._progress_tracker.update_step_progress()
+                self._progress_tracker.add_step_message(
+                    "🧩 Context gathered", 1, completed=True
+                )
+
             initial_plan = await self._generate_initial_plan(context)
 
-            # Optimize the plan
+            if self._progress_tracker:
+                self._progress_tracker.update_step_progress()
+                self._progress_tracker.add_step_message(
+                    "📐 Plan initialized", 1, completed=True
+                )
+
             optimized_plan = await self._optimize_plan(initial_plan)
 
-            # Validate the plan
+            if self._progress_tracker:
+                self._progress_tracker.update_step_progress()
+                self._progress_tracker.add_step_message(
+                    "⚡ Plan optimized", 1, completed=True
+                )
+
             validation = await self._validate_plan(optimized_plan)
             if not validation.valid:
+                if self._progress_tracker:
+                    self._progress_tracker.update_step_progress()
+                    self._progress_tracker.add_step_message(
+                        "🔍 Plan validation failed", 1, completed=False
+                    )
                 raise PlannerError(f"Plan validation failed: {validation.errors}")
+
+            if self._progress_tracker:
+                self._progress_tracker.update_step_progress()
+                self._progress_tracker.add_step_message(
+                    "🔍 Plan validated", 1, completed=True
+                )
 
             # Perform risk assessment
             risk_assessment = await self._assess_risks(optimized_plan)
+
+            if self._progress_tracker:
+                self._progress_tracker.update_step_progress()
+                self._progress_tracker.add_step_message(
+                    "🛡️ Risks assessed", 1, completed=True
+                )
 
             # Create final plan object
             plan = Plan(

@@ -21,7 +21,7 @@ class LogEvent:
         if self.metadata is None:
             self.metadata = {}
         if self.timestamp is None:
-            self.timestamp = datetime.utcnow()
+            self.timestamp = datetime.now()
 
 
 @dataclass

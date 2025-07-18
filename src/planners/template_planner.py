@@ -52,8 +52,8 @@ class TemplatePlanner(Planner):
     No AI required - uses pattern matching and rule-based composition.
     """
 
-    def __init__(self, config: PlannerConfig):
-        super().__init__(config)
+    def __init__(self, config: PlannerConfig, progress_tracker=None):
+        super().__init__(config, progress_tracker)
         # Modular component system
         self._components: Dict[str, TemplateComponent] = {}
         self._technology_patterns: Dict[str, Dict[str, List[str]]] = {}

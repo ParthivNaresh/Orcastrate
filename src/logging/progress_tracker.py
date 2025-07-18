@@ -1,64 +1,99 @@
 """
-Progress tracking with alive-progress integration.
+Progress tracking with rich progress integration for real-time messaging.
 """
 
-import sys
-from alive_progress import alive_bar
+from typing import List, Optional
+
+from rich.console import Console, Group
+from rich.live import Live
+from rich.progress import (
+    BarColumn,
+    MofNCompleteColumn,
+    Progress,
+    SpinnerColumn,
+    TaskID,
+    TextColumn,
+    TimeElapsedColumn,
+)
+from rich.text import Text
 
 from .events import StepCompleted, StepStarted
 from .log_manager import LogManager
 
 
 class ProgressTracker:
-    """Simple progress tracker with alive-progress and persistent step messages."""
+    """Progress tracker with rich progress for real-time messaging."""
 
     def __init__(self, log_manager: LogManager):
         self.log_manager = log_manager
-        self._current_bar = None
-        self._step_messages = []  # Store persistent step messages
-        self._current_step_line = None  # Track the current step being updated
+        self.console = Console()
+        self._progress: Optional[Progress] = None
+        self._current_task: Optional[TaskID] = None
+        self._step_messages: List[str] = []
+        self._live: Optional[Live] = None
 
     def start_execution_progress(
         self, total_steps: int, title: str = "🚀 Orcastrate"
     ) -> None:
         """Start tracking execution progress."""
-        self._current_bar = alive_bar(
-            total_steps,
-            title=title,
-            bar="smooth",
-            spinner="dots_waves",
-            stats=True,
-            elapsed=True,
+        self._progress = Progress(
+            SpinnerColumn(),
+            TextColumn("[bold blue]{task.description}"),
+            BarColumn(),
+            MofNCompleteColumn(),
+            TimeElapsedColumn(),
         )
-        self._progress_context = self._current_bar.__enter__()
-        self._step_messages = []  # Reset step messages for new execution
+        self._current_task = self._progress.add_task(title, total=total_steps)
 
-    def update_step_progress(self, step_name: str, increment: int = 1) -> None:
-        """Update progress for a step."""
-        if self._progress_context:
-            # Just update the progress bar counter, don't print step messages yet
-            self._progress_context(increment)
+        # Create a live display with progress bar and step messages
+        self._live = Live(
+            self._create_display(), console=self.console, refresh_per_second=10
+        )
+        self._live.start()
 
-    def add_step_message(self, step_name: str, completed: bool = False) -> None:
-        """Add a persistent step message and display it immediately."""
-        status_icon = " ✅" if completed else ""
-        step_msg = f"  {step_name}{status_icon}"
-        print(step_msg, flush=True)
+    def _create_display(self):
+        """Create the display group with progress bar and step messages."""
+        if not self._progress:
+            return Text("")
+
+        # Create step messages text
+        step_text = Text()
+        for msg in self._step_messages:
+            step_text.append(f"{msg}\n")
+
+        # Group progress bar and step messages
+        return Group(self._progress, step_text)
+
+    def update_step_progress(self, increment: int = 1) -> None:
+        """Update progress counter."""
+        if self._progress and self._current_task is not None:
+            self._progress.advance(self._current_task, increment)
+            if self._live:
+                self._live.update(self._create_display())
+
+    def add_step_message(
+        self, step_name: str, indent: int = 0, completed: bool = False
+    ) -> None:
+        """Add a step message and display it immediately below the progress bar."""
+        status_icon = " ✅" if completed else " ❌"
+        indent_amount = "  " * 2 * indent
+        step_msg = f"{indent_amount}{step_name}{status_icon}"
         self._step_messages.append(step_msg)
+        if self._live:
+            self._live.update(self._create_display())
 
     def complete_step_progress(self, step_name: str) -> None:
-        """Mark a step as completed - this is called manually for init steps."""
-        # For manual completion, just store the message for later display
+        """Mark a step as completed - show only the completed version."""
         self.add_step_message(step_name, completed=True)
 
     def complete_execution_progress(self) -> None:
         """Complete the execution progress."""
-        if self._current_bar:
-            self._current_bar.__exit__(None, None, None)
-            self._current_bar = None
-            self._progress_context = None
-            
-            # Step messages have already been printed in real-time
+        if self._live:
+            self._live.stop()
+            self._live = None
+        if self._progress:
+            self._progress = None
+            self._current_task = None
             self._step_messages = []
 
     def track_step_execution(
@@ -95,21 +130,24 @@ class ProgressTracker:
                     )
                 )
 
-                # Update progress counter and show step started
-                self.tracker.update_step_progress(self.step_name)
-                self.tracker.add_step_message(self.step_name, completed=False)
+                # Update progress counter but don't show step message yet
+                self.tracker.update_step_progress()
                 return self
 
             async def __aexit__(self, exc_type, exc_val, exc_tb):
                 from datetime import datetime
 
                 end_time = datetime.utcnow()
-                duration = (end_time - self.start_time).total_seconds()
+                duration = (
+                    end_time - (self.start_time or datetime.utcnow())
+                ).total_seconds()
                 success = exc_type is None
 
                 # Show the completed step message immediately
                 status_icon = "✅" if success else "❌"
-                print(f"  {self.step_name} {status_icon}", flush=True)
+                self.tracker.add_step_message(
+                    f"{self.step_name} {status_icon}", completed=False
+                )
 
                 # Emit step completed event
                 await self.tracker.log_manager.emit_event(

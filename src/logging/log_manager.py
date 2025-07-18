@@ -50,7 +50,7 @@ class LogManager:
         try:
             event_dict = {
                 "event_type": event.event_type,
-                "timestamp": event.timestamp.isoformat(),
+                "timestamp": event.timestamp.isoformat() if event.timestamp else "",
                 "correlation_id": event.correlation_id,
                 "execution_id": event.execution_id,
                 **{
@@ -65,7 +65,7 @@ class LogManager:
                         "metadata",
                     ]
                 },
-                **event.metadata,
+                **(event.metadata or {}),
             }
 
             with open(self.event_log_file, "a") as f:

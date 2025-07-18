@@ -8,6 +8,7 @@ from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 
+from logging_utils import LogManager, ProgressTracker
 from src.agent.base import Requirements
 from src.executors.base import ExecutionStrategy, ExecutorConfig
 from src.executors.concrete_executor import ConcreteExecutor
@@ -31,14 +32,29 @@ class TestEndToEndWorkflow:
         return planner
 
     @pytest.fixture
-    async def executor(self):
+    def mock_progress_tracker(self):
+        """Create a mock progress tracker for testing."""
+        mock_log_manager = Mock(spec=LogManager)
+        mock_log_manager.emit_event = AsyncMock()
+
+        progress_tracker = Mock(spec=ProgressTracker)
+        progress_tracker.log_manager = mock_log_manager
+        progress_tracker.update_step_progress = Mock()
+        progress_tracker.add_step_message = Mock()
+        progress_tracker.log_step_success = Mock()
+        progress_tracker.log_step_failure = Mock()
+        progress_tracker.log_step_conditional = Mock()
+        return progress_tracker
+
+    @pytest.fixture
+    async def executor(self, mock_progress_tracker):
         """Create and initialize concrete executor with mocked tools."""
         config = ExecutorConfig(
             strategy=ExecutionStrategy.SEQUENTIAL,
             max_concurrent_steps=5,
             step_timeout=300,
         )
-        executor = ConcreteExecutor(config)
+        executor = ConcreteExecutor(config, mock_progress_tracker)
 
         # Mock tool initialization to avoid requiring real tools
         with patch.object(executor, "_initialize_tools") as mock_init:

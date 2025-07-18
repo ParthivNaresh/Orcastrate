@@ -21,7 +21,12 @@ from ..agent.base import Requirements
 from ..agent.coordinator import AgentCoordinator
 from ..executors.base import ExecutionStrategy, ExecutorConfig
 from ..executors.concrete_executor import ConcreteExecutor
-from ..logging import ExecutionCompleted, ExecutionStarted, LogManager, ProgressTracker
+from ..logging_utils import (
+    ExecutionCompleted,
+    ExecutionStarted,
+    LogManager,
+    ProgressTracker,
+)
 from ..planners.base import PlannerConfig, PlanningStrategy
 from ..planners.template_planner import TemplatePlanner
 

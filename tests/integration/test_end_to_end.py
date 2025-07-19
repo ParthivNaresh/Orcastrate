@@ -8,7 +8,7 @@ from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 
-from logging_utils import LogManager, ProgressTracker
+from src.logging_utils import LogManager, ProgressTracker
 from src.agent.base import Requirements
 from src.executors.base import ExecutionStrategy, ExecutorConfig
 from src.executors.concrete_executor import ConcreteExecutor

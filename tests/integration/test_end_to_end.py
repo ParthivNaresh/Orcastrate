@@ -8,10 +8,10 @@ from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 
-from src.logging_utils import LogManager, ProgressTracker
 from src.agent.base import Requirements
 from src.executors.base import ExecutionStrategy, ExecutorConfig
 from src.executors.concrete_executor import ConcreteExecutor
+from src.logging_utils import LogManager, ProgressTracker
 from src.planners.base import PlannerConfig, PlanningStrategy
 from src.planners.template_planner import TemplatePlanner
 

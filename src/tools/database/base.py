@@ -201,10 +201,6 @@ class ConnectionPool:
 
     async def initialize(self) -> None:
         """Initialize the connection pool."""
-        self.logger.info(
-            f"Initializing connection pool (min: {self.config.min_connections}, max: {self.config.max_connections})"
-        )
-
         # Create minimum connections
         for _ in range(self.config.min_connections):
             await self._create_connection()

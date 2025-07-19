@@ -70,7 +70,6 @@ class MongoDBConnection(DatabaseConnection):
 
         except Exception as e:
             self.state = ConnectionState.ERROR
-            self.logger.error(f"Failed to connect to MongoDB: {e}")
             raise ToolError(f"MongoDB connection failed: {e}")
 
     def _build_uri(self) -> str:

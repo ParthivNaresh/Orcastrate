@@ -8,7 +8,10 @@ development environments using natural language requirements.
 import asyncio
 import json
 import logging
+import os
 import sys
+import tempfile
+import uuid
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -20,22 +23,122 @@ from ..agent.base import Requirements
 from ..agent.coordinator import AgentCoordinator
 from ..executors.base import ExecutionStrategy, ExecutorConfig
 from ..executors.concrete_executor import ConcreteExecutor
+from ..logging_utils import (
+    ExecutionCompleted,
+    ExecutionStarted,
+    LogManager,
+    ProgressTracker,
+)
 from ..planners.base import PlannerConfig, PlanningStrategy
 from ..planners.template_planner import TemplatePlanner
 
+
+def get_log_directory() -> Path:
+    """Get secure log directory based on platform and user permissions."""
+    # Try user-specific directories first (more secure)
+    if os.name == "nt":  # Windows
+        log_dir = (
+            Path(os.environ.get("LOCALAPPDATA", tempfile.gettempdir())) / "orcastrate"
+        )
+    else:  # Unix-like systems
+        # Try XDG_DATA_HOME or fallback to ~/.local/share
+        xdg_data_home = os.environ.get("XDG_DATA_HOME")
+        if xdg_data_home:
+            log_dir = Path(xdg_data_home) / "orcastrate"
+        else:
+            home = Path.home()
+            log_dir = home / ".local" / "share" / "orcastrate"
+
+        # If user directory is not writable, fall back to secure temp directory
+        try:
+            log_dir.mkdir(parents=True, exist_ok=True)
+            # Test write permissions
+            test_file = log_dir / ".write_test"
+            test_file.touch()
+            test_file.unlink()
+        except (OSError, PermissionError):
+            # Use secure temporary directory with proper permissions
+            log_dir = Path(tempfile.mkdtemp(prefix="orcastrate_", suffix="_logs"))
+            os.chmod(log_dir, 0o700)  # Owner read/write/execute only
+
+    return log_dir
+
+
 # Ensure log directory exists before configuring logging
-LOG_DIR = Path("/tmp/orcastrate")
+LOG_DIR = get_log_directory()
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler(LOG_DIR / "orcastrate.log"),
-    ],
+
+class StructuredFormatter(logging.Formatter):
+    """Custom formatter for structured logging with correlation IDs."""
+
+    def format(self, record):
+        # Get correlation ID from record or generate one
+        correlation_id = getattr(record, "correlation_id", "unknown")
+        execution_id = getattr(record, "execution_id", None)
+
+        # Create structured log entry
+        log_data = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "level": record.levelname,
+            "logger": record.name,
+            "message": record.getMessage(),
+            "correlation_id": correlation_id,
+            "module": record.module,
+            "function": record.funcName,
+            "line": record.lineno,
+        }
+
+        # Add execution context if available
+        if execution_id:
+            log_data["execution_id"] = execution_id
+
+        # Add any extra fields from the record
+        for key, value in record.__dict__.items():
+            if key not in [
+                "name",
+                "msg",
+                "args",
+                "levelname",
+                "levelno",
+                "pathname",
+                "filename",
+                "module",
+                "lineno",
+                "funcName",
+                "created",
+                "msecs",
+                "relativeCreated",
+                "thread",
+                "threadName",
+                "processName",
+                "process",
+                "getMessage",
+                "stack_info",
+                "correlation_id",
+                "execution_id",
+            ]:
+                if not key.startswith("_"):
+                    log_data[key] = value
+
+        return json.dumps(log_data, default=str)
+
+
+# Configure structured logging
+structured_handler = logging.FileHandler(LOG_DIR / "orcastrate.log")
+structured_handler.setFormatter(StructuredFormatter())
+
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(
+    logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 )
+
+# Configure root logger
+root_logger = logging.getLogger()
+root_logger.setLevel(logging.INFO)
+root_logger.handlers.clear()
+root_logger.addHandler(console_handler)
+root_logger.addHandler(structured_handler)
 
 
 class OrcastrateAgent:
@@ -43,14 +146,22 @@ class OrcastrateAgent:
 
     def __init__(self):
         self.logger = logging.getLogger(self.__class__.__name__)
+        self.correlation_id = str(uuid.uuid4())
         self.planner: Optional[TemplatePlanner] = None
         self.executor: Optional[ConcreteExecutor] = None
         self.coordinator: Optional[AgentCoordinator] = None
 
+        # Initialize centralized logging
+        self.log_manager = LogManager()
+        self.progress_tracker = ProgressTracker(self.log_manager)
+
     async def initialize(self) -> None:
         """Initialize the agent and its components."""
         try:
-            self.logger.info("🚀 Initializing Orcastrate Agent...")
+            # Start initialization progress tracking (increased for tool-level tracking)
+            self.progress_tracker.start_execution_progress(
+                12, "🔧 Initializing Orcastrate Agent..."
+            )
 
             # Create configurations
             planner_config = PlannerConfig(
@@ -72,18 +183,31 @@ class OrcastrateAgent:
                 },
                 enable_rollback=True,
             )
+            self.progress_tracker.log_step_success("⚙️ Configurations created")
 
-            # Initialize components
-            self.planner = TemplatePlanner(planner_config)
+            self.planner = TemplatePlanner(
+                planner_config, progress_tracker=self.progress_tracker
+            )
             await self.planner.initialize()
 
-            self.executor = ConcreteExecutor(executor_config)
+            self.progress_tracker.log_step_success("📋 Planner initialized")
+
+            self.executor = ConcreteExecutor(
+                executor_config, progress_tracker=self.progress_tracker
+            )
+
+            self.progress_tracker.log_step_success("⚡ Executor set up")
+
+            self.progress_tracker.log_step_success("🔧 Initializing tools...")
+
             await self.executor.initialize()
 
-            self.logger.info("✅ Orcastrate Agent initialized successfully!")
+            self.progress_tracker.log_step_success("🔧 Tools initialized")
 
-        except Exception as e:
-            self.logger.error(f"❌ Failed to initialize agent: {e}")
+            self.progress_tracker.complete_execution_progress()
+
+        except Exception:
+            self.progress_tracker.complete_execution_progress()
             raise
 
     async def create_environment(self, requirements: Requirements) -> Dict[str, Any]:
@@ -91,19 +215,34 @@ class OrcastrateAgent:
         if not self.planner or not self.executor:
             raise RuntimeError("Agent not initialized")
 
-        try:
-            self.logger.info(f"📋 Creating environment: {requirements.description}")
+        execution_id = str(uuid.uuid4())
+        start_time = datetime.utcnow()
 
-            # Generate plan
-            self.logger.info("🧠 Generating execution plan...")
+        try:
+            # Emit execution started event
+            await self.log_manager.emit_event(
+                ExecutionStarted(
+                    correlation_id=self.correlation_id,
+                    execution_id=execution_id,
+                    operation="environment_creation",
+                    requirements_description=requirements.description,
+                )
+            )
+
+            self.progress_tracker.start_execution_progress(
+                11, f"🚀 Creating: {requirements.description[:30]}..."
+            )
+
+            self.progress_tracker.log_step_success("📋 Generating plan...")
+
             plan = await self.planner.create_plan(requirements)
 
-            self.logger.info(f"📊 Plan created with {len(plan.steps)} steps:")
-            for i, step in enumerate(plan.steps, 1):
-                self.logger.info(f"  {i}. {step.get('name', step['id'])}")
+            # m[step["tool"] for step in plan.steps]
 
-            # Validate plan
-            self.logger.info("🔍 Validating plan requirements...")
+            self.progress_tracker.log_step_success("📋 Generated execution plan")
+
+            self.progress_tracker.log_step_success("🔍 Validating plan requirements")
+
             validation = await self.executor.validate_plan_requirements(plan)
 
             if not validation["valid"]:
@@ -111,15 +250,42 @@ class OrcastrateAgent:
                     "missing_tools": validation.get("missing_tools", []),
                     "invalid_actions": validation.get("invalid_actions", []),
                 }
+                self.progress_tracker.log_step_failure("🔍 Plan validation failed")
                 raise RuntimeError(f"Plan validation failed: {error_details}")
+
+            self.progress_tracker.log_step_success("🔍 Validated plan requirements")
 
             if validation.get("warnings"):
                 for warning in validation["warnings"]:
-                    self.logger.warning(f"⚠️  {warning}")
+                    self.logger.warning(
+                        "Plan validation warning",
+                        extra={
+                            "correlation_id": self.correlation_id,
+                            "execution_id": execution_id,
+                            "warning_message": warning,
+                        },
+                    )
 
-            # Execute plan
-            self.logger.info("⚡ Executing plan...")
             result = await self.executor.execute_plan(plan)
+
+            self.progress_tracker.log_step_success("⚡ Executed plan")
+
+            duration = (datetime.utcnow() - start_time).total_seconds()
+
+            self.progress_tracker.log_step_success("✅ Environment created!")
+
+            self.progress_tracker.complete_execution_progress()
+
+            await self.log_manager.emit_event(
+                ExecutionCompleted(
+                    correlation_id=self.correlation_id,
+                    execution_id=execution_id,
+                    operation="environment_creation",
+                    success=result.success,
+                    duration_seconds=duration,
+                    artifacts_count=len(result.artifacts) if result.artifacts else 0,
+                )
+            )
 
             # Return comprehensive result
             return {
@@ -141,7 +307,34 @@ class OrcastrateAgent:
             }
 
         except Exception as e:
-            self.logger.error(f"❌ Environment creation failed: {e}")
+            duration = (datetime.utcnow() - start_time).total_seconds()
+
+            # Complete progress on error and emit completion event
+            self.progress_tracker.complete_execution_progress()
+
+            await self.log_manager.emit_event(
+                ExecutionCompleted(
+                    correlation_id=self.correlation_id,
+                    execution_id=execution_id,
+                    operation="environment_creation",
+                    success=False,
+                    duration_seconds=duration,
+                    artifacts_count=0,
+                )
+            )
+
+            self.logger.error(
+                "Environment creation failed",
+                extra={
+                    "correlation_id": self.correlation_id,
+                    "execution_id": execution_id,
+                    "operation": "environment_creation",
+                    "phase": "error",
+                    "error_type": type(e).__name__,
+                    "error_message": str(e),
+                    "duration_seconds": duration,
+                },
+            )
             return {
                 "success": False,
                 "error": str(e),
@@ -154,6 +347,7 @@ class OrcastrateAgent:
             raise RuntimeError("Agent not initialized")
 
         templates = await self.planner.get_available_templates()
+
         return {"templates": templates}
 
     async def get_tools_status(self) -> Dict[str, Any]:
@@ -162,6 +356,7 @@ class OrcastrateAgent:
             raise RuntimeError("Agent not initialized")
 
         tools = await self.executor.get_available_tools()
+
         return {"tools": tools}
 
 

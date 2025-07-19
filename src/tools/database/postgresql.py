@@ -60,7 +60,6 @@ class PostgreSQLConnection(DatabaseConnection):
 
         except Exception as e:
             self.state = ConnectionState.ERROR
-            self.logger.error(f"Failed to connect to PostgreSQL: {e}")
             raise ToolError(f"PostgreSQL connection failed: {e}")
 
     def _build_dsn(self) -> str:

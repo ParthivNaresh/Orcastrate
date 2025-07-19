@@ -35,10 +35,11 @@ class ConcreteExecutor(Executor):
     to actually create development environments.
     """
 
-    def __init__(self, config: ExecutorConfig):
+    def __init__(self, config: ExecutorConfig, progress_tracker=None):
         super().__init__(config)
         self._tools: Dict[str, Any] = {}
         self._tool_configs: Dict[str, ToolConfig] = {}
+        self._progress_tracker = progress_tracker
 
     async def initialize(self) -> None:
         """Initialize the executor and its tools."""
@@ -106,31 +107,36 @@ class ConcreteExecutor(Executor):
             docker_tool = DockerTool(self._tool_configs["docker"])
             await docker_tool.initialize()
             self._tools["docker"] = docker_tool
-            self.logger.info("Docker tool initialized successfully")
-
+            if self._progress_tracker:
+                self._progress_tracker.log_step_success("🐳 Docker tool ready", 1)
         except Exception as e:
             self.logger.warning(f"Docker tool initialization failed: {e}")
-            # Continue without Docker - some plans might not need it
+            if self._progress_tracker:
+                self._progress_tracker.log_step_failure("🐳 Docker tool failed", 1)
 
         try:
             # Initialize Git tool
             git_tool = GitTool(self._tool_configs["git"])
             await git_tool.initialize()
             self._tools["git"] = git_tool
-            self.logger.info("Git tool initialized successfully")
-
+            if self._progress_tracker:
+                self._progress_tracker.log_step_success("📦 Git tool ready", 1)
         except Exception as e:
             self.logger.warning(f"Git tool initialization failed: {e}")
+            if self._progress_tracker:
+                self._progress_tracker.log_step_failure("📦 Git tool failed", 1)
 
         try:
             # Initialize File System tool
             filesystem_tool = FileSystemTool(self._tool_configs["filesystem"])
             await filesystem_tool.initialize()
             self._tools["filesystem"] = filesystem_tool
-            self.logger.info("File System tool initialized successfully")
-
+            if self._progress_tracker:
+                self._progress_tracker.log_step_success("📁 Filesystem tool ready", 1)
         except Exception as e:
             self.logger.error(f"File System tool initialization failed: {e}")
+            if self._progress_tracker:
+                self._progress_tracker.log_step_failure("📁 Filesystem tool failed", 1)
             # File system is critical - raise error
             raise ExecutorError(f"Critical tool initialization failed: {e}")
 
@@ -139,10 +145,6 @@ class ConcreteExecutor(Executor):
 
         # Initialize infrastructure tools
         await self._initialize_infrastructure_tools()
-
-        self.logger.info(
-            f"Initialized {len(self._tools)} tools: {list(self._tools.keys())}"
-        )
 
     async def _initialize_database_tools(self) -> None:
         """Initialize database tools with default configurations."""
@@ -166,9 +168,11 @@ class ConcreteExecutor(Executor):
             postgresql_tool = PostgreSQLTool(postgresql_tool_config)
             await postgresql_tool.initialize()
             self._tools["postgresql"] = postgresql_tool
-            self.logger.info("PostgreSQL tool initialized successfully")
-        except Exception as e:
-            self.logger.warning(f"PostgreSQL tool initialization failed: {e}")
+            if self._progress_tracker:
+                self._progress_tracker.log_step_success("🐘 PostgreSQL tool ready", 1)
+        except Exception:
+            if self._progress_tracker:
+                self._progress_tracker.log_step_failure("🐘 PostgreSQL tool failed", 1)
 
         # MySQL Tool
         try:
@@ -186,9 +190,11 @@ class ConcreteExecutor(Executor):
             mysql_tool = MySQLTool(mysql_tool_config)
             await mysql_tool.initialize()
             self._tools["mysql"] = mysql_tool
-            self.logger.info("MySQL tool initialized successfully")
-        except Exception as e:
-            self.logger.warning(f"MySQL tool initialization failed: {e}")
+            if self._progress_tracker:
+                self._progress_tracker.log_step_success("🐬 MySQL tool ready", 1)
+        except Exception:
+            if self._progress_tracker:
+                self._progress_tracker.log_step_failure("🐬 MySQL tool failed", 1)
 
         # MongoDB Tool
         try:
@@ -206,9 +212,11 @@ class ConcreteExecutor(Executor):
             mongodb_tool = MongoDBTool(mongodb_tool_config)
             await mongodb_tool.initialize()
             self._tools["mongodb"] = mongodb_tool
-            self.logger.info("MongoDB tool initialized successfully")
-        except Exception as e:
-            self.logger.warning(f"MongoDB tool initialization failed: {e}")
+            if self._progress_tracker:
+                self._progress_tracker.log_step_success("🍃 MongoDB tool ready", 1)
+        except Exception:
+            if self._progress_tracker:
+                self._progress_tracker.log_step_failure("🍃 MongoDB tool failed", 1)
 
         # Redis Tool
         try:
@@ -228,9 +236,11 @@ class ConcreteExecutor(Executor):
             redis_tool = RedisTool(redis_tool_config)
             await redis_tool.initialize()
             self._tools["redis"] = redis_tool
-            self.logger.info("Redis tool initialized successfully")
-        except Exception as e:
-            self.logger.warning(f"Redis tool initialization failed: {e}")
+            if self._progress_tracker:
+                self._progress_tracker.log_step_success("🔴 Redis tool ready", 1)
+        except Exception:
+            if self._progress_tracker:
+                self._progress_tracker.log_step_failure("🔴 Redis tool failed", 1)
 
     async def _initialize_infrastructure_tools(self) -> None:
         """Initialize infrastructure tools with default configurations."""
@@ -255,9 +265,11 @@ class ConcreteExecutor(Executor):
             terraform_tool = TerraformTool(terraform_tool_config)
             await terraform_tool.initialize()
             self._tools["terraform"] = terraform_tool
-            self.logger.info("Terraform tool initialized successfully")
-        except Exception as e:
-            self.logger.warning(f"Terraform tool initialization failed: {e}")
+            if self._progress_tracker:
+                self._progress_tracker.log_step_success("🏗️ Terraform tool ready", 1)
+        except Exception:
+            if self._progress_tracker:
+                self._progress_tracker.log_step_failure("🏗️ Terraform tool failed", 1)
 
     async def _execute_plan_with_strategy(
         self, plan: Plan, context: ExecutionContext
@@ -266,13 +278,9 @@ class ConcreteExecutor(Executor):
         start_time = datetime.utcnow()
 
         try:
-            self.logger.info(f"Starting plan execution with {len(plan.steps)} steps")
-
             # Create dependency graph and sort steps
             dependency_graph = await self._create_dependency_graph(plan)
             execution_order = await self._topological_sort(dependency_graph)
-
-            self.logger.info(f"Execution order: {execution_order}")
 
             # Execute steps in dependency order
             executed_count = 0
@@ -280,18 +288,15 @@ class ConcreteExecutor(Executor):
 
             for step_id in execution_order:
                 if context.cancellation_requested:
-                    self.logger.info("Execution cancelled by user")
                     break
 
                 # Find the step definition
                 step = next((s for s in plan.steps if s["id"] == step_id), None)
                 if not step:
-                    self.logger.error(f"Step definition not found: {step_id}")
                     continue
 
                 # Check if dependencies are satisfied
                 if not await self._check_dependencies(step, context):
-                    self.logger.error(f"Dependencies not satisfied for step: {step_id}")
                     failed_steps.append(step_id)
                     continue
 
@@ -305,11 +310,8 @@ class ConcreteExecutor(Executor):
 
                 # Log step completion
                 if step_execution.status == ExecutionStatus.COMPLETED:
-                    self.logger.info(f"✅ Step completed: {step_id}")
+                    pass
                 elif step_execution.status == ExecutionStatus.FAILED:
-                    self.logger.error(
-                        f"❌ Step failed: {step_id} - {step_execution.error}"
-                    )
                     failed_steps.append(step_id)
 
                     # Stop on failure unless configured otherwise
@@ -346,17 +348,13 @@ class ConcreteExecutor(Executor):
             )
 
             if success:
-                self.logger.info(
-                    f"🎉 Plan execution completed successfully! ({successful_steps}/{total_steps} steps)"
-                )
+                pass
             else:
                 result.error = f"Plan execution failed. {successful_steps}/{total_steps} steps completed. Failed steps: {failed_steps}"
-                self.logger.error(result.error)
 
             return result
 
         except Exception as e:
-            self.logger.error(f"Plan execution failed with exception: {e}")
             return ExecutionResult(
                 success=False,
                 execution_id=context.execution_id,
@@ -372,9 +370,6 @@ class ConcreteExecutor(Executor):
         step_execution = context.steps[step_id]
 
         try:
-            self.logger.info(
-                f"🔄 Executing step: {step_id} ({step.get('name', 'Unknown')})"
-            )
 
             step_execution.status = ExecutionStatus.RUNNING
             step_execution.start_time = datetime.utcnow()
@@ -391,10 +386,6 @@ class ConcreteExecutor(Executor):
             action = step.get("action")
             parameters = step.get("parameters", {})
 
-            self.logger.debug(
-                f"Using tool '{tool_name}' with action '{action}' and parameters: {parameters}"
-            )
-
             # Execute the tool action
             result = await tool.execute(action, parameters)
 
@@ -410,16 +401,13 @@ class ConcreteExecutor(Executor):
                 if result.output:
                     context.artifacts[step_id] = result.output
 
-                self.logger.info(f"✅ Step '{step_id}' completed successfully")
             else:
                 step_execution.status = ExecutionStatus.FAILED
                 step_execution.error = result.error or "Tool execution failed"
-                self.logger.error(f"❌ Step '{step_id}' failed: {step_execution.error}")
 
             step_execution.end_time = datetime.utcnow()
 
         except Exception as e:
-            self.logger.error(f"❌ Step '{step_id}' failed with exception: {e}")
             step_execution.status = ExecutionStatus.FAILED
             step_execution.end_time = datetime.utcnow()
             step_execution.error = str(e)
@@ -489,9 +477,15 @@ class ConcreteExecutor(Executor):
                         }
                     )
                     validation_results["valid"] = False
+                self._progress_tracker.log_step_success(
+                    f"🧩 Tool {tool_name} validated", 1
+                )
             except Exception as e:
                 validation_results["warnings"].append(
                     f"Could not validate tool {tool_name}: {e}"
+                )
+                self._progress_tracker.log_step_failure(
+                    f"🧩 Tool {tool_name} not validated", 1
                 )
 
         return validation_results

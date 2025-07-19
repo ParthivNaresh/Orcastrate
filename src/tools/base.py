@@ -105,14 +105,10 @@ class Tool(ABC):
 
     async def initialize(self) -> None:
         """Initialize the tool (setup clients, validate config, etc.)."""
-        self.logger.info(f"Initializing tool: {self.config.name}")
-
         try:
             self._validator = await self._create_validator()
             self._client = await self._create_client()
             await self._validate_configuration()
-
-            self.logger.info(f"Tool {self.config.name} initialized successfully")
 
         except Exception as e:
             self.logger.error(f"Failed to initialize tool {self.config.name}: {e}")
@@ -130,14 +126,26 @@ class Tool(ABC):
             ToolResult: Result of the operation
         """
         start_time = datetime.utcnow()
+        operation_id = f"{self.config.name}_{action}_{int(start_time.timestamp())}"
 
         try:
-            self.logger.info(f"Executing action: {action}")
             self.status = ToolStatus.VALIDATING
 
             # Validate parameters
             validation = await self.validate(action, params)
             if not validation.valid:
+                self.logger.error(
+                    "Tool parameter validation failed",
+                    extra={
+                        "tool_name": self.config.name,
+                        "operation_id": operation_id,
+                        "action": action,
+                        "operation": "tool_execution",
+                        "phase": "validation_error",
+                        "validation_errors": validation.errors,
+                        "validation_warnings": validation.warnings,
+                    },
+                )
                 raise ToolError(f"Validation failed: {validation.errors}")
 
             # Use normalized parameters
@@ -174,7 +182,20 @@ class Tool(ABC):
             self.status = ToolStatus.FAILED
             duration = (datetime.utcnow() - start_time).total_seconds()
 
-            self.logger.error(f"Action {action} failed: {e}")
+            self.logger.error(
+                "Tool action failed",
+                extra={
+                    "tool_name": self.config.name,
+                    "operation_id": operation_id,
+                    "action": action,
+                    "operation": "tool_execution",
+                    "phase": "error",
+                    "error_type": type(e).__name__,
+                    "error_message": str(e),
+                    "duration_seconds": duration,
+                    "tool_status": self.status.value,
+                },
+            )
 
             return ToolResult(
                 success=False,
@@ -298,6 +319,9 @@ class Tool(ABC):
     ) -> Dict[str, Any]:
         """Execute action with retry logic."""
         last_error = None
+        operation_id = (
+            f"{self.config.name}_{action}_{int(datetime.utcnow().timestamp())}"
+        )
 
         for attempt in range(self.config.retry_count + 1):
             try:
@@ -307,15 +331,55 @@ class Tool(ABC):
             except asyncio.TimeoutError:
                 last_error = f"Operation timed out after {self.config.timeout} seconds"
                 if attempt < self.config.retry_count:
+                    self.logger.warning(
+                        "Tool action timed out, retrying",
+                        extra={
+                            "tool_name": self.config.name,
+                            "operation_id": operation_id,
+                            "action": action,
+                            "operation": "tool_execution",
+                            "phase": "timeout_retry",
+                            "attempt": attempt + 1,
+                            "max_attempts": self.config.retry_count + 1,
+                            "timeout": self.config.timeout,
+                            "retry_delay": self.config.retry_delay,
+                        },
+                    )
                     await asyncio.sleep(self.config.retry_delay)
             except Exception as e:
                 last_error = str(e)
                 if attempt < self.config.retry_count:
-                    self.logger.warning(f"Attempt {attempt + 1} failed, retrying: {e}")
+                    self.logger.warning(
+                        "Tool action failed, retrying",
+                        extra={
+                            "tool_name": self.config.name,
+                            "operation_id": operation_id,
+                            "action": action,
+                            "operation": "tool_execution",
+                            "phase": "error_retry",
+                            "attempt": attempt + 1,
+                            "max_attempts": self.config.retry_count + 1,
+                            "error_type": type(e).__name__,
+                            "error_message": str(e),
+                            "retry_delay": self.config.retry_delay,
+                        },
+                    )
                     await asyncio.sleep(self.config.retry_delay)
                 else:
                     raise
 
+        self.logger.error(
+            "Tool action failed after all retry attempts",
+            extra={
+                "tool_name": self.config.name,
+                "operation_id": operation_id,
+                "action": action,
+                "operation": "tool_execution",
+                "phase": "retry_exhausted",
+                "total_attempts": self.config.retry_count + 1,
+                "final_error": last_error,
+            },
+        )
         raise ToolError(
             f"Action failed after {self.config.retry_count + 1} attempts: {last_error}"
         )

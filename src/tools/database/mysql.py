@@ -75,7 +75,6 @@ class MySQLConnection(DatabaseConnection):
 
         except Exception as e:
             self.state = ConnectionState.ERROR
-            self.logger.error(f"Failed to connect to MySQL: {e}")
             raise ToolError(f"MySQL connection failed: {e}")
 
     async def disconnect(self) -> None:

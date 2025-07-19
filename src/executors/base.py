@@ -114,13 +114,9 @@ class Executor(ABC):
 
     async def initialize(self) -> None:
         """Initialize the executor and its components."""
-        self.logger.info("Initializing executor")
-
         try:
             await self._initialize_tool_registry()
             await self._setup_monitoring()
-
-            self.logger.info("Executor initialized successfully")
 
         except Exception as e:
             self.logger.error(f"Failed to initialize executor: {e}")
@@ -140,8 +136,6 @@ class Executor(ABC):
         start_time = datetime.utcnow()
 
         try:
-            self.logger.info(f"Starting plan execution: {execution_id}")
-
             # Create execution context
             context = ExecutionContext(
                 execution_id=execution_id,

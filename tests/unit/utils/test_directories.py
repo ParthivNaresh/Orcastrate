@@ -53,12 +53,23 @@ class TestGetSecureAppDirectory:
             assert "custom_" in result.name
             assert "_test" in result.name
 
-    @patch("os.name", "nt")
-    @patch.dict(os.environ, {"LOCALAPPDATA": "/test/localappdata"})
-    def test_windows_directory(self):
-        """Test Windows directory logic."""
-        result = _get_platform_specific_directory("test_app")
-        assert result == Path("/test/localappdata/test_app")
+    def test_windows_directory_logic(self):
+        """Test Windows directory logic without instantiating WindowsPath."""
+        with (
+            patch("os.name", "nt"),
+            patch.dict(os.environ, {"LOCALAPPDATA": "/test/localappdata"}),
+            patch("src.utils.directories.Path") as mock_path,
+        ):
+
+            # Mock the Path constructor and division operator
+            mock_instance = mock_path.return_value
+            mock_instance.__truediv__.return_value = "mocked_path/test_app"
+
+            result = _get_platform_specific_directory("test_app")
+
+            # Verify Path was called with the LOCALAPPDATA environment variable
+            mock_path.assert_called_once_with("/test/localappdata")
+            assert result == "mocked_path/test_app"
 
     @patch("os.name", "posix")
     @patch.dict(os.environ, {"XDG_DATA_HOME": "/test/xdg"})
@@ -123,12 +134,15 @@ class TestSecureCacheDirectory:
         assert result.is_dir()
         assert "test_app" in str(result)
 
-    @patch("os.name", "nt")
-    @patch.dict(os.environ, {"LOCALAPPDATA": "/test/localappdata"})
-    def test_windows_cache_directory(self):
-        """Test Windows cache directory path."""
-        with patch("src.utils.directories.get_secure_app_directory") as mock_get_dir:
-            mock_get_dir.return_value = Path("/test/path")
+    def test_windows_cache_directory_logic(self):
+        """Test Windows cache directory logic."""
+        with (
+            patch("os.name", "nt"),
+            patch.dict(os.environ, {"LOCALAPPDATA": "/test/localappdata"}),
+            patch("src.utils.directories.get_secure_app_directory") as mock_get_dir,
+        ):
+
+            mock_get_dir.return_value = "/test/path"
 
             get_secure_cache_directory("test_app")
 
@@ -166,18 +180,25 @@ class TestSecureConfigDirectory:
         assert result.is_dir()
         assert "test_app" in str(result)
 
-    @patch("os.name", "nt")
-    @patch.dict(os.environ, {"APPDATA": "/test/appdata"})
-    def test_windows_config_directory(self):
-        """Test Windows config directory path."""
+    def test_windows_config_directory_logic(self):
+        """Test Windows config directory logic."""
         with (
+            patch("os.name", "nt"),
+            patch.dict(os.environ, {"APPDATA": "/test/appdata"}),
+            patch("src.utils.directories.Path") as mock_path,
             patch("src.utils.directories._test_directory_writable"),
-            patch("pathlib.Path.mkdir"),
         ):
 
+            # Mock Path to return an object with mkdir method
+            mock_instance = mock_path.return_value
+            mock_instance.__truediv__.return_value = mock_instance
+            mock_instance.mkdir = lambda *args, **kwargs: None
+
             result = get_secure_config_directory("test_app")
-            # Should use APPDATA path construction logic
-            assert "test_app" in str(result)
+
+            # Verify the APPDATA environment variable was used
+            mock_path.assert_called_with("/test/appdata")
+            assert result == mock_instance
 
     @patch("os.name", "posix")
     @patch.dict(os.environ, {"XDG_CONFIG_HOME": "/test/config"})

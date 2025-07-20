@@ -6,22 +6,12 @@ from unittest.mock import patch
 
 import pytest
 
-from src.tools.base import ToolConfig, ToolError
+from src.tools.base import ToolError
 from src.tools.git import GitTool
 
 
 class TestGitTool:
     """Test Git tool functionality."""
-
-    @pytest.fixture
-    def git_config(self):
-        """Create Git tool configuration."""
-        return ToolConfig(
-            name="git",
-            version="1.0.0",
-            timeout=300,
-            retry_count=3,
-        )
 
     @pytest.fixture
     def git_tool(self, git_config):

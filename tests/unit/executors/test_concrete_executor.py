@@ -20,8 +20,6 @@ from src.executors.base import (
     StepExecution,
 )
 from src.executors.concrete_executor import ConcreteExecutor
-from src.logging_utils.log_manager import LogManager
-from src.logging_utils.progress_tracker import ProgressTracker
 from src.tools.base import ToolResult, ToolSchema
 
 
@@ -38,21 +36,6 @@ class TestConcreteExecutor:
             retry_policy={"max_retries": 3, "backoff_factor": 2.0, "max_delay": 60},
             enable_rollback=True,
         )
-
-    @pytest.fixture
-    def mock_progress_tracker(self):
-        """Create a mock progress tracker for testing."""
-        mock_log_manager = Mock(spec=LogManager)
-        mock_log_manager.emit_event = AsyncMock()
-
-        progress_tracker = Mock(spec=ProgressTracker)
-        progress_tracker.log_manager = mock_log_manager
-        progress_tracker.update_step_progress = Mock()
-        progress_tracker.add_step_message = Mock()
-        progress_tracker.log_step_success = Mock()
-        progress_tracker.log_step_failure = Mock()
-        progress_tracker.log_step_conditional = Mock()
-        return progress_tracker
 
     @pytest.fixture
     def executor(self, executor_config, mock_progress_tracker):
@@ -461,21 +444,6 @@ class TestConcreteExecutorIntegration:
         )
 
     @pytest.fixture
-    def mock_progress_tracker(self):
-        """Create a mock progress tracker for testing."""
-        mock_log_manager = Mock(spec=LogManager)
-        mock_log_manager.emit_event = AsyncMock()
-
-        progress_tracker = Mock(spec=ProgressTracker)
-        progress_tracker.log_manager = mock_log_manager
-        progress_tracker.update_step_progress = Mock()
-        progress_tracker.add_step_message = Mock()
-        progress_tracker.log_step_success = Mock()
-        progress_tracker.log_step_failure = Mock()
-        progress_tracker.log_step_conditional = Mock()
-        return progress_tracker
-
-    @pytest.fixture
     def executor(self, executor_config, mock_progress_tracker):
         """Create ConcreteExecutor for integration tests."""
         return ConcreteExecutor(executor_config, progress_tracker=mock_progress_tracker)
@@ -632,21 +600,6 @@ class TestConcreteExecutorEdgeCases:
             retry_policy={"max_retries": 5, "backoff_factor": 3.0, "max_delay": 300},
             enable_rollback=False,
         )
-
-    @pytest.fixture
-    def mock_progress_tracker(self):
-        """Create a mock progress tracker for testing."""
-        mock_log_manager = Mock(spec=LogManager)
-        mock_log_manager.emit_event = AsyncMock()
-
-        progress_tracker = Mock(spec=ProgressTracker)
-        progress_tracker.log_manager = mock_log_manager
-        progress_tracker.update_step_progress = Mock()
-        progress_tracker.add_step_message = Mock()
-        progress_tracker.log_step_success = Mock()
-        progress_tracker.log_step_failure = Mock()
-        progress_tracker.log_step_conditional = Mock()
-        return progress_tracker
 
     @pytest.fixture
     def executor(self, executor_config, mock_progress_tracker):

@@ -3,13 +3,11 @@ Tests for File System tool implementation.
 """
 
 import json
-import tempfile
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 
-from src.tools.base import ToolConfig, ToolError
+from src.tools.base import ToolError
 from src.tools.filesystem import FileSystemTool
 
 
@@ -17,25 +15,9 @@ class TestFileSystemTool:
     """Test File System tool functionality."""
 
     @pytest.fixture
-    def fs_config(self):
-        """Create File System tool configuration."""
-        return ToolConfig(
-            name="filesystem",
-            version="1.0.0",
-            timeout=300,
-            retry_count=3,
-        )
-
-    @pytest.fixture
-    def fs_tool(self, fs_config):
+    def fs_tool(self, filesystem_config):
         """Create File System tool instance."""
-        return FileSystemTool(fs_config)
-
-    @pytest.fixture
-    def temp_dir(self):
-        """Create a temporary directory for testing."""
-        with tempfile.TemporaryDirectory() as temp_dir:
-            yield Path(temp_dir)
+        return FileSystemTool(filesystem_config)
 
     @pytest.mark.asyncio
     async def test_tool_initialization(self, fs_tool):

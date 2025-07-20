@@ -4,53 +4,21 @@ Simple centralized log manager.
 
 import json
 import logging
-import os
-import tempfile
 from pathlib import Path
 from typing import List, Optional
 
+from ..utils.directories import get_secure_app_directory
 from .events import LogEvent
 
 
 class LogManager:
     """Simple centralized logging manager."""
 
-    @staticmethod
-    def _get_secure_log_directory() -> str:
-        """Get secure log directory based on platform and user permissions."""
-        # Try user-specific directories first (more secure)
-        if os.name == "nt":  # Windows
-            log_dir = (
-                Path(os.environ.get("LOCALAPPDATA", tempfile.gettempdir()))
-                / "orcastrate"
-            )
-        else:  # Unix-like systems
-            # Try XDG_DATA_HOME or fallback to ~/.local/share
-            xdg_data_home = os.environ.get("XDG_DATA_HOME")
-            if xdg_data_home:
-                log_dir = Path(xdg_data_home) / "orcastrate"
-            else:
-                home = Path.home()
-                log_dir = home / ".local" / "share" / "orcastrate"
-
-            # If user directory is not writable, fall back to secure temp directory
-            try:
-                log_dir.mkdir(parents=True, exist_ok=True)
-                # Test write permissions
-                test_file = log_dir / ".write_test"
-                test_file.touch()
-                test_file.unlink()
-            except (OSError, PermissionError):
-                # Use secure temporary directory with proper permissions
-                log_dir = Path(tempfile.mkdtemp(prefix="orcastrate_", suffix="_logs"))
-                os.chmod(log_dir, 0o700)  # Owner read/write/execute only
-
-        return str(log_dir)
-
     def __init__(self, log_dir: Optional[str] = None):
         if log_dir is None:
-            log_dir = self._get_secure_log_directory()
-        self.log_dir = Path(log_dir)
+            self.log_dir = get_secure_app_directory("orcastrate", "logs")
+        else:
+            self.log_dir = Path(log_dir)
         self.log_dir.mkdir(parents=True, exist_ok=True)
 
         # Setup logger

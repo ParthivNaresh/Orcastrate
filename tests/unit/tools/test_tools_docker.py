@@ -7,22 +7,12 @@ from unittest.mock import patch
 
 import pytest
 
-from src.tools.base import ToolConfig, ToolError
+from src.tools.base import ToolError
 from src.tools.docker import DockerTool
 
 
 class TestDockerTool:
     """Test Docker tool functionality."""
-
-    @pytest.fixture
-    def docker_config(self):
-        """Create Docker tool configuration."""
-        return ToolConfig(
-            name="docker",
-            version="1.0.0",
-            timeout=300,
-            retry_count=3,
-        )
 
     @pytest.fixture
     def docker_tool(self, docker_config):

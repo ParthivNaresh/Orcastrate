@@ -52,8 +52,8 @@ class TemplatePlanner(Planner):
     No AI required - uses pattern matching and rule-based composition.
     """
 
-    def __init__(self, config: PlannerConfig):
-        super().__init__(config)
+    def __init__(self, config: PlannerConfig, progress_tracker=None):
+        super().__init__(config, progress_tracker)
         # Modular component system
         self._components: Dict[str, TemplateComponent] = {}
         self._technology_patterns: Dict[str, Dict[str, List[str]]] = {}
@@ -101,12 +101,6 @@ class TemplatePlanner(Planner):
         ).items():
             if any(pattern in description_lower for pattern in patterns):
                 detected.infrastructure.append(infra)
-
-        self.logger.info(
-            f"Detected technologies: framework={detected.framework}, "
-            f"databases={detected.databases}, cache={detected.cache}, "
-            f"infrastructure={detected.infrastructure}"
-        )
 
         return detected
 
@@ -191,9 +185,6 @@ class TemplatePlanner(Planner):
             infra_steps = self._get_infrastructure_steps(technologies, step_counter)
             composed_steps.extend(infra_steps)
 
-        self.logger.info(
-            f"Composed plan with {len(composed_steps)} steps from multiple technologies"
-        )
         return composed_steps
 
     def _get_base_steps(self, start_counter: int) -> List[Dict[str, Any]]:

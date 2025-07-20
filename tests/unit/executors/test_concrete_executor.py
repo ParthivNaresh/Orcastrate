@@ -38,9 +38,9 @@ class TestConcreteExecutor:
         )
 
     @pytest.fixture
-    def executor(self, executor_config):
+    def executor(self, executor_config, mock_progress_tracker):
         """Create a ConcreteExecutor instance."""
-        return ConcreteExecutor(executor_config)
+        return ConcreteExecutor(executor_config, progress_tracker=mock_progress_tracker)
 
     @pytest.fixture
     def mock_tool(self):
@@ -444,9 +444,9 @@ class TestConcreteExecutorIntegration:
         )
 
     @pytest.fixture
-    def executor(self, executor_config):
+    def executor(self, executor_config, mock_progress_tracker):
         """Create ConcreteExecutor for integration tests."""
-        return ConcreteExecutor(executor_config)
+        return ConcreteExecutor(executor_config, progress_tracker=mock_progress_tracker)
 
     @pytest.fixture
     def complex_plan(self):
@@ -602,9 +602,9 @@ class TestConcreteExecutorEdgeCases:
         )
 
     @pytest.fixture
-    def executor(self, executor_config):
+    def executor(self, executor_config, mock_progress_tracker):
         """Create ConcreteExecutor for edge case tests."""
-        return ConcreteExecutor(executor_config)
+        return ConcreteExecutor(executor_config, progress_tracker=mock_progress_tracker)
 
     @pytest.mark.asyncio
     async def test_empty_plan_validation(self, executor):

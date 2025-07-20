@@ -217,17 +217,12 @@ class TerraformTool(Tool):
         # Check for Terraform binary
         await self._ensure_terraform_binary()
 
-        self.logger.info(
-            f"Terraform tool initialized with working directory: {self.terraform_config.working_dir}"
-        )
-
     async def _ensure_terraform_binary(self) -> None:
         """Ensure Terraform binary is available."""
         try:
             result = await self._run_command(["terraform", "version"])
             if result["success"]:
                 self._terraform_binary = "terraform"
-                self.logger.info(f"Found Terraform binary: {result['output']}")
             else:
                 raise ToolError("Terraform binary not found in PATH")
         except Exception as e:
